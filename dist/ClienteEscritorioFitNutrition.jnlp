@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="ClienteEscritorioFitNutrition.jnlp">
+  <information>
+    <title>ClienteEscritorioFitNutrition</title>
+    <vendor>alasn</vendor>
+    <description>null</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="ClienteEscritorioFitNutrition.jar" size="5371592" download="eager" />
+    <jar href="lib\gson-2.9.1.jar" size="265030" download="eager" />
+  </resources>
+  <jfx:javafx-desc  width="800" height="600" main-class="clienteescritoriofitnutrition.ClienteEscritorioFitNutrition"  name="ClienteEscritorioFitNutrition" />
+  <update check="always"/>
+</jnlp>

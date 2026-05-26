@@ -1,0 +1,58 @@
+/* Fondo general */
+.mainFxmlClass {
+    -fx-background-color: #F4F7F6;
+}
+
+/* Títulos */
+.label-titulo {
+    -fx-font-size: 28px;
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-text-fill: #2C3E50;
+}
+
+.label-subtitulo {
+    -fx-font-size: 14px;
+    -fx-text-fill: #7F8C8D;
+}
+
+/* Campos de entrada */
+.campo-texto {
+    -fx-background-radius: 20;
+    -fx-padding: 8 15;
+    -fx-border-color: #BDC3C7;
+    -fx-border-radius: 20;
+    -fx-background-color: white;
+}
+
+.campo-texto:focused {
+    -fx-border-color: #27AE60;
+    -fx-border-width: 1.5;
+}
+
+/* Selector ComboBox */
+.combo-box-estilo {
+    -fx-background-radius: 20;
+    -fx-background-color: white;
+    -fx-border-color: #BDC3C7;
+    -fx-border-radius: 20;
+}
+
+/* Botón Iniciar Sesión */
+.boton-iniciar {
+    -fx-background-color: #27AE60;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-cursor: hand;
+}
+
+.boton-iniciar:hover {
+    -fx-background-color: #219150;
+}
+
+/* Errores */
+.label-error {
+    -fx-text-fill: #E74C3C;
+    -fx-font-size: 12px;
+    -fx-alignment: center;
+}

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="400.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/fxml/1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clienteescritoriofitnutrition.FXMLInicioSesionController">
+    <stylesheets>
+        <URL value="@/clienteescritoriofitnutrition/utilidad/estilo.css" />
+    </stylesheets>
+   <children>
+      <VBox alignment="CENTER" layoutX="50.0" layoutY="30.0" prefHeight="440.0" prefWidth="300.0" spacing="15.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="30.0">
+         <children>
+            <ImageView fx:id="ivLogo" fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../imagenes/logo.png" />
+               </image>
+            </ImageView>
+            
+            <Label styleClass="label-titulo" text="FITNUTRITION" />
+            <Label styleClass="label-subtitulo" text="Bienvenido, identifícate" />
+            
+            <Separator prefWidth="200.0" />
+            
+            <TextField fx:id="tfUsuario" promptText="Número Personal" styleClass="campo-texto" />
+            
+            <PasswordField fx:id="pfContrasena" promptText="Contraseña" styleClass="campo-texto" />
+            
+            <ComboBox fx:id="cbTipoUsuario" prefWidth="300.0" promptText="Tipo de Usuario" styleClass="combo-box-estilo" />
+            
+            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clicIniciarSesion" prefHeight="40.0" styleClass="boton-iniciar" text="Iniciar Sesión" />
+            
+            <Label fx:id="lbError" styleClass="label-error" text="" wrapText="true" />
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
