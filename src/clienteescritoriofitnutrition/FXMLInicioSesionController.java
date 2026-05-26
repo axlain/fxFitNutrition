@@ -6,8 +6,6 @@ import clienteescritoriofitnutrition.utilidad.Utilidades;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +13,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -28,60 +25,39 @@ public class FXMLInicioSesionController implements Initializable {
     @FXML
     private PasswordField pfContrasena;
     @FXML
-    private ComboBox<String> cbTipoUsuario;
-    @FXML
     private Label lbError;
-
-    private ObservableList<String> tiposUsuario;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        configurarComboBox();
+        // Inicializaciones adicionales si son necesarias
     }    
-
-    private void configurarComboBox() {
-        // Agregamos los 3 roles que soporta tu backend
-        tiposUsuario = FXCollections.observableArrayList("Administrador", "Médico", "Paciente");
-        cbTipoUsuario.setItems(tiposUsuario);
-    }
 
     @FXML
     private void clicIniciarSesion(ActionEvent event) {
         lbError.setText(""); // Limpiar errores previos
         String usuario = tfUsuario.getText();
         String password = pfContrasena.getText();
-        String tipoUsuario = cbTipoUsuario.getValue();
 
         // Validación de campos vacíos
         if (usuario == null || usuario.trim().isEmpty() ||
-            password == null || password.trim().isEmpty() ||
-            tipoUsuario == null) {
+            password == null || password.trim().isEmpty()) {
             
-            lbError.setText("Por favor, ingresa tus credenciales y selecciona tu rol.");
+            lbError.setText("Por favor, ingresa tu número de personal y contraseña.");
             return;
         }
 
-        verificarCredenciales(usuario.trim(), password.trim(), tipoUsuario);
+        verificarCredenciales(usuario.trim(), password.trim());
     }
 
-    private void verificarCredenciales(String usuario, String password, String tipoUsuario) {
-        RSAutenticar respuesta = new RSAutenticar();
-
-        // Dependiendo del ComboBox, invocamos el API correcta
-        switch (tipoUsuario) {
-            case "Administrador":
-                respuesta = AutenticarImp.loginAdministrador(usuario, password);
-                break;
-            case "Médico":
-                respuesta = AutenticarImp.loginMedico(usuario, password);
-                break;
-        }
+    private void verificarCredenciales(String usuario, String password) {
+        // Se llama a un único método que se encarga de identificar el rol
+        RSAutenticar respuesta = AutenticarImp.login(usuario, password);
 
         if (!respuesta.isError()) {
             Utilidades.mostrarAlertaSimple("Ingreso exitoso", respuesta.getMensaje(), Alert.AlertType.INFORMATION);
             irPantallaInicio(respuesta);
         } else {
-            Utilidades.mostrarAlertaSimple("Credenciales incorrectas", respuesta.getMensaje(), Alert.AlertType.ERROR);
+            Utilidades.mostrarAlertaSimple("Credenciales incorrectas", "El número de personal o la contraseña son incorrectos.", Alert.AlertType.ERROR);
         }
     }
 

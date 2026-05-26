@@ -30,8 +30,6 @@
             
             <PasswordField fx:id="pfContrasena" promptText="Contraseña" styleClass="campo-texto" />
             
-            <ComboBox fx:id="cbTipoUsuario" prefWidth="300.0" promptText="Tipo de Usuario" styleClass="combo-box-estilo" />
-            
             <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clicIniciarSesion" prefHeight="40.0" styleClass="boton-iniciar" text="Iniciar Sesión" />
             
             <Label fx:id="lbError" styleClass="label-error" text="" wrapText="true" />

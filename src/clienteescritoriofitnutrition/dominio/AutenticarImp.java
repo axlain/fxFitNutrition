@@ -10,22 +10,25 @@ import java.net.HttpURLConnection;
 
 public class AutenticarImp {
     
-    public static RSAutenticar loginAdministrador(String numeroPersonal, String contrasena) {
+    public static RSAutenticar login(String numeroPersonal, String contrasena) {
         String parametros = "numero_personal=" + numeroPersonal + "&contrasena=" + contrasena;
-        String url = Constantes.URL_WS + "autenticar/administrador";
-        return realizarPeticionLogin(url, parametros);
-    }
-    
-    public static RSAutenticar loginMedico(String numeroPersonal, String contrasena) {
-        String parametros = "numero_personal=" + numeroPersonal + "&contrasena=" + contrasena;
-        String url = Constantes.URL_WS + "autenticar/medico";
-        return realizarPeticionLogin(url, parametros);
+        
+        // 1. Intentar iniciar sesión como Administrador
+        String urlAdmin = Constantes.URL_WS + "autenticar/administrador";
+        RSAutenticar respuesta = realizarPeticionLogin(urlAdmin, parametros);
+        
+        // 2. Si falla como Administrador, intentar como Médico
+        if (respuesta.isError()) {
+            String urlMedico = Constantes.URL_WS + "autenticar/medico";
+            respuesta = realizarPeticionLogin(urlMedico, parametros);
+        }
+        
+        return respuesta;
     }
     
     private static RSAutenticar realizarPeticionLogin(String url, String parametros) {
         RSAutenticar respuesta = new RSAutenticar();
         
-        // Se hace la petición usando la clase que me enviaste
         RespuestaHTTP respuestaAPI = ConexionAPI.peticionBody(
                 url,
                 Constantes.PETICION_POST,
