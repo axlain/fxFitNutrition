@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -16,6 +17,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 public class FXMLInicioSesionController implements Initializable {
@@ -27,37 +29,76 @@ public class FXMLInicioSesionController implements Initializable {
     @FXML
     private Label lbError;
 
+    private double desplazamientoX;
+    private double desplazamientoY;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Inicializaciones adicionales si son necesarias
-    }    
+    }
 
     @FXML
     private void clicIniciarSesion(ActionEvent event) {
-        lbError.setText(""); // Limpiar errores previos
+        lbError.setText("");
         String usuario = tfUsuario.getText();
         String password = pfContrasena.getText();
 
-        // Validación de campos vacíos
-        if (usuario == null || usuario.trim().isEmpty() ||
-            password == null || password.trim().isEmpty()) {
-            
-            lbError.setText("Por favor, ingresa tu número de personal y contraseña.");
+        if (usuario == null || usuario.trim().isEmpty()
+                || password == null || password.trim().isEmpty()) {
+            lbError.setText("Por favor, ingresa tu numero de personal y contrasena.");
             return;
         }
 
         verificarCredenciales(usuario.trim(), password.trim());
     }
 
+    @FXML
+    private void clickCancelar(ActionEvent event) {
+        tfUsuario.clear();
+        pfContrasena.clear();
+        lbError.setText("");
+    }
+
+    @FXML
+    private void clickCerrarAplicacion(ActionEvent event) {
+        Platform.exit();
+    }
+
+    @FXML
+    private void clickMinimizar(ActionEvent event) {
+        Stage stage = (Stage) tfUsuario.getScene().getWindow();
+        stage.setIconified(true);
+    }
+
+    @FXML
+    private void clickMaximizar(ActionEvent event) {
+        Stage stage = (Stage) tfUsuario.getScene().getWindow();
+        stage.setMaximized(!stage.isMaximized());
+    }
+
+    @FXML
+    private void iniciarArrastre(MouseEvent event) {
+        Stage stage = (Stage) tfUsuario.getScene().getWindow();
+        desplazamientoX = stage.getX() - event.getScreenX();
+        desplazamientoY = stage.getY() - event.getScreenY();
+    }
+
+    @FXML
+    private void arrastrarVentana(MouseEvent event) {
+        Stage stage = (Stage) tfUsuario.getScene().getWindow();
+        if (!stage.isMaximized()) {
+            stage.setX(event.getScreenX() + desplazamientoX);
+            stage.setY(event.getScreenY() + desplazamientoY);
+        }
+    }
+
     private void verificarCredenciales(String usuario, String password) {
-        // Se llama a un único método que se encarga de identificar el rol
         RSAutenticar respuesta = AutenticarImp.login(usuario, password);
 
-        if (!respuesta.isError()) {
+        if (respuesta != null && !respuesta.isError()) {
             Utilidades.mostrarAlertaSimple("Ingreso exitoso", respuesta.getMensaje(), Alert.AlertType.INFORMATION);
             irPantallaInicio(respuesta);
         } else {
-            Utilidades.mostrarAlertaSimple("Credenciales incorrectas", "El número de personal o la contraseña son incorrectos.", Alert.AlertType.ERROR);
+            Utilidades.mostrarAlertaSimple("Credenciales incorrectas", "El numero de personal o la contrasena son incorrectos.", Alert.AlertType.ERROR);
         }
     }
 
@@ -65,22 +106,17 @@ public class FXMLInicioSesionController implements Initializable {
         try {
             FXMLLoader cargador = new FXMLLoader(getClass().getResource("FXMLPrincipal.fxml"));
             Parent vista = cargador.load();
-            
-            /* * NOTA: Cuando tengas creado tu FXMLPrincipalController, descomenta estas líneas 
-             * para enviarle la sesión y saber quién entró.
-             */
-            // FXMLPrincipalController controlador = cargador.getController();
-            // controlador.inicializarSesion(sesion);
-            
+            FXMLPrincipalController controlador = cargador.getController();
+            controlador.inicializarSesion(sesion);
+
             Scene escenaPrincipal = new Scene(vista);
             Stage stPrincipal = (Stage) tfUsuario.getScene().getWindow();
             stPrincipal.setScene(escenaPrincipal);
-            stPrincipal.setTitle("FITNUTRITION - Inicio");
+            stPrincipal.setTitle("FIT NUTRITION - Inicio");
             stPrincipal.show();
-            
         } catch (IOException ex) {
             ex.printStackTrace();
-            Utilidades.mostrarAlertaSimple("Error de navegación", "No se pudo cargar la pantalla principal.", Alert.AlertType.ERROR);
-        }   
+            Utilidades.mostrarAlertaSimple("Error de navegacion", "No se pudo cargar la pantalla principal.", Alert.AlertType.ERROR);
+        }
     }
 }

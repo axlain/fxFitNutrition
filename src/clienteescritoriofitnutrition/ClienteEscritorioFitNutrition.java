@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class ClienteEscritorioFitNutrition extends Application {
     
@@ -23,6 +24,7 @@ public class ClienteEscritorioFitNutrition extends Application {
             
             //crear la escena 
             Scene escenaLogin = new Scene(vista); 
+            primaryStage.initStyle(StageStyle.UNDECORATED);
             primaryStage.setScene(escenaLogin); 
             primaryStage.setTitle("Login");
             primaryStage.show(); 

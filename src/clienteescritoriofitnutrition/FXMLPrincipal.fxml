@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="720.0" prefWidth="1180.0" styleClass="root-app" xmlns="http://javafx.com/fxml/1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clienteescritoriofitnutrition.FXMLPrincipalController">
+    <stylesheets>
+        <URL value="@/clienteescritoriofitnutrition/utilidad/estilo.css" />
+    </stylesheets>
+    <left>
+        <VBox prefWidth="200.0" styleClass="menu-lateral">
+            <children>
+                <HBox alignment="CENTER_LEFT" onMouseDragged="#arrastrarVentana" onMousePressed="#iniciarArrastre" spacing="8.0" styleClass="sidebar-header">
+                    <children>
+                        <Button mnemonicParsing="false" onAction="#clickCerrarAplicacion" styleClass="btn-semaforo-rojo" />
+                        <Button mnemonicParsing="false" onAction="#clickMinimizar" styleClass="btn-semaforo-amarillo" />
+                        <Button mnemonicParsing="false" onAction="#clickMaximizar" styleClass="btn-semaforo-verde" />
+                        <TextField promptText="Buscar..." styleClass="sidebar-search-box" HBox.hgrow="ALWAYS" />
+                    </children>
+                </HBox>
+                <Label styleClass="label-menu" text="PRINCIPAL" />
+                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="boton-menu" text="Dashboard" />
+                <Button fx:id="btnPacientes" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickPacientes" styleClass="boton-menu" text="Pacientes" />
+                <Button fx:id="btnMedicos" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickMedicos" styleClass="boton-menu" text="Medicos" />
+                <Label styleClass="label-menu" text="OPERACION" />
+                <Button fx:id="btnCitas" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickCitas" styleClass="boton-menu" text="Citas" />
+                <Button fx:id="btnConsultas" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickConsultas" styleClass="boton-menu" text="Consultas" />
+                <Button fx:id="btnDietas" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickDietas" styleClass="boton-menu" text="Dietas" />
+                <Button fx:id="btnAlimentos" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickAlimentos" styleClass="boton-menu" text="Alimentos" />
+                <Region VBox.vgrow="ALWAYS" />
+                <HBox alignment="CENTER_LEFT" spacing="9.0" styleClass="sidebar-footer">
+                    <children>
+                        <StackPane styleClass="sidebar-avatar">
+                            <children>
+                                <Label styleClass="sidebar-avatar-text" text="FN" />
+                            </children>
+                        </StackPane>
+                        <VBox spacing="1.0">
+                            <children>
+                                <Label fx:id="lbSesion" styleClass="sidebar-username" text="Usuario" />
+                                <Label styleClass="sidebar-userrole" text="Sesion activa" />
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickCerrarSesion" styleClass="boton-salir" text="Cerrar sesion" />
+            </children>
+        </VBox>
+    </left>
+    <center>
+        <BorderPane>
+            <top>
+                <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="barra-superior">
+                    <children>
+                        <Label fx:id="lbTitulo" styleClass="label-titulo-principal" text="Dashboard" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label styleClass="status-pill" text="Sistema activo" />
+                    </children>
+                </HBox>
+            </top>
+            <center>
+                <BorderPane fx:id="bpContenedor" styleClass="contenedor-modulo">
+                    <center>
+                        <VBox spacing="16.0">
+                            <padding>
+                                <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                            </padding>
+                            <HBox spacing="12.0">
+                                <children>
+                                    <VBox spacing="3.0" styleClass="stat-card" HBox.hgrow="ALWAYS">
+                                        <children>
+                                            <StackPane styleClass="stat-icon">
+                                                <children>
+                                                    <Label styleClass="stat-icon-text" text="P" />
+                                                </children>
+                                            </StackPane>
+                                            <Label styleClass="label-stat-valor" text="142" />
+                                            <Label styleClass="label-stat-nombre" text="Pacientes activos" />
+                                            <Label styleClass="label-stat-delta" text="+4 este mes" />
+                                        </children>
+                                    </VBox>
+                                    <VBox spacing="3.0" styleClass="stat-card" HBox.hgrow="ALWAYS">
+                                        <children>
+                                            <StackPane styleClass="stat-icon">
+                                                <children>
+                                                    <Label styleClass="stat-icon-text" text="M" />
+                                                </children>
+                                            </StackPane>
+                                            <Label styleClass="label-stat-valor" text="8" />
+                                            <Label styleClass="label-stat-nombre" text="Medicos" />
+                                            <Label styleClass="label-stat-delta" text="2 en consulta" />
+                                        </children>
+                                    </VBox>
+                                    <VBox spacing="3.0" styleClass="stat-card" HBox.hgrow="ALWAYS">
+                                        <children>
+                                            <StackPane styleClass="stat-icon">
+                                                <children>
+                                                    <Label styleClass="stat-icon-text" text="C" />
+                                                </children>
+                                            </StackPane>
+                                            <Label styleClass="label-stat-valor" text="23" />
+                                            <Label styleClass="label-stat-nombre" text="Citas hoy" />
+                                            <Label styleClass="label-stat-delta" text="6 pendientes" />
+                                        </children>
+                                    </VBox>
+                                    <VBox spacing="3.0" styleClass="stat-card" HBox.hgrow="ALWAYS">
+                                        <children>
+                                            <StackPane styleClass="stat-icon">
+                                                <children>
+                                                    <Label styleClass="stat-icon-text" text="N" />
+                                                </children>
+                                            </StackPane>
+                                            <Label styleClass="label-stat-valor" text="317" />
+                                            <Label styleClass="label-stat-nombre" text="Consultas totales" />
+                                            <Label styleClass="label-stat-delta" text="+12 esta semana" />
+                                        </children>
+                                    </VBox>
+                                </children>
+                            </HBox>
+                            <HBox spacing="14.0" VBox.vgrow="ALWAYS">
+                                <children>
+                                    <VBox styleClass="panel" HBox.hgrow="ALWAYS">
+                                        <children>
+                                            <HBox alignment="CENTER_LEFT" styleClass="panel-header">
+                                                <children>
+                                                    <Label styleClass="label-panel" text="Pacientes recientes" />
+                                                    <Region HBox.hgrow="ALWAYS" />
+                                                    <Label styleClass="label-stat-delta" text="Ver todos" />
+                                                </children>
+                                            </HBox>
+                                            <VBox spacing="12.0" styleClass="panel-body">
+                                                <children>
+                                                    <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                                        <Label prefWidth="170.0" text="Ana Cordoba" />
+                                                        <Label prefWidth="120.0" styleClass="label-subtitulo" text="Dr. Vega" />
+                                                        <Label styleClass="pill-activo" text="Activo" />
+                                                    </HBox>
+                                                    <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                                        <Label prefWidth="170.0" text="Luis Mendez" />
+                                                        <Label prefWidth="120.0" styleClass="label-subtitulo" text="Dra. Rios" />
+                                                        <Label styleClass="pill-activo" text="Activo" />
+                                                    </HBox>
+                                                    <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                                        <Label prefWidth="170.0" text="Maria Salas" />
+                                                        <Label prefWidth="120.0" styleClass="label-subtitulo" text="Dr. Vega" />
+                                                        <Label styleClass="pill-pendiente" text="Pendiente" />
+                                                    </HBox>
+                                                </children>
+                                            </VBox>
+                                        </children>
+                                    </VBox>
+                                    <VBox styleClass="panel" HBox.hgrow="ALWAYS">
+                                        <children>
+                                            <HBox alignment="CENTER_LEFT" styleClass="panel-header">
+                                                <children>
+                                                    <Label styleClass="label-panel" text="Citas del dia" />
+                                                    <Region HBox.hgrow="ALWAYS" />
+                                                    <Label styleClass="label-subtitulo" text="miercoles 27 mayo" />
+                                                </children>
+                                            </HBox>
+                                            <VBox spacing="10.0" styleClass="panel-body">
+                                                <children>
+                                                    <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                                        <Label prefWidth="52.0" styleClass="label-stat-valor" text="09:00" />
+                                                        <VBox HBox.hgrow="ALWAYS">
+                                                            <children>
+                                                                <Label text="Ana Cordoba" />
+                                                                <Label styleClass="label-subtitulo" text="Dr. Vega - Consulta nutricional" />
+                                                            </children>
+                                                        </VBox>
+                                                        <Label styleClass="pill-confirmada" text="Confirmada" />
+                                                    </HBox>
+                                                    <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                                        <Label prefWidth="52.0" styleClass="label-stat-valor" text="10:30" />
+                                                        <VBox HBox.hgrow="ALWAYS">
+                                                            <children>
+                                                                <Label text="Luis Mendez" />
+                                                                <Label styleClass="label-subtitulo" text="Dra. Rios - Seguimiento" />
+                                                            </children>
+                                                        </VBox>
+                                                        <Label styleClass="pill-pendiente" text="Pendiente" />
+                                                    </HBox>
+                                                    <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                                        <Label prefWidth="52.0" styleClass="label-stat-valor" text="12:00" />
+                                                        <VBox HBox.hgrow="ALWAYS">
+                                                            <children>
+                                                                <Label text="Maria Salas" />
+                                                                <Label styleClass="label-subtitulo" text="Dr. Vega - Primera vez" />
+                                                            </children>
+                                                        </VBox>
+                                                        <Label styleClass="pill-confirmada" text="Confirmada" />
+                                                    </HBox>
+                                                </children>
+                                            </VBox>
+                                        </children>
+                                    </VBox>
+                                </children>
+                            </HBox>
+                        </VBox>
+                    </center>
+                </BorderPane>
+            </center>
+            <bottom>
+                <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="statusbar">
+                    <children>
+                        <Label styleClass="label-status" text="Sistema activo" />
+                        <Label styleClass="label-status" text="localhost:8080" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label styleClass="label-status" text="miercoles 27 mayo 2026" />
+                    </children>
+                </HBox>
+            </bottom>
+        </BorderPane>
+    </center>
+</BorderPane>

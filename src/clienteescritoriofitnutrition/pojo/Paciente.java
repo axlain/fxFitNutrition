@@ -68,6 +68,42 @@ public class Paciente {
     public void setMedico(Medico medico) {
         this.medico = medico;
     }
-    
-    
+
+    public String getNombreCompleto() {
+        if (usuario == null) {
+            return "";
+        }
+        String nombre = usuario.getNombre() != null ? usuario.getNombre() : "";
+        String apellidoPaterno = usuario.getApellidoPaterno() != null ? usuario.getApellidoPaterno() : "";
+        String apellidoMaterno = usuario.getApellidoMaterno() != null ? usuario.getApellidoMaterno() : "";
+        return (nombre + " " + apellidoPaterno + " " + apellidoMaterno).trim();
+    }
+
+    public String getCorreoUsuario() {
+        return usuario != null && usuario.getCorreo() != null ? usuario.getCorreo() : "";
+    }
+
+    public String getTelefonoUsuario() {
+        return usuario != null && usuario.getTelefono() != null ? usuario.getTelefono() : "";
+    }
+
+    public String getEstatusUsuario() {
+        return usuario != null && usuario.getEstatus() != null && usuario.getEstatus().getNombre() != null
+                ? usuario.getEstatus().getNombre()
+                : "";
+    }
+
+    public String getMedicoAsignado() {
+        return medico != null ? medico.getNombreCompleto() : "";
+    }
+
+    @Override
+    public String toString() {
+        String nombre = getNombreCompleto();
+        if (codigoAcceso != null && !codigoAcceso.trim().isEmpty()) {
+            return nombre + " - " + codigoAcceso;
+        }
+        return nombre;
+    }
+
 }
