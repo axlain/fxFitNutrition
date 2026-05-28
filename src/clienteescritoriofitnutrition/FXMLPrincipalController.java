@@ -19,6 +19,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class FXMLPrincipalController implements Initializable, INotificador {
@@ -186,6 +187,7 @@ public class FXMLPrincipalController implements Initializable, INotificador {
         try {
             Parent vista = FXMLLoader.load(getClass().getResource("FXMLInicioSesion.fxml"));
             Scene escenaLogin = new Scene(vista);
+            escenaLogin.setFill(Color.TRANSPARENT);
             Stage stage = (Stage) bpContenedor.getScene().getWindow();
             stage.setScene(escenaLogin);
             stage.setTitle("Login");

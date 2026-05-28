@@ -11,12 +11,12 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="720.0" prefWidth="1180.0" styleClass="root-app" xmlns="http://javafx.com/fxml/1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clienteescritoriofitnutrition.FXMLPrincipalController">
+<BorderPane prefHeight="740.0" prefWidth="1240.0" styleClass="root-app" xmlns="http://javafx.com/fxml/1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clienteescritoriofitnutrition.FXMLPrincipalController">
     <stylesheets>
         <URL value="@/clienteescritoriofitnutrition/utilidad/estilo.css" />
     </stylesheets>
     <left>
-        <VBox prefWidth="200.0" styleClass="menu-lateral">
+        <VBox prefWidth="230.0" styleClass="menu-lateral">
             <children>
                 <HBox alignment="CENTER_LEFT" onMouseDragged="#arrastrarVentana" onMousePressed="#iniciarArrastre" spacing="8.0" styleClass="sidebar-header">
                     <children>

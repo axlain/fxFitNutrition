@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.paint.Color;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -24,7 +25,8 @@ public class ClienteEscritorioFitNutrition extends Application {
             
             //crear la escena 
             Scene escenaLogin = new Scene(vista); 
-            primaryStage.initStyle(StageStyle.UNDECORATED);
+            escenaLogin.setFill(Color.TRANSPARENT);
+            primaryStage.initStyle(StageStyle.TRANSPARENT);
             primaryStage.setScene(escenaLogin); 
             primaryStage.setTitle("Login");
             primaryStage.show(); 

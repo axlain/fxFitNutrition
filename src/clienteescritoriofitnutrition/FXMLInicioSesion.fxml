@@ -16,12 +16,12 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane prefHeight="600.0" prefWidth="960.0" styleClass="root-login" xmlns="http://javafx.com/fxml/1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clienteescritoriofitnutrition.FXMLInicioSesionController">
+<StackPane prefHeight="478.0" prefWidth="360.0" styleClass="root-login" xmlns="http://javafx.com/fxml/1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clienteescritoriofitnutrition.FXMLInicioSesionController">
     <stylesheets>
         <URL value="@/clienteescritoriofitnutrition/utilidad/estilo.css" />
     </stylesheets>
     <children>
-        <VBox maxHeight="478.0" maxWidth="360.0" prefHeight="478.0" prefWidth="360.0" styleClass="login-window">
+        <VBox prefHeight="478.0" prefWidth="360.0" styleClass="login-window">
             <children>
                 <HBox alignment="CENTER_LEFT" onMouseDragged="#arrastrarVentana" onMousePressed="#iniciarArrastre" spacing="8.0" styleClass="titlebar">
                     <children>
@@ -36,12 +36,12 @@
                     <children>
                         <StackPane styleClass="logo-tile">
                             <children>
-                                <ImageView fx:id="ivLogo" fitHeight="46.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true">
+                                <ImageView fx:id="ivLogo" fitHeight="62.0" fitWidth="62.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
                                         <Image url="@/clienteescritoriofitnutrition/imagenes/logo.png" />
                                     </image>
                                     <viewport>
-                                        <Rectangle2D height="560.0" minX="270.0" minY="285.0" width="560.0" />
+                                        <Rectangle2D height="700.0" minX="420.0" minY="410.0" width="600.0" />
                                     </viewport>
                                 </ImageView>
                             </children>

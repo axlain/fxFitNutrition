@@ -2,7 +2,7 @@
 
 .root-login,
 .mainFxmlClass {
-    -fx-background-color: #E8EDE9;
+    -fx-background-color: transparent;
     -fx-font-family: "Segoe UI";
 }
 
@@ -85,10 +85,10 @@
     -fx-border-color: #C8D4CA;
     -fx-border-radius: 15;
     -fx-border-width: 0.5;
-    -fx-min-width: 72;
-    -fx-min-height: 72;
-    -fx-max-width: 72;
-    -fx-max-height: 72;
+    -fx-min-width: 76;
+    -fx-min-height: 76;
+    -fx-max-width: 76;
+    -fx-max-height: 76;
     -fx-alignment: center;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.14), 12, 0, 0, 3);
 }
@@ -273,8 +273,8 @@
 .menu-lateral,
 .sidebar {
     -fx-background-color: #253E2C;
-    -fx-pref-width: 200;
-    -fx-min-width: 200;
+    -fx-pref-width: 230;
+    -fx-min-width: 230;
     -fx-border-color: transparent #1A2A1E transparent transparent;
     -fx-border-width: 0 1 0 0;
 }
@@ -283,9 +283,9 @@
     -fx-background-color: linear-gradient(to bottom, #354039 0%, #2C3730 100%);
     -fx-border-color: transparent transparent #1A2A1E transparent;
     -fx-border-width: 0 0 1 0;
-    -fx-pref-height: 38;
-    -fx-min-height: 38;
-    -fx-padding: 0 12;
+    -fx-pref-height: 42;
+    -fx-min-height: 42;
+    -fx-padding: 0 14;
 }
 
 .sidebar-search-box {
@@ -294,8 +294,8 @@
     -fx-border-color: #0F1F12;
     -fx-border-radius: 4;
     -fx-border-width: 0.5;
-    -fx-pref-height: 20;
-    -fx-font-size: 11px;
+    -fx-pref-height: 23;
+    -fx-font-size: 12px;
     -fx-text-fill: #8AB59A;
     -fx-prompt-text-fill: #52745B;
     -fx-padding: 0 8;
@@ -303,22 +303,22 @@
 
 .label-menu,
 .sidebar-grupo-label {
-    -fx-font-size: 9px;
+    -fx-font-size: 10px;
     -fx-font-family: "Segoe UI Semibold";
     -fx-font-weight: bold;
     -fx-text-fill: #648A70;
-    -fx-padding: 14 14 4 14;
+    -fx-padding: 16 18 5 18;
 }
 
 .boton-menu {
     -fx-background-color: transparent;
     -fx-background-radius: 0;
     -fx-border-width: 0;
-    -fx-padding: 7 14;
+    -fx-padding: 9 18;
     -fx-cursor: hand;
     -fx-alignment: center-left;
     -fx-text-fill: #9EC0A7;
-    -fx-font-size: 13px;
+    -fx-font-size: 14px;
 }
 
 .boton-menu:hover,
@@ -335,11 +335,11 @@
     -fx-background-color: #1E3A28;
     -fx-background-radius: 6;
     -fx-border-width: 0;
-    -fx-padding: 8 12;
+    -fx-padding: 9 16;
     -fx-cursor: hand;
     -fx-alignment: center-left;
     -fx-text-fill: #DCECE1;
-    -fx-font-size: 12px;
+    -fx-font-size: 13px;
 }
 
 .boton-salir:hover {
@@ -350,7 +350,7 @@
     -fx-background-color: transparent;
     -fx-border-color: #1A2A1E transparent transparent transparent;
     -fx-border-width: 1 0 0 0;
-    -fx-padding: 10 14;
+    -fx-padding: 12 18;
 }
 
 .sidebar-avatar {
@@ -359,27 +359,27 @@
     -fx-border-color: #27AE60;
     -fx-border-radius: 50%;
     -fx-border-width: 1;
-    -fx-min-width: 28;
-    -fx-min-height: 28;
-    -fx-max-width: 28;
-    -fx-max-height: 28;
+    -fx-min-width: 32;
+    -fx-min-height: 32;
+    -fx-max-width: 32;
+    -fx-max-height: 32;
     -fx-alignment: center;
 }
 
 .sidebar-avatar-text {
-    -fx-font-size: 11px;
+    -fx-font-size: 12px;
     -fx-font-weight: bold;
     -fx-text-fill: #BDE7C7;
 }
 
 .sidebar-username {
-    -fx-font-size: 11px;
+    -fx-font-size: 12px;
     -fx-text-fill: #A6CDB0;
     -fx-font-weight: bold;
 }
 
 .sidebar-userrole {
-    -fx-font-size: 9px;
+    -fx-font-size: 10px;
     -fx-text-fill: #648A70;
 }
 
