@@ -28,9 +28,4 @@ public class SegmentoDia {
         this.nombre = nombre;
     }
     
-    @Override
-    public String toString() {
-        return nombre != null ? nombre : "";
-    }
-    
 }

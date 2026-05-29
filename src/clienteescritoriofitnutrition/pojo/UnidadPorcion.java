@@ -28,9 +28,4 @@ public class UnidadPorcion {
         this.nombre = nombre;
     }
     
-    @Override
-    public String toString() {
-        return nombre != null ? nombre : "";
-    }
-    
 }

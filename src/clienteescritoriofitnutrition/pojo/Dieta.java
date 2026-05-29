@@ -96,9 +96,4 @@ public class Dieta {
     public void setAlimentos(List<DietaAlimento> alimentos) {
         this.alimentos = alimentos;
     }
-
-    @Override
-    public String toString() {
-        return nombre;
-    }
 }
