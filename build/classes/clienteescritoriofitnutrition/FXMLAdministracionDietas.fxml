@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane styleClass="modulo-root" xmlns="http://javafx.com/fxml/1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clienteescritoriofitnutrition.FXMLAdministracionDietasController">
+    <stylesheets>
+        <URL value="@/clienteescritoriofitnutrition/utilidad/estilo.css" />
+    </stylesheets>
+    <top>
+        <VBox spacing="12.0">
+            <padding>
+                <Insets bottom="14.0" left="16.0" right="16.0" top="14.0" />
+            </padding>
+            <Label styleClass="titulo-modulo" text="Administración de Dietas" />
+            <HBox alignment="CENTER_LEFT" spacing="8.0" styleClass="toolbar">
+                <TextField fx:id="tfBuscar" promptText="Buscar por nombre..." styleClass="campo-busqueda" HBox.hgrow="ALWAYS" />
+                <Button fx:id="btnBuscar" mnemonicParsing="false" onAction="#clickBuscar" styleClass="boton-secundario" text="Buscar" />
+                <Button fx:id="btnLimpiar" mnemonicParsing="false" onAction="#clickLimpiar" styleClass="boton-secundario" text="Limpiar" />
+                <Button fx:id="btnRegistrar" mnemonicParsing="false" onAction="#clickRegistrar" styleClass="boton-primario" text="+ Nueva Dieta" />
+                <Button fx:id="btnEditar" mnemonicParsing="false" onAction="#clickEditar" styleClass="boton-secundario" text="Editar" />
+                <Button fx:id="btnEliminar" mnemonicParsing="false" onAction="#clickEliminar" styleClass="boton-peligro" text="Eliminar" />
+            </HBox>
+        </VBox>
+    </top>
+    <center>
+        <TableView fx:id="tvDietas" styleClass="tabla-datos">
+            <columns>
+                <TableColumn fx:id="tcNombre" prefWidth="250.0" text="Nombre de la Dieta" />
+                <TableColumn fx:id="tcDescripcion" prefWidth="500.0" text="Descripción" />
+            </columns>
+            <BorderPane.margin>
+                <Insets bottom="18.0" left="18.0" right="18.0" />
+            </BorderPane.margin>
+        </TableView>
+    </center>
+</BorderPane>

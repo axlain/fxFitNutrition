@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane styleClass="modulo-root" xmlns="http://javafx.com/fxml/1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clienteescritoriofitnutrition.FXMLAgendaCitasController">
+    <stylesheets>
+        <URL value="@/clienteescritoriofitnutrition/utilidad/estilo.css" />
+    </stylesheets>
+    <top>
+        <VBox spacing="12.0">
+            <padding>
+                <Insets bottom="14.0" left="16.0" right="16.0" top="14.0" />
+            </padding>
+            <Label styleClass="titulo-modulo" text="Agenda de Citas" />
+            <HBox alignment="CENTER_LEFT" spacing="8.0" styleClass="toolbar">
+                <Button fx:id="btnFiltroTodas" mnemonicParsing="false" onAction="#clickFiltroTodas" styleClass="segmented-btn-activo" text="Todas" />
+                <Button fx:id="btnFiltroPendientes" mnemonicParsing="false" onAction="#clickFiltroPendientes" styleClass="segmented-btn" text="Pendientes" />
+                <Button fx:id="btnFiltroAtendidas" mnemonicParsing="false" onAction="#clickFiltroAtendidas" styleClass="segmented-btn" text="Atendidas" />
+                <TextField fx:id="tfBuscar" promptText="Buscar por paciente o médico..." styleClass="campo-busqueda" HBox.hgrow="ALWAYS" />
+                <Button fx:id="btnBuscar" mnemonicParsing="false" onAction="#clickBuscar" styleClass="boton-secundario" text="Buscar" />
+                <Button fx:id="btnLimpiar" mnemonicParsing="false" onAction="#clickLimpiar" styleClass="boton-secundario" text="Limpiar" />
+                <Button fx:id="btnRegistrar" mnemonicParsing="false" onAction="#clickRegistrar" styleClass="boton-primario" text="+ Nueva Cita" />
+                <Button fx:id="btnEditar" mnemonicParsing="false" onAction="#clickEditar" styleClass="boton-secundario" text="Editar / Reagendar" />
+                <Button fx:id="btnCancelar" mnemonicParsing="false" onAction="#clickCancelar" styleClass="boton-peligro" text="Cancelar Cita" />
+            </HBox>
+        </VBox>
+    </top>
+    <center>
+        <TableView fx:id="tvCitas" styleClass="tabla-datos">
+            <columns>
+                <TableColumn fx:id="tcFecha" prefWidth="120.0" text="Fecha" />
+                <TableColumn fx:id="tcHora" prefWidth="100.0" text="Hora" />
+                <TableColumn fx:id="tcPaciente" prefWidth="250.0" text="Paciente" />
+                <TableColumn fx:id="tcMedico" prefWidth="250.0" text="Médico" />
+                <TableColumn fx:id="tcEstado" prefWidth="130.0" text="Estado" />
+            </columns>
+            <BorderPane.margin>
+                <Insets bottom="18.0" left="18.0" right="18.0" />
+            </BorderPane.margin>
+        </TableView>
+    </center>
+</BorderPane>

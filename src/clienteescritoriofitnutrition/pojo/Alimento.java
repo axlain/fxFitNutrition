@@ -69,5 +69,16 @@ public class Alimento {
         this.unidadPorcion = unidadPorcion;
     }
     
+    public String getPorcionUnidad() {
+        if (unidadPorcion != null && unidadPorcion.getNombre() != null) {
+            return String.format("%.2f %s", porcion, unidadPorcion.getNombre());
+        }
+        return String.valueOf(porcion);
+    }
     
+    @Override
+    public String toString() {
+        return nombre != null ? nombre : "";
+    }
+
 }

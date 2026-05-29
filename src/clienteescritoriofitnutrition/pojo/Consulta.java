@@ -139,4 +139,17 @@ public class Consulta {
     public void setDieta(Dieta dieta) {
         this.dieta = dieta;
     }
+
+    public String getNombrePaciente() {
+        return paciente != null ? paciente.getNombreCompleto() : "";
+    }
+
+    public String getNombreMedico() {
+        return medico != null ? medico.getNombreCompleto() : "";
+    }
+
+    public String getNombreDieta() {
+        return dieta != null && dieta.getNombre() != null ? dieta.getNombre() : "";
+    }
+
 }
