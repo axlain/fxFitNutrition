@@ -90,28 +90,5 @@ public class DietaAlimento {
         this.segmentoDia = segmentoDia;
     }
     
-    public String getNombreSegmento() {
-        return segmentoDia != null && segmentoDia.getNombre() != null ? segmentoDia.getNombre() : "";
-    }
-
-    public String getNombreAlimento() {
-        return alimento != null && alimento.getNombre() != null ? alimento.getNombre() : "";
-    }
-
-    public String getPorcionString() {
-        if (alimento != null && alimento.getUnidadPorcion() != null) {
-            return String.format("%.2f %s", cantidad, alimento.getUnidadPorcion().getNombre());
-        }
-        return String.valueOf(cantidad);
-    }
-
-    public String getCaloriasCalculadas() {
-        if (alimento != null && alimento.getPorcion() != null && alimento.getCaloriasPorPorcion() != null) {
-            double cal = (cantidad / alimento.getPorcion()) * alimento.getCaloriasPorPorcion();
-            return String.format("%.2f kcal", cal);
-        }
-        return "";
-    }
     
-
 }

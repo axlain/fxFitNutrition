@@ -166,42 +166,4 @@ public class CitaImp {
             return r;
         }
     }
-
-    public static List<Cita> obtenerTodas() {
-        String url = Constantes.URL_WS + "cita/obtener-todas";
-        RespuestaHTTP resp = ConexionAPI.peticionGET(url);
-
-        if (resp.getCodigo() == HttpURLConnection.HTTP_OK) {
-            try {
-                Gson gson = new Gson();
-                Type listType = new TypeToken<List<Cita>>() {}.getType();
-                return gson.fromJson(resp.getContenido(), listType);
-            } catch (Exception e) {
-                return null;
-            }
-        }
-        return null;
-    }
-
-    public static List<Cita> obtenerPorFecha(String fecha) {
-        if (fecha == null) fecha = "";
-        try {
-            String parametro = URLEncoder.encode(fecha.trim(), StandardCharsets.UTF_8.name());
-            String url = Constantes.URL_WS + "cita/obtener-por-fecha/" + parametro;
-            RespuestaHTTP resp = ConexionAPI.peticionGET(url);
-
-            if (resp.getCodigo() == HttpURLConnection.HTTP_OK) {
-                Gson gson = new Gson();
-                Type listType = new TypeToken<List<Cita>>() {}.getType();
-                return gson.fromJson(resp.getContenido(), listType);
-            }
-        } catch (Exception e) {
-            return null;
-        }
-        return null;
-    }
-
-    public static Respuesta editar(Cita cita) {
-        return reagendar(cita);
-    }
 }
