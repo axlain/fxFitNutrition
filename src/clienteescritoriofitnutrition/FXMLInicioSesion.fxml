@@ -1,80 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.net.URL?>
-<?import javafx.geometry.Rectangle2D?>
 <?import javafx.geometry.Insets?>
+<?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane prefHeight="478.0" prefWidth="360.0" styleClass="root-login" xmlns="http://javafx.com/fxml/1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clienteescritoriofitnutrition.FXMLInicioSesionController">
+<AnchorPane prefHeight="620.0" prefWidth="520.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/fxml/1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clienteescritoriofitnutrition.FXMLInicioSesionController">
     <stylesheets>
         <URL value="@/clienteescritoriofitnutrition/utilidad/estilo.css" />
     </stylesheets>
     <children>
-        <VBox prefHeight="478.0" prefWidth="360.0" styleClass="login-window">
+        <VBox alignment="CENTER" spacing="17.0" styleClass="login-card" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="50.0">
             <children>
-                <HBox alignment="CENTER_LEFT" onMouseDragged="#arrastrarVentana" onMousePressed="#iniciarArrastre" spacing="8.0" styleClass="titlebar">
+                <StackPane styleClass="logo-tile">
                     <children>
-                        <Button mnemonicParsing="false" onAction="#clickCerrarAplicacion" styleClass="btn-semaforo-rojo" />
-                        <Button mnemonicParsing="false" onAction="#clickMinimizar" styleClass="btn-semaforo-amarillo" />
-                        <Button mnemonicParsing="false" onAction="#clickMaximizar" styleClass="btn-semaforo-verde" />
-                        <Region prefWidth="38.0" />
-                        <Label styleClass="titlebar-texto" text="FitNutrition - Iniciar sesion" />
+                        <ImageView fx:id="ivLogo" fitHeight="36.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@/clienteescritoriofitnutrition/imagenes/logo.png" />
+                            </image>
+                            <viewport>
+                                <Rectangle2D height="700.0" minX="420.0" minY="410.0" width="600.0" />
+                            </viewport>
+                        </ImageView>
                     </children>
-                </HBox>
-                <VBox alignment="CENTER" spacing="13.0" styleClass="login-card">
+                </StackPane>
+                <VBox alignment="CENTER" spacing="4.0">
                     <children>
-                        <StackPane styleClass="logo-tile">
-                            <children>
-                                <ImageView fx:id="ivLogo" fitHeight="62.0" fitWidth="62.0" pickOnBounds="true" preserveRatio="true">
-                                    <image>
-                                        <Image url="@/clienteescritoriofitnutrition/imagenes/logo.png" />
-                                    </image>
-                                    <viewport>
-                                        <Rectangle2D height="700.0" minX="420.0" minY="410.0" width="600.0" />
-                                    </viewport>
-                                </ImageView>
-                            </children>
-                        </StackPane>
-                        <VBox alignment="CENTER" spacing="2.0">
-                            <children>
-                                <Label styleClass="label-brand" text="FitNutrition" />
-                                <Label styleClass="label-subtitulo" text="Sistema de gestion clinica" />
-                            </children>
-                        </VBox>
-                        <Region styleClass="hr-marca" />
-                        <VBox spacing="6.0">
-                            <children>
-                                <Label styleClass="label-campo" text="Numero de personal" />
-                                <TextField fx:id="tfUsuario" promptText="NP-00001" styleClass="campo-texto" />
-                            </children>
-                        </VBox>
-                        <VBox spacing="6.0">
-                            <children>
-                                <Label styleClass="label-campo" text="Contrasena" />
-                                <PasswordField fx:id="pfContrasena" promptText="********" styleClass="campo-texto" />
-                            </children>
-                        </VBox>
-                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clicIniciarSesion" styleClass="boton-iniciar" text="Iniciar sesion" />
-                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickCancelar" styleClass="boton-secundario" text="Cancelar" />
-                        <CheckBox mnemonicParsing="false" selected="true" text="Recordar numero de personal" />
-                        <Label fx:id="lbError" styleClass="label-error" text="" wrapText="true" />
+                        <Label styleClass="label-titulo" text="FITNUTRITION" />
+                        <Label styleClass="label-subtitulo" text="Acceso al sistema clinico" />
                     </children>
-                    <padding>
-                        <Insets bottom="24.0" left="32.0" right="32.0" top="30.0" />
-                    </padding>
                 </VBox>
+                <Region styleClass="login-separator" />
+                <VBox spacing="7.0">
+                    <children>
+                        <Label styleClass="label-campo" text="NUMERO PERSONAL" />
+                        <TextField fx:id="tfUsuario" promptText="NP-00001" styleClass="campo-texto" />
+                    </children>
+                </VBox>
+                <VBox spacing="7.0">
+                    <children>
+                        <Label styleClass="label-campo" text="CONTRASENA" />
+                        <PasswordField fx:id="pfContrasena" promptText="********" styleClass="campo-texto" />
+                    </children>
+                </VBox>
+                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clicIniciarSesion" styleClass="boton-iniciar" text="Ingresar" />
+                <Label fx:id="lbError" alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="label-error" text="" wrapText="true" />
+                <Region VBox.vgrow="ALWAYS" />
             </children>
+            <padding>
+                <Insets bottom="32.0" left="32.0" right="32.0" top="36.0" />
+            </padding>
         </VBox>
     </children>
-</StackPane>
+</AnchorPane>

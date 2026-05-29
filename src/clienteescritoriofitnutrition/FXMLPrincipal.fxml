@@ -27,7 +27,7 @@
                     </children>
                 </HBox>
                 <Label styleClass="label-menu" text="PRINCIPAL" />
-                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="boton-menu" text="Dashboard" />
+                <Button fx:id="btnDashboard" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickDashboard" styleClass="boton-menu" text="Dashboard" />
                 <Button fx:id="btnPacientes" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickPacientes" styleClass="boton-menu" text="Pacientes" />
                 <Button fx:id="btnMedicos" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickMedicos" styleClass="boton-menu" text="Medicos" />
                 <Label styleClass="label-menu" text="OPERACION" />
@@ -69,7 +69,7 @@
             <center>
                 <BorderPane fx:id="bpContenedor" styleClass="contenedor-modulo">
                     <center>
-                        <VBox spacing="16.0">
+                        <VBox fx:id="vbDashboard" spacing="16.0">
                             <padding>
                                 <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
                             </padding>
@@ -82,9 +82,9 @@
                                                     <Label styleClass="stat-icon-text" text="P" />
                                                 </children>
                                             </StackPane>
-                                            <Label styleClass="label-stat-valor" text="142" />
+                                            <Label fx:id="lbTotalPacientes" styleClass="label-stat-valor" text="0" />
                                             <Label styleClass="label-stat-nombre" text="Pacientes activos" />
-                                            <Label styleClass="label-stat-delta" text="+4 este mes" />
+                                            <Label fx:id="lbActivosPacientes" styleClass="label-stat-delta" text="0 activos" />
                                         </children>
                                     </VBox>
                                     <VBox spacing="3.0" styleClass="stat-card" HBox.hgrow="ALWAYS">
@@ -94,9 +94,9 @@
                                                     <Label styleClass="stat-icon-text" text="M" />
                                                 </children>
                                             </StackPane>
-                                            <Label styleClass="label-stat-valor" text="8" />
+                                            <Label fx:id="lbTotalMedicos" styleClass="label-stat-valor" text="0" />
                                             <Label styleClass="label-stat-nombre" text="Medicos" />
-                                            <Label styleClass="label-stat-delta" text="2 en consulta" />
+                                            <Label fx:id="lbMedicosActivos" styleClass="label-stat-delta" text="0 activos" />
                                         </children>
                                     </VBox>
                                     <VBox spacing="3.0" styleClass="stat-card" HBox.hgrow="ALWAYS">
@@ -106,9 +106,9 @@
                                                     <Label styleClass="stat-icon-text" text="C" />
                                                 </children>
                                             </StackPane>
-                                            <Label styleClass="label-stat-valor" text="23" />
+                                            <Label fx:id="lbCitasHoy" styleClass="label-stat-valor" text="0" />
                                             <Label styleClass="label-stat-nombre" text="Citas hoy" />
-                                            <Label styleClass="label-stat-delta" text="6 pendientes" />
+                                            <Label fx:id="lbCitasPendientes" styleClass="label-stat-delta" text="0 pendientes" />
                                         </children>
                                     </VBox>
                                     <VBox spacing="3.0" styleClass="stat-card" HBox.hgrow="ALWAYS">
@@ -118,9 +118,9 @@
                                                     <Label styleClass="stat-icon-text" text="N" />
                                                 </children>
                                             </StackPane>
-                                            <Label styleClass="label-stat-valor" text="317" />
+                                            <Label fx:id="lbConsultasTotal" styleClass="label-stat-valor" text="0" />
                                             <Label styleClass="label-stat-nombre" text="Consultas totales" />
-                                            <Label styleClass="label-stat-delta" text="+12 esta semana" />
+                                            <Label fx:id="lbConsultasHoy" styleClass="label-stat-delta" text="0 hoy" />
                                         </children>
                                     </VBox>
                                 </children>
@@ -136,25 +136,7 @@
                                                     <Label styleClass="label-stat-delta" text="Ver todos" />
                                                 </children>
                                             </HBox>
-                                            <VBox spacing="12.0" styleClass="panel-body">
-                                                <children>
-                                                    <HBox alignment="CENTER_LEFT" spacing="12.0">
-                                                        <Label prefWidth="170.0" text="Ana Cordoba" />
-                                                        <Label prefWidth="120.0" styleClass="label-subtitulo" text="Dr. Vega" />
-                                                        <Label styleClass="pill-activo" text="Activo" />
-                                                    </HBox>
-                                                    <HBox alignment="CENTER_LEFT" spacing="12.0">
-                                                        <Label prefWidth="170.0" text="Luis Mendez" />
-                                                        <Label prefWidth="120.0" styleClass="label-subtitulo" text="Dra. Rios" />
-                                                        <Label styleClass="pill-activo" text="Activo" />
-                                                    </HBox>
-                                                    <HBox alignment="CENTER_LEFT" spacing="12.0">
-                                                        <Label prefWidth="170.0" text="Maria Salas" />
-                                                        <Label prefWidth="120.0" styleClass="label-subtitulo" text="Dr. Vega" />
-                                                        <Label styleClass="pill-pendiente" text="Pendiente" />
-                                                    </HBox>
-                                                </children>
-                                            </VBox>
+                                            <VBox fx:id="vbPacientesRecientes" spacing="12.0" styleClass="panel-body" />
                                         </children>
                                     </VBox>
                                     <VBox styleClass="panel" HBox.hgrow="ALWAYS">
@@ -163,43 +145,10 @@
                                                 <children>
                                                     <Label styleClass="label-panel" text="Citas del dia" />
                                                     <Region HBox.hgrow="ALWAYS" />
-                                                    <Label styleClass="label-subtitulo" text="miercoles 27 mayo" />
+                                                    <Label fx:id="lbFechaCitas" styleClass="label-subtitulo" text="" />
                                                 </children>
                                             </HBox>
-                                            <VBox spacing="10.0" styleClass="panel-body">
-                                                <children>
-                                                    <HBox alignment="CENTER_LEFT" spacing="12.0">
-                                                        <Label prefWidth="52.0" styleClass="label-stat-valor" text="09:00" />
-                                                        <VBox HBox.hgrow="ALWAYS">
-                                                            <children>
-                                                                <Label text="Ana Cordoba" />
-                                                                <Label styleClass="label-subtitulo" text="Dr. Vega - Consulta nutricional" />
-                                                            </children>
-                                                        </VBox>
-                                                        <Label styleClass="pill-confirmada" text="Confirmada" />
-                                                    </HBox>
-                                                    <HBox alignment="CENTER_LEFT" spacing="12.0">
-                                                        <Label prefWidth="52.0" styleClass="label-stat-valor" text="10:30" />
-                                                        <VBox HBox.hgrow="ALWAYS">
-                                                            <children>
-                                                                <Label text="Luis Mendez" />
-                                                                <Label styleClass="label-subtitulo" text="Dra. Rios - Seguimiento" />
-                                                            </children>
-                                                        </VBox>
-                                                        <Label styleClass="pill-pendiente" text="Pendiente" />
-                                                    </HBox>
-                                                    <HBox alignment="CENTER_LEFT" spacing="12.0">
-                                                        <Label prefWidth="52.0" styleClass="label-stat-valor" text="12:00" />
-                                                        <VBox HBox.hgrow="ALWAYS">
-                                                            <children>
-                                                                <Label text="Maria Salas" />
-                                                                <Label styleClass="label-subtitulo" text="Dr. Vega - Primera vez" />
-                                                            </children>
-                                                        </VBox>
-                                                        <Label styleClass="pill-confirmada" text="Confirmada" />
-                                                    </HBox>
-                                                </children>
-                                            </VBox>
+                                            <VBox fx:id="vbCitasHoy" spacing="10.0" styleClass="panel-body" />
                                         </children>
                                     </VBox>
                                 </children>

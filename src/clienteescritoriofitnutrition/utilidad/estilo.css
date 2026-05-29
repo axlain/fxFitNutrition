@@ -682,3 +682,107 @@
     -fx-border-width: 0.5;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.22), 28, 0.05, 0, 8);
 }
+
+/* Login clean clinical style */
+.mainFxmlClass {
+    -fx-background-color: #EBF2EE;
+}
+
+.login-card {
+    -fx-background-color: white;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: rgba(0,0,0,0.06);
+    -fx-border-width: 0.5;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.09), 32, 0.1, 0, 6);
+    -fx-padding: 36 32 32 32;
+}
+
+.logo-tile {
+    -fx-background-color: #1e8a4a;
+    -fx-background-radius: 16;
+    -fx-min-width: 64;
+    -fx-min-height: 64;
+    -fx-max-width: 64;
+    -fx-max-height: 64;
+    -fx-effect: dropshadow(gaussian, rgba(30,138,74,0.35), 18, 0.2, 0, 5);
+    -fx-alignment: center;
+}
+
+.login-card .label-titulo {
+    -fx-font-family: "Segoe UI Black", "Segoe UI Semibold", sans-serif;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f1f14;
+}
+
+.login-card .label-subtitulo {
+    -fx-font-size: 12px;
+    -fx-text-fill: #7a9484;
+}
+
+.login-separator {
+    -fx-background-color: linear-gradient(to right, transparent, #c8ddd0, transparent);
+    -fx-pref-height: 1;
+    -fx-max-height: 1;
+}
+
+.login-card .label-campo {
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #5a7566;
+}
+
+.login-card .campo-texto {
+    -fx-font-size: 13px;
+    -fx-pref-height: 42;
+    -fx-padding: 0 12 0 38;
+    -fx-background-color: #f5f9f6;
+    -fx-background-radius: 11;
+    -fx-border-color: #d8e6de;
+    -fx-border-radius: 11;
+    -fx-border-width: 1.5;
+    -fx-text-fill: #0f1f14;
+    -fx-prompt-text-fill: #aabfb3;
+}
+
+.login-card .campo-texto:focused {
+    -fx-border-color: #27AE60;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(39,174,96,0.14), 10, 0, 0, 0);
+}
+
+.login-card .campo-texto:hover {
+    -fx-border-color: #a0c8b0;
+}
+
+.login-card .boton-iniciar {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-background-color: #1e8a4a;
+    -fx-background-radius: 11;
+    -fx-border-radius: 11;
+    -fx-border-width: 0;
+    -fx-pref-height: 46;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(30,138,74,0.28), 14, 0.15, 0, 4);
+}
+
+.login-card .boton-iniciar:hover {
+    -fx-background-color: #27AE60;
+    -fx-effect: dropshadow(gaussian, rgba(39,174,96,0.35), 18, 0.2, 0, 5);
+}
+
+.login-card .boton-iniciar:pressed {
+    -fx-background-color: #186b3a;
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+.login-card .label-error {
+    -fx-font-size: 12px;
+    -fx-text-fill: #A32D2D;
+    -fx-alignment: center;
+    -fx-wrap-text: true;
+}

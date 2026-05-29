@@ -18,7 +18,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class FXMLInicioSesionController implements Initializable {
 
@@ -110,10 +112,14 @@ public class FXMLInicioSesionController implements Initializable {
             controlador.inicializarSesion(sesion);
 
             Scene escenaPrincipal = new Scene(vista);
-            Stage stPrincipal = (Stage) tfUsuario.getScene().getWindow();
+            escenaPrincipal.setFill(Color.TRANSPARENT);
+            Stage stLogin = (Stage) tfUsuario.getScene().getWindow();
+            Stage stPrincipal = new Stage();
+            stPrincipal.initStyle(StageStyle.TRANSPARENT);
             stPrincipal.setScene(escenaPrincipal);
             stPrincipal.setTitle("FIT NUTRITION - Inicio");
             stPrincipal.show();
+            stLogin.close();
         } catch (IOException ex) {
             ex.printStackTrace();
             Utilidades.mostrarAlertaSimple("Error de navegacion", "No se pudo cargar la pantalla principal.", Alert.AlertType.ERROR);
