@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="560.0" prefWidth="900.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/fxml/1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clienteescritoriofitnutrition.FXMLHistorialClinicoController">
+    <stylesheets>
+        <URL value="@/clienteescritoriofitnutrition/utilidad/estilo.css" />
+    </stylesheets>
+    <top>
+        <VBox spacing="6.0" styleClass="encabezado-modal">
+            <padding>
+                <Insets bottom="16.0" left="22.0" right="22.0" top="20.0" />
+            </padding>
+            <Label styleClass="titulo-modulo" text="Historial clinico" />
+            <Label fx:id="lbPaciente" styleClass="label-paciente" text="Paciente" />
+            <Label fx:id="lbCodigo" styleClass="texto-ayuda" text="Codigo de acceso" />
+        </VBox>
+    </top>
+    <center>
+        <TableView fx:id="tvConsultas" styleClass="tabla-datos">
+            <columns>
+                <TableColumn fx:id="tcFecha" prefWidth="150.0" text="Fecha" />
+                <TableColumn fx:id="tcPeso" prefWidth="100.0" text="Peso" />
+                <TableColumn fx:id="tcEstatura" prefWidth="110.0" text="Estatura" />
+                <TableColumn fx:id="tcTalla" prefWidth="90.0" text="Talla" />
+                <TableColumn fx:id="tcImc" prefWidth="90.0" text="IMC" />
+                <TableColumn fx:id="tcObservaciones" prefWidth="330.0" text="Observaciones" />
+            </columns>
+            <BorderPane.margin>
+                <Insets bottom="16.0" left="22.0" right="22.0" top="16.0" />
+            </BorderPane.margin>
+        </TableView>
+    </center>
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" styleClass="barra-modal">
+            <padding>
+                <Insets bottom="18.0" left="22.0" right="22.0" top="14.0" />
+            </padding>
+            <Button mnemonicParsing="false" onAction="#clickCerrar" styleClass="boton-secundario" text="Cerrar" />
+        </HBox>
+    </bottom>
+</BorderPane>

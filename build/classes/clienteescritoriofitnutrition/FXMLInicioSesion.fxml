@@ -1,39 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.image.*?>
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="400.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/fxml/1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clienteescritoriofitnutrition.FXMLInicioSesionController">
+<StackPane prefHeight="600.0" prefWidth="960.0" styleClass="root-login" xmlns="http://javafx.com/fxml/1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clienteescritoriofitnutrition.FXMLInicioSesionController">
     <stylesheets>
         <URL value="@/clienteescritoriofitnutrition/utilidad/estilo.css" />
     </stylesheets>
-   <children>
-      <VBox alignment="CENTER" layoutX="50.0" layoutY="30.0" prefHeight="440.0" prefWidth="300.0" spacing="15.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="30.0">
-         <children>
-            <ImageView fx:id="ivLogo" fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../imagenes/logo.png" />
-               </image>
-            </ImageView>
-            
-            <Label styleClass="label-titulo" text="FITNUTRITION" />
-            <Label styleClass="label-subtitulo" text="Bienvenido, identifícate" />
-            
-            <Separator prefWidth="200.0" />
-            
-            <TextField fx:id="tfUsuario" promptText="Número Personal" styleClass="campo-texto" />
-            
-            <PasswordField fx:id="pfContrasena" promptText="Contraseña" styleClass="campo-texto" />
-            
-            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clicIniciarSesion" prefHeight="40.0" styleClass="boton-iniciar" text="Iniciar Sesión" />
-            
-            <Label fx:id="lbError" styleClass="label-error" text="" wrapText="true" />
-         </children>
-      </VBox>
-   </children>
-</AnchorPane>
+    <children>
+        <VBox maxHeight="478.0" maxWidth="360.0" prefHeight="478.0" prefWidth="360.0" styleClass="login-window">
+            <children>
+                <HBox alignment="CENTER_LEFT" onMouseDragged="#arrastrarVentana" onMousePressed="#iniciarArrastre" spacing="8.0" styleClass="titlebar">
+                    <children>
+                        <Button mnemonicParsing="false" onAction="#clickCerrarAplicacion" styleClass="btn-semaforo-rojo" />
+                        <Button mnemonicParsing="false" onAction="#clickMinimizar" styleClass="btn-semaforo-amarillo" />
+                        <Button mnemonicParsing="false" onAction="#clickMaximizar" styleClass="btn-semaforo-verde" />
+                        <Region prefWidth="38.0" />
+                        <Label styleClass="titlebar-texto" text="FitNutrition - Iniciar sesion" />
+                    </children>
+                </HBox>
+                <VBox alignment="CENTER" spacing="13.0" styleClass="login-card">
+                    <children>
+                        <StackPane styleClass="logo-tile">
+                            <children>
+                                <ImageView fx:id="ivLogo" fitHeight="46.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@/clienteescritoriofitnutrition/imagenes/logo.png" />
+                                    </image>
+                                    <viewport>
+                                        <Rectangle2D height="560.0" minX="270.0" minY="285.0" width="560.0" />
+                                    </viewport>
+                                </ImageView>
+                            </children>
+                        </StackPane>
+                        <VBox alignment="CENTER" spacing="2.0">
+                            <children>
+                                <Label styleClass="label-brand" text="FitNutrition" />
+                                <Label styleClass="label-subtitulo" text="Sistema de gestion clinica" />
+                            </children>
+                        </VBox>
+                        <Region styleClass="hr-marca" />
+                        <VBox spacing="6.0">
+                            <children>
+                                <Label styleClass="label-campo" text="Numero de personal" />
+                                <TextField fx:id="tfUsuario" promptText="NP-00001" styleClass="campo-texto" />
+                            </children>
+                        </VBox>
+                        <VBox spacing="6.0">
+                            <children>
+                                <Label styleClass="label-campo" text="Contrasena" />
+                                <PasswordField fx:id="pfContrasena" promptText="********" styleClass="campo-texto" />
+                            </children>
+                        </VBox>
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clicIniciarSesion" styleClass="boton-iniciar" text="Iniciar sesion" />
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickCancelar" styleClass="boton-secundario" text="Cancelar" />
+                        <CheckBox mnemonicParsing="false" selected="true" text="Recordar numero de personal" />
+                        <Label fx:id="lbError" styleClass="label-error" text="" wrapText="true" />
+                    </children>
+                    <padding>
+                        <Insets bottom="24.0" left="32.0" right="32.0" top="30.0" />
+                    </padding>
+                </VBox>
+            </children>
+        </VBox>
+    </children>
+</StackPane>

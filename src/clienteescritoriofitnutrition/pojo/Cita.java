@@ -122,7 +122,18 @@ public class Cita {
         this.medico = medico;
     }
 
+    public String getNombrePaciente() {
+        return paciente != null ? paciente.getNombreCompleto() : "";
+    }
+
+    public String getNombreMedico() {
+        return medico != null ? medico.getNombreCompleto() : "";
+    }
+
+    public String getNombreEstado() {
+        return estadoCita != null && estadoCita.getNombre() != null ? estadoCita.getNombre() : "";
+    }
     
-    
+
     
 }
