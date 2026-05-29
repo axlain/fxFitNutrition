@@ -95,4 +95,60 @@ public class ConsultaImp {
             return r;
         }
     }
+
+    public static List<Consulta> obtenerTodas() {
+        String url = Constantes.URL_WS + "consulta/obtener-todas";
+        RespuestaHTTP resp = ConexionAPI.peticionGET(url);
+        
+        if (resp.getCodigo() == HttpURLConnection.HTTP_OK) {
+            try {
+                Gson gson = new Gson();
+                Type listType = new TypeToken<List<Consulta>>() {}.getType();
+                return gson.fromJson(resp.getContenido(), listType);
+            } catch (Exception e) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    public static List<Consulta> obtenerPorIdPaciente(Integer idPaciente) {
+        return obtenerHistorialPaciente(idPaciente);
+    }
+
+    public static Respuesta registrar(Consulta consulta) {
+        return registrarConsulta(consulta);
+    }
+
+    public static Respuesta editar(Consulta consulta) {
+        Respuesta respuesta = new Respuesta();
+        respuesta.setError(true);
+        String url = Constantes.URL_WS + "consulta/editar";
+
+        try {
+            Gson gson = new Gson();
+            String json = gson.toJson(consulta);
+
+            RespuestaHTTP resp = ConexionAPI.peticionBody(
+                    url,
+                    Constantes.PETICION_PUT,
+                    json,
+                    Constantes.APPLICATION_JSON
+            );
+
+            if (resp.getCodigo() == HttpURLConnection.HTTP_OK) {
+                return parsearRespuesta(resp.getContenido());
+            } else {
+                respuesta.setMensaje(Utilidades.obtenerMensajeErrorHTTP(
+                        resp.getCodigo(),
+                        "No es posible editar la consulta en este momento."
+                ));
+            }
+        } catch (Exception e) {
+            respuesta.setMensaje("Error al editar la consulta: " + e.getMessage());
+        }
+
+        return respuesta;
+    }
+
 }

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane id="AnchorPane" prefHeight="650.0" prefWidth="700.0" styleClass="fondo-formulario" xmlns="http://javafx.com/fxml/1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clienteescritoriofitnutrition.FXMLFormularioDietaController">
+    <stylesheets>
+        <URL value="@/clienteescritoriofitnutrition/utilidad/estilo.css" />
+    </stylesheets>
+    <children>
+        <VBox layoutX="32.0" layoutY="25.0" prefWidth="636.0" spacing="16.0">
+            <Label styleClass="titulo-formulario" text="Información de la Dieta" />
+            
+            <GridPane hgap="16.0" vgap="16.0">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                    <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                </rowConstraints>
+                <children>
+                    <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                        <children>
+                            <Label styleClass="etiqueta-campo" text="Nombre de la Dieta (*)" />
+                            <TextField fx:id="tfNombre" layoutY="22.0" prefHeight="35.0" styleClass="campo-texto" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                        </children>
+                    </AnchorPane>
+                    <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+                        <children>
+                            <Label styleClass="etiqueta-campo" text="Descripción" />
+                            <TextField fx:id="tfDescripcion" layoutY="22.0" prefHeight="35.0" styleClass="campo-texto" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                        </children>
+                    </AnchorPane>
+                </children>
+            </GridPane>
+
+            <Label styleClass="titulo-formulario" text="Alimentos Asignados" />
+            <HBox spacing="12.0" alignment="CENTER_LEFT">
+                <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                    <Label styleClass="etiqueta-campo" text="Segmento" />
+                    <ComboBox fx:id="cbSegmento" prefHeight="35.0" prefWidth="150.0" promptText="Ej: Desayuno" styleClass="combo-box" />
+                </VBox>
+                <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                    <Label styleClass="etiqueta-campo" text="Alimento" />
+                    <ComboBox fx:id="cbAlimento" prefHeight="35.0" prefWidth="250.0" promptText="Seleccionar alimento" styleClass="combo-box" />
+                </VBox>
+                <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                    <Label styleClass="etiqueta-campo" text="Cantidad" />
+                    <TextField fx:id="tfCantidad" prefHeight="35.0" prefWidth="80.0" promptText="0" styleClass="campo-texto" />
+                </VBox>
+                <VBox spacing="4.0" alignment="BOTTOM_CENTER">
+                    <Button mnemonicParsing="false" onAction="#clickAgregarAlimento" prefHeight="35.0" styleClass="boton-secundario" text="Añadir" />
+                </VBox>
+            </HBox>
+
+            <TableView fx:id="tvAlimentosDieta" prefHeight="200.0" styleClass="tabla-datos">
+                <columns>
+                    <TableColumn fx:id="tcSegmento" prefWidth="120.0" text="Segmento" />
+                    <TableColumn fx:id="tcAlimento" prefWidth="250.0" text="Alimento" />
+                    <TableColumn fx:id="tcPorcion" prefWidth="120.0" text="Porción / Cant." />
+                    <TableColumn fx:id="tcCalorias" prefWidth="100.0" text="Calorías" />
+                </columns>
+            </TableView>
+            <HBox alignment="CENTER_RIGHT" spacing="12.0">
+                <Button mnemonicParsing="false" onAction="#clickQuitarAlimento" styleClass="boton-peligro" text="Quitar Seleccionado" />
+            </HBox>
+
+            <HBox alignment="CENTER_RIGHT" spacing="12.0">
+                <padding>
+                    <Insets top="16.0" />
+                </padding>
+                <Button mnemonicParsing="false" onAction="#clickCancelar" styleClass="boton-secundario" text="Cancelar" />
+                <Button mnemonicParsing="false" onAction="#clickGuardar" styleClass="boton-primario" text="Guardar" />
+            </HBox>
+        </VBox>
+    </children>
+</AnchorPane>
