@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="560.0" prefWidth="860.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/fxml/1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clienteescritoriofitnutrition.FXMLReasignarPacientesController">
+    <stylesheets>
+        <URL value="@/clienteescritoriofitnutrition/utilidad/estilo.css" />
+    </stylesheets>
+    <top>
+        <VBox spacing="12.0" styleClass="encabezado-modal">
+            <padding>
+                <Insets bottom="16.0" left="22.0" right="22.0" top="20.0" />
+            </padding>
+            <Label styleClass="titulo-modulo" text="Reasignar pacientes" />
+            <Label styleClass="texto-ayuda" text="Selecciona un medico origen y uno destino para conservar la continuidad de atencion." />
+            <HBox spacing="12.0" styleClass="form-card">
+                <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                    <Label styleClass="label-campo" text="Medico origen" />
+                    <ComboBox fx:id="cbMedicoOrigen" maxWidth="1.7976931348623157E308" promptText="Selecciona medico origen" styleClass="combo-box-estilo" />
+                </VBox>
+                <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                    <Label styleClass="label-campo" text="Medico destino" />
+                    <ComboBox fx:id="cbMedicoDestino" maxWidth="1.7976931348623157E308" promptText="Selecciona medico destino" styleClass="combo-box-estilo" />
+                </VBox>
+            </HBox>
+        </VBox>
+    </top>
+    <center>
+        <VBox spacing="10.0">
+            <padding>
+                <Insets bottom="16.0" left="22.0" right="22.0" top="16.0" />
+            </padding>
+            <Label styleClass="label-seccion" text="Pacientes asignados al medico origen" />
+            <TableView fx:id="tvPacientes" styleClass="tabla-datos" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="tcCodigo" prefWidth="120.0" text="Codigo" />
+                    <TableColumn fx:id="tcNombre" prefWidth="260.0" text="Nombre" />
+                    <TableColumn fx:id="tcCorreo" prefWidth="240.0" text="Correo" />
+                    <TableColumn fx:id="tcMedico" prefWidth="200.0" text="Medico actual" />
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" spacing="10.0" styleClass="barra-modal">
+            <padding>
+                <Insets bottom="18.0" left="22.0" right="22.0" top="14.0" />
+            </padding>
+            <Button mnemonicParsing="false" onAction="#clickCancelar" styleClass="boton-secundario" text="Cancelar" />
+            <Button mnemonicParsing="false" onAction="#clickReasignar" styleClass="boton-secundario" text="Reasignar" />
+            <Button mnemonicParsing="false" onAction="#clickReasignarYDarBaja" styleClass="boton-peligro" text="Reasignar y dar de baja" />
+        </HBox>
+    </bottom>
+</BorderPane>
