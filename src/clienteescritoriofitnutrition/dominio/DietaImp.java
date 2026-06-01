@@ -11,6 +11,8 @@ import clienteescritoriofitnutrition.utilidad.Utilidades;
 
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class DietaImp {
@@ -91,6 +93,34 @@ public class DietaImp {
         }
 
         return respuesta;
+    }
+    
+    public static List<Dieta> buscar(String filtro) {
+        if (filtro == null) {
+            filtro = "";
+        }
+
+        try {
+            String filtroCodificado = URLEncoder.encode(
+                    filtro,
+                    StandardCharsets.UTF_8.name()
+            );
+
+            String url = Constantes.URL_WS + "dieta/buscar?filtro=" + filtroCodificado;
+
+            RespuestaHTTP resp = ConexionAPI.peticionGET(url);
+
+            if (resp.getCodigo() == HttpURLConnection.HTTP_OK) {
+                Gson gson = new Gson();
+                Type listType = new TypeToken<List<Dieta>>() {}.getType();
+                return gson.fromJson(resp.getContenido(), listType);
+            }
+
+        } catch (Exception e) {
+            return null;
+        }
+
+        return null;
     }
     
     public static Respuesta eliminar(Integer idDieta) {

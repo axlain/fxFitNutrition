@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="620.0"
+            prefWidth="760.0"
+            styleClass="modulo-root"
+            xmlns="http://javafx.com/fxml/1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="clienteescritoriofitnutrition.FXMLDetalleDietaController">
+
+    <stylesheets>
+        <URL value="@/clienteescritoriofitnutrition/utilidad/estilo.css" />
+    </stylesheets>
+
+    <top>
+        <VBox spacing="12.0"
+              style="-fx-background-color: #F4FAF6;
+                     -fx-border-color: #D8E8DD;
+                     -fx-border-width: 0 0 1 0;">
+
+            <padding>
+                <Insets top="18.0" right="22.0" bottom="16.0" left="22.0" />
+            </padding>
+
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
+
+                <Label text="Detalle de Dieta"
+                       style="
+                            -fx-background-color: #253E2C;
+                            -fx-text-fill: white;
+                            -fx-font-size: 18px;
+                            -fx-font-weight: bold;
+                            -fx-padding: 10 16 10 16;
+                            -fx-background-radius: 8;
+                       " />
+
+                <Label text="Información completa"
+                       style="
+                            -fx-background-color: #E2F3E8;
+                            -fx-text-fill: #253E2C;
+                            -fx-font-size: 11px;
+                            -fx-font-weight: bold;
+                            -fx-padding: 4 10 4 10;
+                            -fx-background-radius: 14;
+                       " />
+
+            </HBox>
+
+            <VBox spacing="8.0"
+                  style="
+                        -fx-background-color: white;
+                        -fx-background-radius: 10;
+                        -fx-border-color: #D8E8DD;
+                        -fx-border-radius: 10;
+                  ">
+
+                <padding>
+                    <Insets top="14.0" right="16.0" bottom="14.0" left="16.0" />
+                </padding>
+
+                <Label text="Nombre de la dieta"
+                       style="
+                            -fx-font-size: 11px;
+                            -fx-font-weight: bold;
+                            -fx-text-fill: #2E6B44;
+                       " />
+
+                <Label fx:id="lbNombre"
+                       text="Nombre de la dieta"
+                       style="
+                            -fx-font-size: 16px;
+                            -fx-font-weight: bold;
+                            -fx-text-fill: #1A1A1A;
+                       " />
+
+                <Label fx:id="lbCalorias"
+                       text="Total de calorías: 0"
+                       style="
+                            -fx-font-size: 13px;
+                            -fx-font-weight: bold;
+                            -fx-text-fill: #2E6B44;
+                       " />
+
+                <Label text="Observaciones"
+                       style="
+                            -fx-font-size: 11px;
+                            -fx-font-weight: bold;
+                            -fx-text-fill: #2E6B44;
+                       " />
+
+                <TextArea fx:id="taObservaciones"
+                          editable="false"
+                          prefRowCount="3"
+                          wrapText="true"
+                          style="
+                                -fx-background-color: #FAFCFA;
+                                -fx-border-color: #D8E8DD;
+                                -fx-border-radius: 8;
+                                -fx-background-radius: 8;
+                                -fx-font-size: 13px;
+                          " />
+
+            </VBox>
+
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="10.0">
+
+            <padding>
+                <Insets top="16.0" right="22.0" bottom="10.0" left="22.0" />
+            </padding>
+
+            <HBox alignment="CENTER_LEFT" spacing="8.0">
+
+                <Label text="Alimentos asignados"
+                       style="
+                            -fx-font-size: 15px;
+                            -fx-font-weight: bold;
+                            -fx-text-fill: #143D25;
+                       " />
+
+                <Label text="Por segmento del día"
+                       style="
+                            -fx-background-color: #EDF7F0;
+                            -fx-text-fill: #2E6B44;
+                            -fx-font-size: 11px;
+                            -fx-padding: 3 9 3 9;
+                            -fx-background-radius: 12;
+                       " />
+
+            </HBox>
+
+            <TableView fx:id="tvAlimentos"
+                       prefHeight="330.0"
+                       styleClass="tabla-datos">
+
+                <columns>
+                    <TableColumn fx:id="tcAlimento"
+                                 prefWidth="230.0"
+                                 text="Alimento" />
+
+                    <TableColumn fx:id="tcSegmento"
+                                 prefWidth="180.0"
+                                 text="Segmento" />
+
+                    <TableColumn fx:id="tcCantidad"
+                                 prefWidth="130.0"
+                                 text="Cantidad" />
+
+                    <TableColumn fx:id="tcCalorias"
+                                 prefWidth="150.0"
+                                 text="Calorías" />
+                </columns>
+
+            </TableView>
+
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER_RIGHT"
+              spacing="8.0"
+              style="
+                    -fx-background-color: #F4FAF6;
+                    -fx-border-color: #D8E8DD;
+                    -fx-border-width: 1 0 0 0;
+              ">
+
+            <padding>
+                <Insets top="12.0" right="22.0" bottom="14.0" left="22.0" />
+            </padding>
+
+            <Button fx:id="btnCerrar"
+                    text="Cerrar"
+                    onAction="#clickCerrar"
+                    style="
+                        -fx-background-color: #FF5F57;
+                        -fx-text-fill: white;
+                        -fx-font-weight: bold;
+                        -fx-background-radius: 6;
+                        -fx-padding: 8 20 8 20;
+                    " />
+
+        </HBox>
+    </bottom>
+
+</BorderPane>
