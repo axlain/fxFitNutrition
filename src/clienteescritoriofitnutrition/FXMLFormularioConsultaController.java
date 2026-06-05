@@ -51,6 +51,7 @@ public class FXMLFormularioConsultaController implements Initializable {
 
     private Consulta consultaEdicion;
     private INotificador notificador;
+    private Integer idMedicoSesion;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -59,10 +60,19 @@ public class FXMLFormularioConsultaController implements Initializable {
         cargarDietas();
     }
 
-    public void inicializarDatos(Consulta consulta, INotificador notificador) {
+    public void inicializarDatos(Consulta consulta, INotificador notificador, Integer idMedicoSesion) {
         this.consultaEdicion = consulta;
         this.notificador = notificador;
+        this.idMedicoSesion = idMedicoSesion;
         cargarDatosEdicion();
+        aplicarMedicoSesion();
+    }
+
+    private void aplicarMedicoSesion() {
+        if (idMedicoSesion != null) {
+            seleccionarMedico(idMedicoSesion);
+            cbMedico.setDisable(true);
+        }
     }
 
     private void cargarPacientes() {

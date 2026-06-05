@@ -89,6 +89,31 @@ public class DietaAlimento {
     public void setSegmentoDia(SegmentoDia segmentoDia) {
         this.segmentoDia = segmentoDia;
     }
-    
-    
+
+    // Getters calculados para las columnas de la tabla (estilo PAQ, sin lambda)
+    public String getNombreSegmento() {
+        return (segmentoDia != null && segmentoDia.getNombre() != null) ? segmentoDia.getNombre() : "";
+    }
+
+    public String getNombreAlimento() {
+        return (alimento != null && alimento.getNombre() != null) ? alimento.getNombre() : "";
+    }
+
+    public String getPorcionString() {
+        String u = (alimento != null && alimento.getUnidadPorcion() != null
+                && alimento.getUnidadPorcion().getNombre() != null)
+                ? alimento.getUnidadPorcion().getNombre() : "";
+        String c = (cantidad != null) ? String.valueOf(cantidad) : "";
+        return (c + " " + u).trim();
+    }
+
+    public Double getCaloriasCalculadas() {
+        if (alimento != null && cantidad != null
+                && alimento.getCaloriasPorPorcion() != null
+                && alimento.getPorcion() != null && alimento.getPorcion() > 0) {
+            double cal = (cantidad / alimento.getPorcion()) * alimento.getCaloriasPorPorcion();
+            return Math.round(cal * 100.0) / 100.0;
+        }
+        return null;
+    }
 }

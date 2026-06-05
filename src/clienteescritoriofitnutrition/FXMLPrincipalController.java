@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -82,6 +83,8 @@ public class FXMLPrincipalController implements Initializable, INotificador {
     private VBox vbCitasHoy;
     @FXML
     private Label lbFechaCitas;
+    @FXML
+    private Label lbFechaFooter;
 
     private RSAutenticar sesion;
     private Parent dashboard;
@@ -91,6 +94,13 @@ public class FXMLPrincipalController implements Initializable, INotificador {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         dashboard = vbDashboard;
+        cargarFechaFooter();
+    }
+
+    private void cargarFechaFooter() {
+        Locale locale = new Locale("es", "MX");
+        lbFechaFooter.setText(LocalDate.now()
+                .format(DateTimeFormatter.ofPattern("EEEE dd 'de' MMMM 'de' yyyy", locale)));
     }
 
     public void inicializarSesion(RSAutenticar sesion) {
@@ -187,38 +197,32 @@ public class FXMLPrincipalController implements Initializable, INotificador {
 
     @FXML
     private void clickMedicos(ActionEvent event) {
-        lbTitulo.setText("Medicos");
-        cargarModulo("FXMLAdministracionMedicos.fxml", "No se pudo cargar el modulo de medicos.");
+        cargarModulo("FXMLAdministracionMedicos.fxml", "Medicos", "No se pudo cargar el modulo de medicos.");
     }
 
     @FXML
     private void clickPacientes(ActionEvent event) {
-        lbTitulo.setText("Pacientes");
-        cargarModulo("FXMLAdministracionPacientes.fxml", "No se pudo cargar el modulo de pacientes.");
+        cargarModulo("FXMLAdministracionPacientes.fxml", "Pacientes", "No se pudo cargar el modulo de pacientes.");
     }
 
     @FXML
     private void clickCitas(ActionEvent event) {
-        lbTitulo.setText("Citas");
-        cargarModulo("FXMLAgendaCitas.fxml", "El modulo de citas esta pendiente de integracion.");
+        cargarModulo("FXMLAgendaCitas.fxml", "Citas", "El modulo de citas esta pendiente de integracion.");
     }
 
     @FXML
     private void clickConsultas(ActionEvent event) {
-        lbTitulo.setText("Consultas");
-        cargarModulo("FXMLAdministracionConsultas.fxml", "El modulo de consultas esta pendiente de integracion.");
+        cargarModulo("FXMLAdministracionConsultas.fxml", "Consultas", "El modulo de consultas esta pendiente de integracion.");
     }
 
     @FXML
     private void clickDietas(ActionEvent event) {
-        lbTitulo.setText("Dietas");
-        cargarModulo("FXMLAdministracionDietas.fxml", "El modulo de dietas esta pendiente de integracion.");
+        cargarModulo("FXMLAdministracionDietas.fxml", "Dietas", "El modulo de dietas esta pendiente de integracion.");
     }
 
     @FXML
     private void clickAlimentos(ActionEvent event) {
-        lbTitulo.setText("Alimentos");
-        cargarModulo("FXMLAdministracionAlimentos.fxml", "El modulo de alimentos esta pendiente de integracion.");
+        cargarModulo("FXMLAdministracionAlimentos.fxml", "Alimentos", "El modulo de alimentos esta pendiente de integracion.");
     }
 
     private void cargarDashboard() {
@@ -441,7 +445,7 @@ public class FXMLPrincipalController implements Initializable, INotificador {
         return hora.length() >= 5 ? hora.substring(0, 5) : hora;
     }
 
-    private void cargarModulo(String nombreFXML, String mensajeError) {
+    private void cargarModulo(String nombreFXML, String titulo, String mensajeError) {
         try {
             URL recurso = getClass().getResource(nombreFXML);
             if (recurso == null) {
@@ -451,7 +455,21 @@ public class FXMLPrincipalController implements Initializable, INotificador {
 
             FXMLLoader loader = new FXMLLoader(recurso);
             Parent vista = loader.load();
+
+            // Se pasa la sesion al modulo antes de mostrarlo (estilo PAQ).
+            Object controlador = loader.getController();
+            if (controlador instanceof FXMLAgendaCitasController) {
+                ((FXMLAgendaCitasController) controlador).inicializarSesion(sesion);
+            } else if (controlador instanceof FXMLAdministracionConsultasController) {
+                ((FXMLAdministracionConsultasController) controlador).inicializarSesion(sesion);
+            } else if (controlador instanceof FXMLAdministracionDietasController) {
+                ((FXMLAdministracionDietasController) controlador).inicializarSesion(sesion);
+            } else if (controlador instanceof FXMLAdministracionPacientesController) {
+                ((FXMLAdministracionPacientesController) controlador).inicializarSesion(sesion);
+            }
+
             bpContenedor.setCenter(vista);
+            lbTitulo.setText(titulo);
         } catch (IOException ex) {
             ex.printStackTrace();
             Utilidades.mostrarAlertaSimple("Error", mensajeError, Alert.AlertType.ERROR);

@@ -68,6 +68,16 @@ public class Alimento {
     public void setUnidadPorcion(UnidadPorcion unidadPorcion) {
         this.unidadPorcion = unidadPorcion;
     }
-    
-    
+
+    // Getter calculado para la columna "Porcion / Unidad" (estilo PAQ, sin lambda)
+    public String getPorcionUnidad() {
+        String u = (unidadPorcion != null && unidadPorcion.getNombre() != null) ? unidadPorcion.getNombre() : "";
+        String p = (porcion != null) ? String.valueOf(porcion) : "";
+        return (p + " " + u).trim();
+    }
+
+    @Override
+    public String toString() {
+        return nombre != null ? nombre : "";
+    }
 }

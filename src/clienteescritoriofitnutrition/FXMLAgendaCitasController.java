@@ -2,15 +2,17 @@ package clienteescritoriofitnutrition;
 
 import clienteescritoriofitnutrition.dominio.CitaImp;
 import clienteescritoriofitnutrition.dto.Respuesta;
+import clienteescritoriofitnutrition.dto.RSAutenticar;
 import clienteescritoriofitnutrition.interfaz.INotificador;
 import clienteescritoriofitnutrition.pojo.Cita;
+import clienteescritoriofitnutrition.utilidad.Constantes;
 import clienteescritoriofitnutrition.utilidad.Utilidades;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -62,66 +64,68 @@ public class FXMLAgendaCitasController implements Initializable, INotificador {
     private TableColumn tcEstado;
 
     private ObservableList<Cita> citas;
+    private RSAutenticar sesion;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         configurarTabla();
+        // La carga de datos se hace en inicializarSesion() (depende del rol).
+    }
+
+    public void inicializarSesion(RSAutenticar sesion) {
+        this.sesion = sesion;
         cargarInformacionCitas();
     }
 
     private void configurarTabla() {
-        tcFecha.setCellValueFactory(new PropertyValueFactory<>("fecha"));
-        tcHora.setCellValueFactory(new PropertyValueFactory<>("hora"));
-        
-        tcPaciente.setCellValueFactory(cellData -> {
-            Cita cita = (Cita) ((TableColumn.CellDataFeatures) cellData).getValue();
-            return new SimpleStringProperty(getNombrePacienteSeguro(cita));
-        });
-        
-        tcMedico.setCellValueFactory(cellData -> {
-            Cita cita = (Cita) ((TableColumn.CellDataFeatures) cellData).getValue();
-            return new SimpleStringProperty(getNombreMedicoSeguro(cita));
-        });
-
-        tcEstado.setCellValueFactory(cellData -> {
-            Cita cita = (Cita) ((TableColumn.CellDataFeatures) cellData).getValue();
-            return new SimpleStringProperty(getNombreEstadoSeguro(cita));
-        });
-    }
-
-    private String getNombrePacienteSeguro(Cita cita) {
-        if (cita != null && cita.getPaciente() != null && cita.getPaciente().getUsuario() != null) {
-            String nombre = cita.getPaciente().getUsuario().getNombre() != null ? cita.getPaciente().getUsuario().getNombre() : "";
-            String apellido = cita.getPaciente().getUsuario().getApellidoPaterno() != null ? cita.getPaciente().getUsuario().getApellidoPaterno() : "";
-            return (nombre + " " + apellido).trim();
-        }
-        return "";
-    }
-
-    private String getNombreMedicoSeguro(Cita cita) {
-        if (cita != null && cita.getMedico() != null && cita.getMedico().getUsuario() != null) {
-            String nombre = cita.getMedico().getUsuario().getNombre() != null ? cita.getMedico().getUsuario().getNombre() : "";
-            String apellido = cita.getMedico().getUsuario().getApellidoPaterno() != null ? cita.getMedico().getUsuario().getApellidoPaterno() : "";
-            return (nombre + " " + apellido).trim();
-        }
-        return "";
-    }
-
-    private String getNombreEstadoSeguro(Cita cita) {
-        if (cita != null && cita.getEstadoCita() != null && cita.getEstadoCita().getNombre() != null) {
-            return cita.getEstadoCita().getNombre();
-        }
-        return "";
+        tcFecha.setCellValueFactory(new PropertyValueFactory("fecha"));
+        tcHora.setCellValueFactory(new PropertyValueFactory("hora"));
+        tcPaciente.setCellValueFactory(new PropertyValueFactory("nombrePaciente"));
+        tcMedico.setCellValueFactory(new PropertyValueFactory("nombreMedico"));
+        tcEstado.setCellValueFactory(new PropertyValueFactory("nombreEstado"));
     }
 
     private void cargarInformacionCitas() {
-        List<Cita> lista = CitaImp.obtenerTodas();
+        HashMap<String, Object> respuesta = CitaImp.obtenerTodas();
+        boolean esError = (boolean) respuesta.get(Constantes.KEY_ERROR);
+
+        if (esError) {
+            citas = FXCollections.observableArrayList();
+            tvCitas.setItems(citas);
+            Utilidades.mostrarAlertaSimple(
+                    "Sin conexión",
+                    respuesta.get(Constantes.KEY_MENSAJE).toString(),
+                    Alert.AlertType.WARNING
+            );
+            return;
+        }
+
+        List<Cita> lista = (List<Cita>) respuesta.get(Constantes.KEY_LISTA);
         if (lista == null) {
             lista = new ArrayList<>();
-            Utilidades.mostrarAlertaSimple("Sin conexión", "No fue posible cargar las citas.", Alert.AlertType.WARNING);
         }
+
+        // Si el usuario en sesión es médico, solo se muestran sus citas.
+        Integer idMedicoSesion = obtenerIdMedicoSesion();
+        if (idMedicoSesion != null) {
+            List<Cita> propias = new ArrayList<>();
+            for (Cita cita : lista) {
+                if (idMedicoSesion.equals(cita.getIdMedico())) {
+                    propias.add(cita);
+                }
+            }
+            lista = propias;
+        }
+
         citas = FXCollections.observableArrayList(lista);
         tvCitas.setItems(citas);
+    }
+
+    private Integer obtenerIdMedicoSesion() {
+        if (sesion != null && sesion.getMedico() != null) {
+            return sesion.getMedico().getIdMedico();
+        }
+        return null;
     }
 
     @FXML
@@ -137,7 +141,7 @@ public class FXMLAgendaCitasController implements Initializable, INotificador {
         btnFiltroTodas.getStyleClass().setAll("button", "segmented-btn");
         btnFiltroPendientes.getStyleClass().setAll("button", "segmented-btn-activo");
         btnFiltroAtendidas.getStyleClass().setAll("button", "segmented-btn");
-        cargarInformacionCitas();
+        filtrarPorEstado("Pendiente");
     }
 
     @FXML
@@ -145,7 +149,20 @@ public class FXMLAgendaCitasController implements Initializable, INotificador {
         btnFiltroTodas.getStyleClass().setAll("button", "segmented-btn");
         btnFiltroPendientes.getStyleClass().setAll("button", "segmented-btn");
         btnFiltroAtendidas.getStyleClass().setAll("button", "segmented-btn-activo");
-        cargarInformacionCitas();
+        filtrarPorEstado("Asistida");
+    }
+
+    private void filtrarPorEstado(String estado) {
+        if (citas == null) {
+            return;
+        }
+        ObservableList<Cita> filtradas = FXCollections.observableArrayList();
+        for (Cita cita : citas) {
+            if (cita.getNombreEstado().equalsIgnoreCase(estado)) {
+                filtradas.add(cita);
+            }
+        }
+        tvCitas.setItems(filtradas);
     }
 
     @FXML
@@ -161,8 +178,8 @@ public class FXMLAgendaCitasController implements Initializable, INotificador {
 
         if (citas != null) {
             for (Cita cita : citas) {
-                if (getNombrePacienteSeguro(cita).toLowerCase().contains(filtroLower) ||
-                    getNombreMedicoSeguro(cita).toLowerCase().contains(filtroLower) ||
+                if (cita.getNombrePaciente().toLowerCase().contains(filtroLower) ||
+                    cita.getNombreMedico().toLowerCase().contains(filtroLower) ||
                     (cita.getFecha() != null && cita.getFecha().toLowerCase().contains(filtroLower))) {
                     filtradas.add(cita);
                 }
@@ -197,7 +214,7 @@ public class FXMLAgendaCitasController implements Initializable, INotificador {
             return;
         }
 
-        if (getNombreEstadoSeguro(cita).equalsIgnoreCase("Cancelada")) {
+        if (cita.getNombreEstado().equalsIgnoreCase("Cancelada")) {
             Utilidades.mostrarAlertaSimple("Acción no permitida", "La cita seleccionada ya se encuentra cancelada.", Alert.AlertType.WARNING);
             return;
         }
@@ -235,7 +252,7 @@ public class FXMLAgendaCitasController implements Initializable, INotificador {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLFormularioCita.fxml"));
             Parent vista = loader.load();
             FXMLFormularioCitaController controlador = loader.getController();
-            controlador.inicializarDatos(cita, this);
+            controlador.inicializarDatos(cita, this, obtenerIdMedicoSesion());
 
             Scene escena = new Scene(vista);
             Stage escenario = new Stage();

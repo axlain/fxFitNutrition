@@ -122,7 +122,29 @@ public class Cita {
         this.medico = medico;
     }
 
-    
-    
-    
+    // Getters calculados para las columnas de la tabla (estilo PAQ, sin lambda)
+    public String getNombrePaciente() {
+        if (paciente != null && paciente.getUsuario() != null) {
+            String nombre = paciente.getUsuario().getNombre() != null ? paciente.getUsuario().getNombre() : "";
+            String apellido = paciente.getUsuario().getApellidoPaterno() != null ? paciente.getUsuario().getApellidoPaterno() : "";
+            return (nombre + " " + apellido).trim();
+        }
+        return "";
+    }
+
+    public String getNombreMedico() {
+        if (medico != null && medico.getUsuario() != null) {
+            String nombre = medico.getUsuario().getNombre() != null ? medico.getUsuario().getNombre() : "";
+            String apellido = medico.getUsuario().getApellidoPaterno() != null ? medico.getUsuario().getApellidoPaterno() : "";
+            return (nombre + " " + apellido).trim();
+        }
+        return "";
+    }
+
+    public String getNombreEstado() {
+        if (estadoCita != null && estadoCita.getNombre() != null) {
+            return estadoCita.getNombre();
+        }
+        return "";
+    }
 }

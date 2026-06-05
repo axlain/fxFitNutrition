@@ -11,6 +11,10 @@ import clienteescritoriofitnutrition.utilidad.Utilidades;
 
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class ConsultaImp {
@@ -96,20 +100,44 @@ public class ConsultaImp {
         }
     }
 
-    public static List<Consulta> obtenerTodas() {
-        String url = Constantes.URL_WS + "consulta/obtener-todas";
-        RespuestaHTTP resp = ConexionAPI.peticionGET(url);
-        
-        if (resp.getCodigo() == HttpURLConnection.HTTP_OK) {
+    public static HashMap<String, Object> obtenerTodas() {
+        return buscar(null, null, null);
+    }
+
+    public static HashMap<String, Object> buscar(Integer idPaciente, Integer idMedico, String fecha) {
+        HashMap<String, Object> respuesta = new LinkedHashMap<>();
+
+        StringBuilder url = new StringBuilder(Constantes.URL_WS + "consulta/buscar");
+        StringBuilder qs = new StringBuilder();
+        if (idPaciente != null) {
+            qs.append(qs.length() == 0 ? "?" : "&").append("idPaciente=").append(idPaciente);
+        }
+        if (idMedico != null) {
+            qs.append(qs.length() == 0 ? "?" : "&").append("idMedico=").append(idMedico);
+        }
+        if (fecha != null && !fecha.trim().isEmpty()) {
             try {
-                Gson gson = new Gson();
-                Type listType = new TypeToken<List<Consulta>>() {}.getType();
-                return gson.fromJson(resp.getContenido(), listType);
+                qs.append(qs.length() == 0 ? "?" : "&").append("fecha=")
+                  .append(URLEncoder.encode(fecha.trim(), StandardCharsets.UTF_8.name()));
             } catch (Exception e) {
-                return null;
+                // si falla la codificacion, se omite el filtro de fecha
             }
         }
-        return null;
+        url.append(qs);
+
+        RespuestaHTTP resp = ConexionAPI.peticionGET(url.toString());
+
+        if (resp.getCodigo() == HttpURLConnection.HTTP_OK) {
+            Gson gson = new Gson();
+            Type listType = new TypeToken<List<Consulta>>() {}.getType();
+            respuesta.put(Constantes.KEY_ERROR, false);
+            respuesta.put(Constantes.KEY_LISTA, gson.fromJson(resp.getContenido(), listType));
+        } else {
+            respuesta.put(Constantes.KEY_ERROR, true);
+            respuesta.put(Constantes.KEY_MENSAJE, Utilidades.obtenerMensajeErrorHTTP(
+                    resp.getCodigo(), "No fue posible obtener las consultas en este momento."));
+        }
+        return respuesta;
     }
 
     public static List<Consulta> obtenerPorIdPaciente(Integer idPaciente) {

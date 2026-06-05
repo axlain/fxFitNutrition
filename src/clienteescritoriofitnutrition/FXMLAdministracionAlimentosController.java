@@ -82,7 +82,7 @@ public class FXMLAdministracionAlimentosController implements Initializable, INo
             return;
         }
 
-        // Simulación: Filtrado por nombre
+        // Filtrado local por nombre sobre los alimentos ya cargados desde la API.
         List<Alimento> todos = AlimentoImp.obtenerTodos();
         List<Alimento> lista = new ArrayList<>();
         if (todos != null) {

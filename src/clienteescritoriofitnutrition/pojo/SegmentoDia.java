@@ -27,5 +27,10 @@ public class SegmentoDia {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-    
+
+    @Override
+    public String toString() {
+        return nombre != null ? nombre : "";
+    }
+
 }

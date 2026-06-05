@@ -57,6 +57,7 @@ public class FXMLFormularioPacienteController implements Initializable {
 
     private Paciente pacienteEdicion;
     private INotificador notificador;
+    private Integer idMedicoSesion;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -64,10 +65,19 @@ public class FXMLFormularioPacienteController implements Initializable {
         cargarMedicos();
     }
 
-    public void inicializarDatos(Paciente paciente, INotificador notificador) {
+    public void inicializarDatos(Paciente paciente, INotificador notificador, Integer idMedicoSesion) {
         this.pacienteEdicion = paciente;
         this.notificador = notificador;
+        this.idMedicoSesion = idMedicoSesion;
         cargarDatosEdicion();
+        aplicarMedicoSesion();
+    }
+
+    private void aplicarMedicoSesion() {
+        if (idMedicoSesion != null) {
+            seleccionarMedico(idMedicoSesion);
+            cbMedico.setDisable(true);
+        }
     }
 
     private void cargarMedicos() {

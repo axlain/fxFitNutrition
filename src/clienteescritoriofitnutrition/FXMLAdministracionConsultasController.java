@@ -1,12 +1,15 @@
 package clienteescritoriofitnutrition;
 
 import clienteescritoriofitnutrition.dominio.ConsultaImp;
+import clienteescritoriofitnutrition.dto.RSAutenticar;
 import clienteescritoriofitnutrition.interfaz.INotificador;
 import clienteescritoriofitnutrition.pojo.Consulta;
+import clienteescritoriofitnutrition.utilidad.Constantes;
 import clienteescritoriofitnutrition.utilidad.Utilidades;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -54,10 +57,16 @@ public class FXMLAdministracionConsultasController implements Initializable, INo
     private TableColumn tcDieta;
 
     private ObservableList<Consulta> consultas;
+    private RSAutenticar sesion;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         configurarTabla();
+        // La carga de datos se hace en inicializarSesion() (depende del rol).
+    }
+
+    public void inicializarSesion(RSAutenticar sesion) {
+        this.sesion = sesion;
         cargarInformacionConsultas();
     }
 
@@ -71,30 +80,57 @@ public class FXMLAdministracionConsultasController implements Initializable, INo
     }
 
     private void cargarInformacionConsultas() {
-        List<Consulta> lista = ConsultaImp.obtenerTodas();
+        Integer idMedicoSesion = obtenerIdMedicoSesion();
+        HashMap<String, Object> respuesta = ConsultaImp.buscar(null, idMedicoSesion, null);
+        boolean esError = (boolean) respuesta.get(Constantes.KEY_ERROR);
+
+        if (esError) {
+            consultas = FXCollections.observableArrayList();
+            tvConsultas.setItems(consultas);
+            Utilidades.mostrarAlertaSimple(
+                    "Sin conexión",
+                    respuesta.get(Constantes.KEY_MENSAJE).toString(),
+                    Alert.AlertType.WARNING
+            );
+            return;
+        }
+
+        List<Consulta> lista = (List<Consulta>) respuesta.get(Constantes.KEY_LISTA);
         if (lista == null) {
             lista = new ArrayList<>();
-            Utilidades.mostrarAlertaSimple("Sin conexión", "No fue posible cargar las consultas.", Alert.AlertType.WARNING);
         }
         consultas = FXCollections.observableArrayList(lista);
         tvConsultas.setItems(consultas);
+    }
+
+    private Integer obtenerIdMedicoSesion() {
+        if (sesion != null && sesion.getMedico() != null) {
+            return sesion.getMedico().getIdMedico();
+        }
+        return null;
     }
 
     @FXML
     private void clickBuscar(ActionEvent event) {
         String filtro = tfBuscar.getText();
         if (filtro == null || filtro.trim().isEmpty()) {
-            cargarInformacionConsultas();
+            tvConsultas.setItems(consultas);
             return;
         }
 
-        // Simulación: Filtrado local o llamada a la API si existe método buscar
-        List<Consulta> lista = ConsultaImp.obtenerPorIdPaciente(Integer.parseInt(filtro)); // Ejemplo
-        if (lista == null) {
-            lista = new ArrayList<>();
-            Utilidades.mostrarAlertaSimple("Búsqueda", "No fue posible realizar la búsqueda.", Alert.AlertType.WARNING);
+        String filtroLower = filtro.toLowerCase().trim();
+        ObservableList<Consulta> filtradas = FXCollections.observableArrayList();
+
+        if (consultas != null) {
+            for (Consulta consulta : consultas) {
+                if (consulta.getNombrePaciente().toLowerCase().contains(filtroLower) ||
+                    consulta.getNombreMedico().toLowerCase().contains(filtroLower) ||
+                    (consulta.getFechaHora() != null && consulta.getFechaHora().toLowerCase().contains(filtroLower))) {
+                    filtradas.add(consulta);
+                }
+            }
         }
-        tvConsultas.setItems(FXCollections.observableArrayList(lista));
+        tvConsultas.setItems(filtradas);
     }
 
     @FXML
@@ -129,7 +165,7 @@ public class FXMLAdministracionConsultasController implements Initializable, INo
             FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLFormularioConsulta.fxml"));
             Parent vista = loader.load();
             FXMLFormularioConsultaController controlador = loader.getController();
-            controlador.inicializarDatos(consulta, this);
+            controlador.inicializarDatos(consulta, this, obtenerIdMedicoSesion());
 
             Scene escena = new Scene(vista);
             Stage escenario = new Stage();

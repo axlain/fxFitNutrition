@@ -3,6 +3,7 @@ package clienteescritoriofitnutrition;
 import clienteescritoriofitnutrition.dominio.DietaAlimentoImp;
 import clienteescritoriofitnutrition.dominio.DietaImp;
 import clienteescritoriofitnutrition.dto.Respuesta;
+import clienteescritoriofitnutrition.dto.RSAutenticar;
 import clienteescritoriofitnutrition.interfaz.INotificador;
 import clienteescritoriofitnutrition.pojo.Dieta;
 import clienteescritoriofitnutrition.pojo.DietaAlimento;
@@ -57,12 +58,24 @@ public class FXMLAdministracionDietasController implements Initializable, INotif
     private TableColumn<Dieta, String> tcAlimentos;
 
     private ObservableList<Dieta> dietas;
+    private RSAutenticar sesion;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         configurarTabla();
         cargarInformacionDietas();
         configurarDobleClick();
+    }
+
+    public void inicializarSesion(RSAutenticar sesion) {
+        this.sesion = sesion;
+    }
+
+    private Integer obtenerIdMedicoSesion() {
+        if (sesion != null && sesion.getMedico() != null) {
+            return sesion.getMedico().getIdMedico();
+        }
+        return null;
     }
 
     private void configurarTabla() {
@@ -276,7 +289,7 @@ public class FXMLAdministracionDietasController implements Initializable, INotif
             Parent vista = loader.load();
 
             FXMLFormularioDietaController controlador = loader.getController();
-            controlador.inicializarDatos(dieta, this);
+            controlador.inicializarDatos(dieta, this, obtenerIdMedicoSesion());
 
             Scene escena = new Scene(vista);
             Stage escenario = new Stage();

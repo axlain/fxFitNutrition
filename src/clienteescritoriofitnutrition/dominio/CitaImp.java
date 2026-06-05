@@ -13,6 +13,8 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class CitaImp {
@@ -167,23 +169,26 @@ public class CitaImp {
         }
     }
 
-    public static List<Cita> obtenerTodas() {
+    public static HashMap<String, Object> obtenerTodas() {
+        HashMap<String, Object> respuesta = new LinkedHashMap<>();
         String url = Constantes.URL_WS + "cita/obtener-todas";
         RespuestaHTTP resp = ConexionAPI.peticionGET(url);
 
         if (resp.getCodigo() == HttpURLConnection.HTTP_OK) {
-            try {
-                Gson gson = new Gson();
-                Type listType = new TypeToken<List<Cita>>() {}.getType();
-                return gson.fromJson(resp.getContenido(), listType);
-            } catch (Exception e) {
-                return null;
-            }
+            Gson gson = new Gson();
+            Type listType = new TypeToken<List<Cita>>() {}.getType();
+            respuesta.put(Constantes.KEY_ERROR, false);
+            respuesta.put(Constantes.KEY_LISTA, gson.fromJson(resp.getContenido(), listType));
+        } else {
+            respuesta.put(Constantes.KEY_ERROR, true);
+            respuesta.put(Constantes.KEY_MENSAJE, Utilidades.obtenerMensajeErrorHTTP(
+                    resp.getCodigo(), "No fue posible obtener las citas en este momento."));
         }
-        return null;
+        return respuesta;
     }
 
-    public static List<Cita> obtenerPorFecha(String fecha) {
+    public static HashMap<String, Object> obtenerPorFecha(String fecha) {
+        HashMap<String, Object> respuesta = new LinkedHashMap<>();
         if (fecha == null) fecha = "";
         try {
             String parametro = URLEncoder.encode(fecha.trim(), StandardCharsets.UTF_8.name());
@@ -193,12 +198,18 @@ public class CitaImp {
             if (resp.getCodigo() == HttpURLConnection.HTTP_OK) {
                 Gson gson = new Gson();
                 Type listType = new TypeToken<List<Cita>>() {}.getType();
-                return gson.fromJson(resp.getContenido(), listType);
+                respuesta.put(Constantes.KEY_ERROR, false);
+                respuesta.put(Constantes.KEY_LISTA, gson.fromJson(resp.getContenido(), listType));
+            } else {
+                respuesta.put(Constantes.KEY_ERROR, true);
+                respuesta.put(Constantes.KEY_MENSAJE, Utilidades.obtenerMensajeErrorHTTP(
+                        resp.getCodigo(), "No fue posible obtener las citas por fecha."));
             }
         } catch (Exception e) {
-            return null;
+            respuesta.put(Constantes.KEY_ERROR, true);
+            respuesta.put(Constantes.KEY_MENSAJE, "Error al obtener las citas por fecha: " + e.getMessage());
         }
-        return null;
+        return respuesta;
     }
 
     public static Respuesta editar(Cita cita) {

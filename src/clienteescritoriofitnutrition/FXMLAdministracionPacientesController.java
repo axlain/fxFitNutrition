@@ -2,6 +2,7 @@ package clienteescritoriofitnutrition;
 
 import clienteescritoriofitnutrition.dominio.PacienteImp;
 import clienteescritoriofitnutrition.dto.Respuesta;
+import clienteescritoriofitnutrition.dto.RSAutenticar;
 import clienteescritoriofitnutrition.interfaz.INotificador;
 import clienteescritoriofitnutrition.pojo.Paciente;
 import clienteescritoriofitnutrition.utilidad.Utilidades;
@@ -61,11 +62,23 @@ public class FXMLAdministracionPacientesController implements Initializable, INo
     private TableColumn tcEstatus;
 
     private ObservableList<Paciente> pacientes;
+    private RSAutenticar sesion;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         configurarTabla();
         cargarInformacionPacientes();
+    }
+
+    public void inicializarSesion(RSAutenticar sesion) {
+        this.sesion = sesion;
+    }
+
+    private Integer obtenerIdMedicoSesion() {
+        if (sesion != null && sesion.getMedico() != null) {
+            return sesion.getMedico().getIdMedico();
+        }
+        return null;
     }
 
     private void configurarTabla() {
@@ -188,7 +201,7 @@ public class FXMLAdministracionPacientesController implements Initializable, INo
             FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLFormularioPaciente.fxml"));
             Parent vista = loader.load();
             FXMLFormularioPacienteController controlador = loader.getController();
-            controlador.inicializarDatos(paciente, this);
+            controlador.inicializarDatos(paciente, this, obtenerIdMedicoSesion());
 
             Scene escena = new Scene(vista);
             Stage escenario = new Stage();

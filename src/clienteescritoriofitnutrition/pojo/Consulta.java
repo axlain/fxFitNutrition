@@ -139,4 +139,31 @@ public class Consulta {
     public void setDieta(Dieta dieta) {
         this.dieta = dieta;
     }
+
+    // Getters calculados para las columnas de la tabla (estilo PAQ, sin lambda)
+    public String getNombrePaciente() {
+        if (paciente != null && paciente.getUsuario() != null) {
+            String nombre = txt(paciente.getUsuario().getNombre());
+            String apellido = txt(paciente.getUsuario().getApellidoPaterno());
+            return (nombre + " " + apellido).trim();
+        }
+        return "";
+    }
+
+    public String getNombreMedico() {
+        if (medico != null && medico.getUsuario() != null) {
+            String nombre = txt(medico.getUsuario().getNombre());
+            String apellido = txt(medico.getUsuario().getApellidoPaterno());
+            return (nombre + " " + apellido).trim();
+        }
+        return "";
+    }
+
+    public String getNombreDieta() {
+        return (dieta != null && dieta.getNombre() != null) ? dieta.getNombre() : "";
+    }
+
+    private String txt(String valor) {
+        return valor != null ? valor : "";
+    }
 }

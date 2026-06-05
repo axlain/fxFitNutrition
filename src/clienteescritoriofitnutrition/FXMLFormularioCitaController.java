@@ -39,6 +39,7 @@ public class FXMLFormularioCitaController implements Initializable {
 
     private Cita citaEdicion;
     private INotificador notificador;
+    private Integer idMedicoSesion;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -46,10 +47,19 @@ public class FXMLFormularioCitaController implements Initializable {
         cargarMedicos();
     }
 
-    public void inicializarDatos(Cita cita, INotificador notificador) {
+    public void inicializarDatos(Cita cita, INotificador notificador, Integer idMedicoSesion) {
         this.citaEdicion = cita;
         this.notificador = notificador;
+        this.idMedicoSesion = idMedicoSesion;
         cargarDatosEdicion();
+        aplicarMedicoSesion();
+    }
+
+    private void aplicarMedicoSesion() {
+        if (idMedicoSesion != null) {
+            seleccionarMedico(idMedicoSesion);
+            cbMedico.setDisable(true);
+        }
     }
 
     private void cargarPacientes() {
