@@ -11,8 +11,6 @@ import clienteescritoriofitnutrition.utilidad.Utilidades;
 
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -52,8 +50,103 @@ public class ConsultaImp {
         return respuesta;
     }
 
+    public static Respuesta editarConsulta(Consulta consulta) {
+        Respuesta respuesta = new Respuesta();
+        respuesta.setError(true);
+
+        String url = Constantes.URL_WS + "consulta/editar";
+
+        try {
+            Gson gson = new Gson();
+            String json = gson.toJson(consulta);
+
+            RespuestaHTTP resp = ConexionAPI.peticionBody(
+                    url,
+                    Constantes.PETICION_PUT,
+                    json,
+                    Constantes.APPLICATION_JSON
+            );
+
+            if (resp.getCodigo() == HttpURLConnection.HTTP_OK) {
+                return parsearRespuesta(resp.getContenido());
+            } else {
+                respuesta.setMensaje(Utilidades.obtenerMensajeErrorHTTP(
+                        resp.getCodigo(),
+                        "No es posible editar la consulta en este momento."
+                ));
+            }
+
+        } catch (Exception e) {
+            respuesta.setMensaje("Error al editar la consulta: " + e.getMessage());
+        }
+
+        return respuesta;
+    }
+
+    public static Consulta buscarConsulta(Integer idConsulta) {
+        if (idConsulta == null || idConsulta <= 0) {
+            return null;
+        }
+
+        String url = Constantes.URL_WS + "consulta/buscar?idConsulta=" + idConsulta;
+
+        RespuestaHTTP resp = ConexionAPI.peticionGET(url);
+
+        if (resp.getCodigo() == HttpURLConnection.HTTP_OK) {
+            try {
+                Gson gson = new Gson();
+                return gson.fromJson(resp.getContenido(), Consulta.class);
+            } catch (Exception e) {
+                return null;
+            }
+        }
+
+        return null;
+    }
+
+    public static HashMap<String, Object> buscar(Integer idConsulta) {
+        HashMap<String, Object> respuesta = new LinkedHashMap<>();
+
+        if (idConsulta == null || idConsulta <= 0) {
+            respuesta.put(Constantes.KEY_ERROR, true);
+            respuesta.put(Constantes.KEY_MENSAJE, "El ID de la consulta es obligatorio.");
+            return respuesta;
+        }
+
+        Consulta consulta = buscarConsulta(idConsulta);
+
+        if (consulta != null) {
+            respuesta.put(Constantes.KEY_ERROR, false);
+            respuesta.put("consulta", consulta);
+        } else {
+            respuesta.put(Constantes.KEY_ERROR, true);
+            respuesta.put(Constantes.KEY_MENSAJE, "No se encontró la consulta.");
+        }
+
+        return respuesta;
+    }
+
     public static List<Consulta> obtenerHistorialPaciente(Integer idPaciente) {
         String url = Constantes.URL_WS + "consulta/historial/" + idPaciente;
+
+        RespuestaHTTP resp = ConexionAPI.peticionGET(url);
+
+        if (resp.getCodigo() == HttpURLConnection.HTTP_OK) {
+            try {
+                Gson gson = new Gson();
+                Type listType = new TypeToken<List<Consulta>>() {
+                }.getType();
+                return gson.fromJson(resp.getContenido(), listType);
+            } catch (Exception e) {
+                return null;
+            }
+        }
+
+        return null;
+    }
+    
+    public static List<Consulta> obtenerHistorialMedico(Integer idMedico) {
+        String url = Constantes.URL_WS + "consulta/historial-medico/" + idMedico;
 
         RespuestaHTTP resp = ConexionAPI.peticionGET(url);
 
@@ -88,55 +181,10 @@ public class ConsultaImp {
         return null;
     }
 
-    private static Respuesta parsearRespuesta(String json) {
-        try {
-            Gson gson = new Gson();
-            return gson.fromJson(json, Respuesta.class);
-        } catch (Exception e) {
-            Respuesta r = new Respuesta();
-            r.setError(true);
-            r.setMensaje("Error al procesar la respuesta del servidor.");
-            return r;
-        }
-    }
-
     public static HashMap<String, Object> obtenerTodas() {
-        return buscar(null, null, null);
-    }
-
-    public static HashMap<String, Object> buscar(Integer idPaciente, Integer idMedico, String fecha) {
         HashMap<String, Object> respuesta = new LinkedHashMap<>();
-
-        StringBuilder url = new StringBuilder(Constantes.URL_WS + "consulta/buscar");
-        StringBuilder qs = new StringBuilder();
-        if (idPaciente != null) {
-            qs.append(qs.length() == 0 ? "?" : "&").append("idPaciente=").append(idPaciente);
-        }
-        if (idMedico != null) {
-            qs.append(qs.length() == 0 ? "?" : "&").append("idMedico=").append(idMedico);
-        }
-        if (fecha != null && !fecha.trim().isEmpty()) {
-            try {
-                qs.append(qs.length() == 0 ? "?" : "&").append("fecha=")
-                  .append(URLEncoder.encode(fecha.trim(), StandardCharsets.UTF_8.name()));
-            } catch (Exception e) {
-                // si falla la codificacion, se omite el filtro de fecha
-            }
-        }
-        url.append(qs);
-
-        RespuestaHTTP resp = ConexionAPI.peticionGET(url.toString());
-
-        if (resp.getCodigo() == HttpURLConnection.HTTP_OK) {
-            Gson gson = new Gson();
-            Type listType = new TypeToken<List<Consulta>>() {}.getType();
-            respuesta.put(Constantes.KEY_ERROR, false);
-            respuesta.put(Constantes.KEY_LISTA, gson.fromJson(resp.getContenido(), listType));
-        } else {
-            respuesta.put(Constantes.KEY_ERROR, true);
-            respuesta.put(Constantes.KEY_MENSAJE, Utilidades.obtenerMensajeErrorHTTP(
-                    resp.getCodigo(), "No fue posible obtener las consultas en este momento."));
-        }
+        respuesta.put(Constantes.KEY_ERROR, true);
+        respuesta.put(Constantes.KEY_MENSAJE, "La búsqueda de todas las consultas ya no está disponible. Usa historial por paciente.");
         return respuesta;
     }
 
@@ -149,34 +197,18 @@ public class ConsultaImp {
     }
 
     public static Respuesta editar(Consulta consulta) {
-        Respuesta respuesta = new Respuesta();
-        respuesta.setError(true);
-        String url = Constantes.URL_WS + "consulta/editar";
-
-        try {
-            Gson gson = new Gson();
-            String json = gson.toJson(consulta);
-
-            RespuestaHTTP resp = ConexionAPI.peticionBody(
-                    url,
-                    Constantes.PETICION_PUT,
-                    json,
-                    Constantes.APPLICATION_JSON
-            );
-
-            if (resp.getCodigo() == HttpURLConnection.HTTP_OK) {
-                return parsearRespuesta(resp.getContenido());
-            } else {
-                respuesta.setMensaje(Utilidades.obtenerMensajeErrorHTTP(
-                        resp.getCodigo(),
-                        "No es posible editar la consulta en este momento."
-                ));
-            }
-        } catch (Exception e) {
-            respuesta.setMensaje("Error al editar la consulta: " + e.getMessage());
-        }
-
-        return respuesta;
+        return editarConsulta(consulta);
     }
 
+    private static Respuesta parsearRespuesta(String json) {
+        try {
+            Gson gson = new Gson();
+            return gson.fromJson(json, Respuesta.class);
+        } catch (Exception e) {
+            Respuesta r = new Respuesta();
+            r.setError(true);
+            r.setMensaje("Error al procesar la respuesta del servidor.");
+            return r;
+        }
+    }
 }

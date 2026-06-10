@@ -163,7 +163,7 @@
                         <Label styleClass="label-status" text="Sistema activo" />
                         <Label styleClass="label-status" text="localhost:8080" />
                         <Region HBox.hgrow="ALWAYS" />
-                        <Label styleClass="label-status" text="miercoles 27 mayo 2026" />
+                        <Label fx:id="lbFechaFooter" styleClass="label-status" text="" />
                     </children>
                 </HBox>
             </bottom>

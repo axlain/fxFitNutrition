@@ -3,7 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/alasn/Desktop/Admon/ClienteEscritorioFitNutrition/src/clienteescritoriofitnutrition/ClienteEscritorioFitNutrition.java</file>
+            <file>file:/C:/Admin%20Proyectos/fxFitNutrition/src/clienteescritoriofitnutrition/FXMLFormularioConsulta.fxml</file>
+            <file>file:/C:/Admin%20Proyectos/fxFitNutrition/src/clienteescritoriofitnutrition/dominio/ConsultaImp.java</file>
+            <file>file:/C:/Admin%20Proyectos/fxFitNutrition/src/clienteescritoriofitnutrition/FXMLFormularioCitaController.java</file>
+            <file>file:/C:/Admin%20Proyectos/fxFitNutrition/src/clienteescritoriofitnutrition/dominio/CitaImp.java</file>
+            <file>file:/C:/Admin%20Proyectos/fxFitNutrition/src/clienteescritoriofitnutrition/pojo/Consulta.java</file>
+            <file>file:/C:/Admin%20Proyectos/fxFitNutrition/src/clienteescritoriofitnutrition/FXMLFormularioConsultaController.java</file>
         </group>
     </open-files>
 </project-private>

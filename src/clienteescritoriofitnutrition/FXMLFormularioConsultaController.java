@@ -1,53 +1,48 @@
 package clienteescritoriofitnutrition;
 
+import clienteescritoriofitnutrition.dominio.CitaImp;
 import clienteescritoriofitnutrition.dominio.ConsultaImp;
 import clienteescritoriofitnutrition.dominio.DietaImp;
 import clienteescritoriofitnutrition.dominio.MedicoImp;
 import clienteescritoriofitnutrition.dominio.PacienteImp;
 import clienteescritoriofitnutrition.dto.Respuesta;
 import clienteescritoriofitnutrition.interfaz.INotificador;
+import clienteescritoriofitnutrition.pojo.Cita;
 import clienteescritoriofitnutrition.pojo.Consulta;
 import clienteescritoriofitnutrition.pojo.Dieta;
 import clienteescritoriofitnutrition.pojo.Medico;
 import clienteescritoriofitnutrition.pojo.Paciente;
 import clienteescritoriofitnutrition.utilidad.Utilidades;
+import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 public class FXMLFormularioConsultaController implements Initializable {
 
-    @FXML
-    private ComboBox<Paciente> cbPaciente;
-    @FXML
-    private ComboBox<Medico> cbMedico;
-    @FXML
-    private ComboBox<Dieta> cbDieta;
-    @FXML
-    private DatePicker dpFecha;
-    @FXML
-    private TextField tfHora;
-    @FXML
-    private TextField tfPeso;
-    @FXML
-    private TextField tfEstatura;
-    @FXML
-    private TextField tfTalla;
-    @FXML
-    private TextField tfImc;
-    @FXML
-    private TextField tfObservaciones;
+    @FXML private ComboBox<Paciente> cbPaciente;
+    @FXML private ComboBox<Medico> cbMedico;
+    @FXML private ComboBox<Cita> cbCita;
+    @FXML private ComboBox<Dieta> cbDieta;
+    @FXML private TextField tfPeso;
+    @FXML private TextField tfEstatura;
+    @FXML private TextField tfTalla;
+    @FXML private TextField tfImc;
+    @FXML private TextField tfObservaciones;
 
     private Consulta consultaEdicion;
     private INotificador notificador;
@@ -55,17 +50,106 @@ public class FXMLFormularioConsultaController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        configurarCombos();
+        bloquearComboCitas("Selecciona primero un paciente");
         cargarPacientes();
         cargarMedicos();
         cargarDietas();
+    }
+
+    private void configurarCombos() {
+        cbPaciente.setConverter(new StringConverter<Paciente>() {
+            @Override
+            public String toString(Paciente paciente) {
+                if (paciente == null) return "";
+
+                if (paciente.getUsuario() != null) {
+                    String nombre = texto(paciente.getUsuario().getNombre());
+                    String apellido = texto(paciente.getUsuario().getApellidoPaterno());
+                    return (nombre + " " + apellido + " - " + texto(paciente.getCodigoAcceso())).trim();
+                }
+
+                return texto(paciente.getCodigoAcceso());
+            }
+
+            @Override
+            public Paciente fromString(String string) {
+                return null;
+            }
+        });
+
+        cbMedico.setConverter(new StringConverter<Medico>() {
+            @Override
+            public String toString(Medico medico) {
+                if (medico == null) return "";
+
+                if (medico.getUsuario() != null) {
+                    String nombre = texto(medico.getUsuario().getNombre());
+                    String apellido = texto(medico.getUsuario().getApellidoPaterno());
+                    return (nombre + " " + apellido + " - " + texto(medico.getNumeroPersonal())).trim();
+                }
+
+                return texto(medico.getNumeroPersonal());
+            }
+
+            @Override
+            public Medico fromString(String string) {
+                return null;
+            }
+        });
+
+        cbDieta.setConverter(new StringConverter<Dieta>() {
+            @Override
+            public String toString(Dieta dieta) {
+                return dieta == null ? "" : texto(dieta.getNombre());
+            }
+
+            @Override
+            public Dieta fromString(String string) {
+                return null;
+            }
+        });
+
+        cbCita.setConverter(new StringConverter<Cita>() {
+            @Override
+            public String toString(Cita cita) {
+                if (cita == null) return "";
+
+                String fecha = texto(cita.getFecha());
+                String hora = texto(cita.getHora());
+
+                if (hora.length() > 5) {
+                    hora = hora.substring(0, 5);
+                }
+
+                return fecha + " " + hora;
+            }
+
+            @Override
+            public Cita fromString(String string) {
+                return null;
+            }
+        });
+
+        cbPaciente.setOnAction(event -> {
+            Paciente paciente = cbPaciente.getValue();
+
+            if (paciente == null || paciente.getIdPaciente() == null) {
+                bloquearComboCitas("Selecciona primero un paciente");
+                return;
+            }
+
+            cargarCitasPaciente(paciente.getIdPaciente());
+        });
     }
 
     public void inicializarDatos(Consulta consulta, INotificador notificador, Integer idMedicoSesion) {
         this.consultaEdicion = consulta;
         this.notificador = notificador;
         this.idMedicoSesion = idMedicoSesion;
-        cargarDatosEdicion();
+
         aplicarMedicoSesion();
+        cargarDatosEdicion();
     }
 
     private void aplicarMedicoSesion() {
@@ -77,26 +161,57 @@ public class FXMLFormularioConsultaController implements Initializable {
 
     private void cargarPacientes() {
         List<Paciente> lista = PacienteImp.obtenerTodos();
-        if (lista == null) {
-            lista = new ArrayList<>();
+        List<Paciente> activos = new ArrayList<>();
+
+        if (lista != null) {
+            for (Paciente paciente : lista) {
+                if (pacienteActivo(paciente)) {
+                    activos.add(paciente);
+                }
+            }
         }
-        cbPaciente.setItems(FXCollections.observableArrayList(lista));
+
+        cbPaciente.setItems(FXCollections.observableArrayList(activos));
     }
 
     private void cargarMedicos() {
         List<Medico> lista = MedicoImp.obtenerTodos();
+
         if (lista == null) {
             lista = new ArrayList<>();
         }
+
         cbMedico.setItems(FXCollections.observableArrayList(lista));
     }
 
     private void cargarDietas() {
         List<Dieta> lista = DietaImp.obtenerTodas();
+
         if (lista == null) {
             lista = new ArrayList<>();
         }
+
         cbDieta.setItems(FXCollections.observableArrayList(lista));
+    }
+
+    private void cargarCitasPaciente(Integer idPaciente) {
+        List<Cita> lista = CitaImp.obtenerPorIdPaciente(idPaciente);
+
+        if (lista == null || lista.isEmpty()) {
+            bloquearComboCitas("Sin citas disponibles");
+            return;
+        }
+
+        cbCita.setItems(FXCollections.observableArrayList(lista));
+        cbCita.setDisable(false);
+        cbCita.setPromptText("Seleccionar cita");
+    }
+
+    private void bloquearComboCitas(String mensaje) {
+        cbCita.getItems().clear();
+        cbCita.setValue(null);
+        cbCita.setDisable(true);
+        cbCita.setPromptText(mensaje);
     }
 
     private void cargarDatosEdicion() {
@@ -104,20 +219,6 @@ public class FXMLFormularioConsultaController implements Initializable {
             return;
         }
 
-        if (consultaEdicion.getFechaHora() != null && !consultaEdicion.getFechaHora().isEmpty()) {
-            String[] partes = consultaEdicion.getFechaHora().split(" ");
-            if (partes.length >= 2) {
-                try {
-                    dpFecha.setValue(LocalDate.parse(partes[0]));
-                    String horaStr = partes[1];
-                    if (horaStr.length() > 5) {
-                        horaStr = horaStr.substring(0, 5);
-                    }
-                    tfHora.setText(horaStr);
-                } catch (Exception e) {}
-            }
-        }
-        
         tfPeso.setText(consultaEdicion.getPeso() != null ? String.valueOf(consultaEdicion.getPeso()) : "");
         tfEstatura.setText(consultaEdicion.getEstatura() != null ? String.valueOf(consultaEdicion.getEstatura()) : "");
         tfTalla.setText(valorFormulario(consultaEdicion.getTalla()));
@@ -125,14 +226,19 @@ public class FXMLFormularioConsultaController implements Initializable {
         tfObservaciones.setText(valorFormulario(consultaEdicion.getObservaciones()));
 
         seleccionarPaciente(consultaEdicion.getIdPaciente());
+
+        if (consultaEdicion.getIdPaciente() != null) {
+            cargarCitasPaciente(consultaEdicion.getIdPaciente());
+            seleccionarCitaPorFechaHora(consultaEdicion.getFecha(), consultaEdicion.getHora());
+        }
+
         seleccionarMedico(consultaEdicion.getIdMedico());
         seleccionarDieta(consultaEdicion.getIdDieta());
     }
 
     private void seleccionarPaciente(Integer idPaciente) {
-        if (idPaciente == null) {
-            return;
-        }
+        if (idPaciente == null) return;
+
         for (Paciente paciente : cbPaciente.getItems()) {
             if (paciente.getIdPaciente() != null && paciente.getIdPaciente().equals(idPaciente)) {
                 cbPaciente.setValue(paciente);
@@ -142,9 +248,8 @@ public class FXMLFormularioConsultaController implements Initializable {
     }
 
     private void seleccionarMedico(Integer idMedico) {
-        if (idMedico == null) {
-            return;
-        }
+        if (idMedico == null) return;
+
         for (Medico medico : cbMedico.getItems()) {
             if (medico.getIdMedico() != null && medico.getIdMedico().equals(idMedico)) {
                 cbMedico.setValue(medico);
@@ -154,9 +259,8 @@ public class FXMLFormularioConsultaController implements Initializable {
     }
 
     private void seleccionarDieta(Integer idDieta) {
-        if (idDieta == null) {
-            return;
-        }
+        if (idDieta == null) return;
+
         for (Dieta dieta : cbDieta.getItems()) {
             if (dieta.getIdDieta() != null && dieta.getIdDieta().equals(idDieta)) {
                 cbDieta.setValue(dieta);
@@ -165,20 +269,62 @@ public class FXMLFormularioConsultaController implements Initializable {
         }
     }
 
+    private void seleccionarCitaPorFechaHora(String fechaConsulta, String horaConsulta) {
+        if (fechaConsulta == null || horaConsulta == null) {
+            return;
+        }
+
+        for (Cita cita : cbCita.getItems()) {
+            if (fechaConsulta.equals(cita.getFecha())
+                    && normalizarHora(horaConsulta).equals(normalizarHora(cita.getHora()))) {
+                cbCita.setValue(cita);
+                return;
+            }
+        }
+    }
+
+    @FXML
+    private void clickCrearCita(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLFormularioCita.fxml"));
+            Parent vista = loader.load();
+
+            FXMLFormularioCitaController controlador = loader.getController();
+            controlador.inicializarDatos(null, null, idMedicoSesion);
+
+            Stage escenario = new Stage();
+            escenario.setScene(new Scene(vista));
+            escenario.setTitle("Registrar Cita");
+            escenario.initModality(Modality.APPLICATION_MODAL);
+            escenario.showAndWait();
+
+            Paciente paciente = cbPaciente.getValue();
+
+            if (paciente != null && paciente.getIdPaciente() != null) {
+                cargarCitasPaciente(paciente.getIdPaciente());
+            }
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            Utilidades.mostrarAlertaSimple(
+                    "Error",
+                    "No se pudo abrir el formulario de cita.",
+                    Alert.AlertType.ERROR
+            );
+        }
+    }
+
     @FXML
     private void clickCalcularIMC(ActionEvent event) {
-        try {
-            double peso = Double.parseDouble(tfPeso.getText().trim());
-            double estatura = Double.parseDouble(tfEstatura.getText().trim());
-            if (estatura > 0) {
-                double imc = peso / (estatura * estatura);
-                tfImc.setText(String.format("%.2f", imc).replace(",", "."));
-            } else {
-                Utilidades.mostrarAlertaSimple("Error", "La estatura debe ser mayor a 0.", Alert.AlertType.WARNING);
-            }
-        } catch (NumberFormatException ex) {
-            Utilidades.mostrarAlertaSimple("Error", "Ingrese valores numéricos válidos para peso y estatura.", Alert.AlertType.WARNING);
+        if (!validarPesoYEstatura()) {
+            return;
         }
+
+        double peso = Double.parseDouble(tfPeso.getText().trim());
+        double estatura = Double.parseDouble(tfEstatura.getText().trim());
+
+        double imc = peso / (estatura * estatura);
+        tfImc.setText(String.format("%.2f", imc).replace(",", "."));
     }
 
     @FXML
@@ -188,6 +334,7 @@ public class FXMLFormularioConsultaController implements Initializable {
         }
 
         Consulta consulta = construirObjeto();
+
         Respuesta respuesta = consultaEdicion == null
                 ? ConsultaImp.registrar(consulta)
                 : ConsultaImp.editar(consulta);
@@ -202,6 +349,7 @@ public class FXMLFormularioConsultaController implements Initializable {
             if (notificador != null) {
                 notificador.notificarOperacionExitosa("consulta", "");
             }
+
             cerrar();
         }
     }
@@ -216,73 +364,152 @@ public class FXMLFormularioConsultaController implements Initializable {
             mostrarCampoRequerido("El paciente es obligatorio.");
             return false;
         }
+
         if (cbMedico.getValue() == null) {
             mostrarCampoRequerido("El médico es obligatorio.");
             return false;
         }
-        if (dpFecha.getValue() == null) {
-            mostrarCampoRequerido("La fecha es obligatoria.");
+
+        if (cbCita.getValue() == null) {
+            mostrarCampoRequerido("Debe seleccionar una cita para tomar la fecha y hora.");
             return false;
         }
-        if (estaVacio(tfHora.getText())) {
-            mostrarCampoRequerido("La hora es obligatoria.");
+
+        if (cbDieta.getValue() == null) {
+            mostrarCampoRequerido("Debe asignar una dieta antes de guardar la consulta.");
             return false;
         }
-        String hora = tfHora.getText().trim();
-        if (!hora.matches("^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$")) {
-            mostrarCampoRequerido("La hora debe tener el formato HH:mm.");
-            return false;
-        }
+
         if (estaVacio(tfPeso.getText())) {
             mostrarCampoRequerido("El peso es obligatorio.");
             return false;
         }
+
         if (estaVacio(tfEstatura.getText())) {
             mostrarCampoRequerido("La estatura es obligatoria.");
             return false;
         }
-        try {
-            Double.parseDouble(tfPeso.getText().trim());
-            Double.parseDouble(tfEstatura.getText().trim());
-        } catch (NumberFormatException e) {
-            mostrarCampoRequerido("Peso y Estatura deben ser números.");
+
+        if (estaVacio(tfTalla.getText())) {
+            mostrarCampoRequerido("La talla es obligatoria.");
             return false;
         }
+
+        if (!pacienteActivo(cbPaciente.getValue())) {
+            mostrarCampoRequerido("No se puede registrar una consulta para un paciente dado de baja.");
+            return false;
+        }
+
+        if (!validarPesoYEstatura()) {
+            return false;
+        }
+
+        if (estaVacio(tfImc.getText())) {
+            clickCalcularIMC(null);
+        }
+
         return true;
+    }
+
+    private boolean validarPesoYEstatura() {
+        if (estaVacio(tfPeso.getText())) {
+            mostrarCampoRequerido("El peso es obligatorio.");
+            return false;
+        }
+
+        if (estaVacio(tfEstatura.getText())) {
+            mostrarCampoRequerido("La estatura es obligatoria.");
+            return false;
+        }
+
+        double peso;
+        double estatura;
+
+        try {
+            peso = Double.parseDouble(tfPeso.getText().trim());
+            estatura = Double.parseDouble(tfEstatura.getText().trim());
+        } catch (NumberFormatException e) {
+            mostrarCampoRequerido("Peso y estatura deben ser valores numéricos. Ejemplo: peso 54 y estatura 1.55.");
+            return false;
+        }
+
+        if (peso <= 0 || peso > 400) {
+            mostrarCampoRequerido("El peso debe estar en kilogramos y ser un valor válido. Ejemplo: 54.");
+            return false;
+        }
+
+        if (estatura > 3) {
+            mostrarCampoRequerido("La estatura debe capturarse en metros. Ejemplo correcto: 1.55, no 155.");
+            return false;
+        }
+
+        if (estatura < 0.50 || estatura > 2.50) {
+            mostrarCampoRequerido("La estatura debe estar entre 0.50 m y 2.50 m.");
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean pacienteActivo(Paciente paciente) {
+        if (paciente == null) {
+            return false;
+        }
+
+        if (paciente.getUsuario() == null || paciente.getUsuario().getEstatus() == null) {
+            return true;
+        }
+
+        String estatus = paciente.getUsuario().getEstatus().getNombre();
+
+        return estatus != null && estatus.equalsIgnoreCase("Activo");
     }
 
     private Consulta construirObjeto() {
         Consulta consulta = consultaEdicion != null ? consultaEdicion : new Consulta();
+
         Paciente paciente = cbPaciente.getValue();
         Medico medico = cbMedico.getValue();
+        Cita cita = cbCita.getValue();
         Dieta dieta = cbDieta.getValue();
 
-        String fecha = dpFecha.getValue().toString();
-        String hora = tfHora.getText().trim() + ":00";
-        consulta.setFechaHora(fecha + " " + hora);
-        
+        consulta.setFecha(cita.getFecha());
+        consulta.setHora(normalizarHora(cita.getHora()));
+
         consulta.setPeso(Double.parseDouble(tfPeso.getText().trim()));
         consulta.setEstatura(Double.parseDouble(tfEstatura.getText().trim()));
         consulta.setTalla(valorFormulario(tfTalla.getText()));
+
         if (!estaVacio(tfImc.getText())) {
             consulta.setImc(Double.parseDouble(tfImc.getText().trim()));
         }
+
         consulta.setObservaciones(valorFormulario(tfObservaciones.getText()));
-        
+
         consulta.setIdPaciente(paciente.getIdPaciente());
         consulta.setPaciente(paciente);
+
         consulta.setIdMedico(medico.getIdMedico());
         consulta.setMedico(medico);
-        
-        if (dieta != null) {
-            consulta.setIdDieta(dieta.getIdDieta());
-            consulta.setDieta(dieta);
-        } else {
-            consulta.setIdDieta(null);
-            consulta.setDieta(null);
-        }
+
+        consulta.setIdDieta(dieta.getIdDieta());
+        consulta.setDieta(dieta);
 
         return consulta;
+    }
+
+    private String normalizarHora(String hora) {
+        if (hora == null) {
+            return "";
+        }
+
+        hora = hora.trim();
+
+        if (hora.length() == 5) {
+            return hora + ":00";
+        }
+
+        return hora;
     }
 
     private void mostrarCampoRequerido(String mensaje) {
@@ -295,6 +522,10 @@ public class FXMLFormularioConsultaController implements Initializable {
 
     private String valorFormulario(String valor) {
         return valor != null ? valor.trim() : "";
+    }
+
+    private String texto(String valor) {
+        return valor != null ? valor : "";
     }
 
     private void cerrar() {

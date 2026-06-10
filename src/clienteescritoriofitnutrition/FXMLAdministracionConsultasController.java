@@ -4,12 +4,10 @@ import clienteescritoriofitnutrition.dominio.ConsultaImp;
 import clienteescritoriofitnutrition.dto.RSAutenticar;
 import clienteescritoriofitnutrition.interfaz.INotificador;
 import clienteescritoriofitnutrition.pojo.Consulta;
-import clienteescritoriofitnutrition.utilidad.Constantes;
 import clienteescritoriofitnutrition.utilidad.Utilidades;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -44,7 +42,9 @@ public class FXMLAdministracionConsultasController implements Initializable, INo
     @FXML
     private TableView<Consulta> tvConsultas;
     @FXML
-    private TableColumn tcFechaHora;
+    private TableColumn tcFecha;
+    @FXML
+    private TableColumn tcHora;
     @FXML
     private TableColumn tcPaciente;
     @FXML
@@ -62,7 +62,6 @@ public class FXMLAdministracionConsultasController implements Initializable, INo
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         configurarTabla();
-        // La carga de datos se hace en inicializarSesion() (depende del rol).
     }
 
     public void inicializarSesion(RSAutenticar sesion) {
@@ -71,7 +70,8 @@ public class FXMLAdministracionConsultasController implements Initializable, INo
     }
 
     private void configurarTabla() {
-        tcFechaHora.setCellValueFactory(new PropertyValueFactory("fechaHora"));
+        tcFecha.setCellValueFactory(new PropertyValueFactory("fecha"));
+        tcHora.setCellValueFactory(new PropertyValueFactory("hora"));
         tcPaciente.setCellValueFactory(new PropertyValueFactory("nombrePaciente"));
         tcMedico.setCellValueFactory(new PropertyValueFactory("nombreMedico"));
         tcPeso.setCellValueFactory(new PropertyValueFactory("peso"));
@@ -80,27 +80,27 @@ public class FXMLAdministracionConsultasController implements Initializable, INo
     }
 
     private void cargarInformacionConsultas() {
-        Integer idMedicoSesion = obtenerIdMedicoSesion();
-        HashMap<String, Object> respuesta = ConsultaImp.buscar(null, idMedicoSesion, null);
-        boolean esError = (boolean) respuesta.get(Constantes.KEY_ERROR);
+        List<Consulta> lista = new ArrayList<>();
 
-        if (esError) {
-            consultas = FXCollections.observableArrayList();
-            tvConsultas.setItems(consultas);
-            Utilidades.mostrarAlertaSimple(
-                    "Sin conexión",
-                    respuesta.get(Constantes.KEY_MENSAJE).toString(),
-                    Alert.AlertType.WARNING
-            );
-            return;
+        Integer idMedicoSesion = obtenerIdMedicoSesion();
+
+        if (idMedicoSesion != null && idMedicoSesion > 0) {
+            lista = ConsultaImp.obtenerHistorialMedico(idMedicoSesion);
         }
 
-        List<Consulta> lista = (List<Consulta>) respuesta.get(Constantes.KEY_LISTA);
         if (lista == null) {
             lista = new ArrayList<>();
         }
+
         consultas = FXCollections.observableArrayList(lista);
         tvConsultas.setItems(consultas);
+    }
+
+    private Integer obtenerIdPacienteSesion() {
+        if (sesion != null && sesion.getPaciente() != null) {
+            return sesion.getPaciente().getIdPaciente();
+        }
+        return null;
     }
 
     private Integer obtenerIdMedicoSesion() {
@@ -113,6 +113,7 @@ public class FXMLAdministracionConsultasController implements Initializable, INo
     @FXML
     private void clickBuscar(ActionEvent event) {
         String filtro = tfBuscar.getText();
+
         if (filtro == null || filtro.trim().isEmpty()) {
             tvConsultas.setItems(consultas);
             return;
@@ -123,13 +124,16 @@ public class FXMLAdministracionConsultasController implements Initializable, INo
 
         if (consultas != null) {
             for (Consulta consulta : consultas) {
-                if (consulta.getNombrePaciente().toLowerCase().contains(filtroLower) ||
-                    consulta.getNombreMedico().toLowerCase().contains(filtroLower) ||
-                    (consulta.getFechaHora() != null && consulta.getFechaHora().toLowerCase().contains(filtroLower))) {
+                if (consulta.getNombrePaciente().toLowerCase().contains(filtroLower)
+                        || consulta.getNombreMedico().toLowerCase().contains(filtroLower)
+                        || texto(consulta.getFecha()).toLowerCase().contains(filtroLower)
+                        || texto(consulta.getHora()).toLowerCase().contains(filtroLower)
+                        || texto(consulta.getNombreDieta()).toLowerCase().contains(filtroLower)) {
                     filtradas.add(consulta);
                 }
             }
         }
+
         tvConsultas.setItems(filtradas);
     }
 
@@ -154,9 +158,11 @@ public class FXMLAdministracionConsultasController implements Initializable, INo
 
     private Consulta obtenerConsultaSeleccionada(String mensaje) {
         Consulta consulta = tvConsultas.getSelectionModel().getSelectedItem();
+
         if (consulta == null) {
             Utilidades.mostrarAlertaSimple("Selección requerida", mensaje, Alert.AlertType.WARNING);
         }
+
         return consulta;
     }
 
@@ -164,6 +170,7 @@ public class FXMLAdministracionConsultasController implements Initializable, INo
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLFormularioConsulta.fxml"));
             Parent vista = loader.load();
+
             FXMLFormularioConsultaController controlador = loader.getController();
             controlador.inicializarDatos(consulta, this, obtenerIdMedicoSesion());
 
@@ -173,10 +180,19 @@ public class FXMLAdministracionConsultasController implements Initializable, INo
             escenario.setTitle(consulta == null ? "Registrar Consulta" : "Editar Consulta");
             escenario.initModality(Modality.APPLICATION_MODAL);
             escenario.showAndWait();
+
         } catch (IOException ex) {
             ex.printStackTrace();
-            Utilidades.mostrarAlertaSimple("Error", "No se pudo abrir el formulario de consulta.", Alert.AlertType.ERROR);
+            Utilidades.mostrarAlertaSimple(
+                    "Error",
+                    "No se pudo abrir el formulario de consulta.",
+                    Alert.AlertType.ERROR
+            );
         }
+    }
+
+    private String texto(String valor) {
+        return valor != null ? valor : "";
     }
 
     @Override

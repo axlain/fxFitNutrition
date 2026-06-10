@@ -1,28 +1,39 @@
 package clienteescritoriofitnutrition.pojo;
 
 public class Consulta {
+
     private Integer idConsulta;
-    private String fechaHora;
+    private String fecha;
+    private String hora;
     private Double peso;
     private Double estatura;
     private String talla;
     private Double imc;
     private String observaciones;
 
-    // Relaciones
     private Integer idPaciente;
     private Paciente paciente;
+
     private Integer idMedico;
     private Medico medico;
+
     private Integer idDieta;
-    private Dieta dieta; 
+    private Dieta dieta;
+
+    private Integer idCita;
 
     public Consulta() {
     }
 
-    public Consulta(Integer idConsulta, String fechaHora, Double peso, Double estatura, String talla, Double imc, String observaciones, Integer idPaciente, Paciente paciente, Integer idMedico, Medico medico, Integer idDieta, Dieta dieta) {
+    public Consulta(Integer idConsulta, String fecha, String hora,
+            Double peso, Double estatura, String talla, Double imc,
+            String observaciones, Integer idPaciente, Paciente paciente,
+            Integer idMedico, Medico medico, Integer idDieta,
+            Dieta dieta, Integer idCita) {
+
         this.idConsulta = idConsulta;
-        this.fechaHora = fechaHora;
+        this.fecha = fecha;
+        this.hora = hora;
         this.peso = peso;
         this.estatura = estatura;
         this.talla = talla;
@@ -34,6 +45,7 @@ public class Consulta {
         this.medico = medico;
         this.idDieta = idDieta;
         this.dieta = dieta;
+        this.idCita = idCita;
     }
 
     public Integer getIdConsulta() {
@@ -44,12 +56,35 @@ public class Consulta {
         this.idConsulta = idConsulta;
     }
 
+    public String getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
+    }
+
+    public String getHora() {
+        return hora;
+    }
+
+    public void setHora(String hora) {
+        this.hora = hora;
+    }
+
     public String getFechaHora() {
-        return fechaHora;
+        String f = txt(fecha);
+        String h = txt(hora);
+
+        if (!f.isEmpty() && !h.isEmpty()) {
+            return f + " " + h;
+        }
+
+        return f + h;
     }
 
     public void setFechaHora(String fechaHora) {
-        this.fechaHora = fechaHora;
+        this.fecha = fechaHora;
     }
 
     public Double getPeso() {
@@ -140,7 +175,14 @@ public class Consulta {
         this.dieta = dieta;
     }
 
-    // Getters calculados para las columnas de la tabla (estilo PAQ, sin lambda)
+    public Integer getIdCita() {
+        return idCita;
+    }
+
+    public void setIdCita(Integer idCita) {
+        this.idCita = idCita;
+    }
+
     public String getNombrePaciente() {
         if (paciente != null && paciente.getUsuario() != null) {
             String nombre = txt(paciente.getUsuario().getNombre());
@@ -160,7 +202,9 @@ public class Consulta {
     }
 
     public String getNombreDieta() {
-        return (dieta != null && dieta.getNombre() != null) ? dieta.getNombre() : "";
+        return (dieta != null && dieta.getNombre() != null)
+                ? dieta.getNombre()
+                : "";
     }
 
     private String txt(String valor) {

@@ -23,6 +23,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 public class FXMLFormularioCitaController implements Initializable {
 
@@ -43,14 +44,62 @@ public class FXMLFormularioCitaController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        configurarCombos();
         cargarPacientes();
         cargarMedicos();
+    }
+
+    private void configurarCombos() {
+        cbPaciente.setConverter(new StringConverter<Paciente>() {
+            @Override
+            public String toString(Paciente paciente) {
+                if (paciente == null) {
+                    return "";
+                }
+
+                if (paciente.getUsuario() != null) {
+                    String nombre = texto(paciente.getUsuario().getNombre());
+                    String apellido = texto(paciente.getUsuario().getApellidoPaterno());
+                    return (nombre + " " + apellido + " - " + texto(paciente.getCodigoAcceso())).trim();
+                }
+
+                return texto(paciente.getCodigoAcceso());
+            }
+
+            @Override
+            public Paciente fromString(String string) {
+                return null;
+            }
+        });
+
+        cbMedico.setConverter(new StringConverter<Medico>() {
+            @Override
+            public String toString(Medico medico) {
+                if (medico == null) {
+                    return "";
+                }
+
+                if (medico.getUsuario() != null) {
+                    String nombre = texto(medico.getUsuario().getNombre());
+                    String apellido = texto(medico.getUsuario().getApellidoPaterno());
+                    return (nombre + " " + apellido + " - " + texto(medico.getNumeroPersonal())).trim();
+                }
+
+                return texto(medico.getNumeroPersonal());
+            }
+
+            @Override
+            public Medico fromString(String string) {
+                return null;
+            }
+        });
     }
 
     public void inicializarDatos(Cita cita, INotificador notificador, Integer idMedicoSesion) {
         this.citaEdicion = cita;
         this.notificador = notificador;
         this.idMedicoSesion = idMedicoSesion;
+
         cargarDatosEdicion();
         aplicarMedicoSesion();
     }
@@ -64,17 +113,26 @@ public class FXMLFormularioCitaController implements Initializable {
 
     private void cargarPacientes() {
         List<Paciente> lista = PacienteImp.obtenerTodos();
-        if (lista == null) {
-            lista = new ArrayList<>();
+        List<Paciente> activos = new ArrayList<>();
+
+        if (lista != null) {
+            for (Paciente paciente : lista) {
+                if (pacienteActivo(paciente)) {
+                    activos.add(paciente);
+                }
+            }
         }
-        cbPaciente.setItems(FXCollections.observableArrayList(lista));
+
+        cbPaciente.setItems(FXCollections.observableArrayList(activos));
     }
 
     private void cargarMedicos() {
         List<Medico> lista = MedicoImp.obtenerTodos();
+
         if (lista == null) {
             lista = new ArrayList<>();
         }
+
         cbMedico.setItems(FXCollections.observableArrayList(lista));
     }
 
@@ -90,10 +148,13 @@ public class FXMLFormularioCitaController implements Initializable {
                 dpFecha.setValue(null);
             }
         }
+
         String horaCita = valorFormulario(citaEdicion.getHora());
+
         if (horaCita.length() > 5) {
             horaCita = horaCita.substring(0, 5);
         }
+
         tfHora.setText(horaCita);
         tfObservaciones.setText(valorFormulario(citaEdicion.getObservaciones()));
 
@@ -105,6 +166,7 @@ public class FXMLFormularioCitaController implements Initializable {
         if (idPaciente == null) {
             return;
         }
+
         for (Paciente paciente : cbPaciente.getItems()) {
             if (paciente.getIdPaciente() != null && paciente.getIdPaciente().equals(idPaciente)) {
                 cbPaciente.setValue(paciente);
@@ -117,6 +179,7 @@ public class FXMLFormularioCitaController implements Initializable {
         if (idMedico == null) {
             return;
         }
+
         for (Medico medico : cbMedico.getItems()) {
             if (medico.getIdMedico() != null && medico.getIdMedico().equals(idMedico)) {
                 cbMedico.setValue(medico);
@@ -132,6 +195,7 @@ public class FXMLFormularioCitaController implements Initializable {
         }
 
         Cita cita = construirObjeto();
+
         Respuesta respuesta = citaEdicion == null
                 ? CitaImp.registrar(cita)
                 : CitaImp.editar(cita);
@@ -146,6 +210,7 @@ public class FXMLFormularioCitaController implements Initializable {
             if (notificador != null) {
                 notificador.notificarOperacionExitosa("cita", "");
             }
+
             cerrar();
         }
     }
@@ -160,47 +225,86 @@ public class FXMLFormularioCitaController implements Initializable {
             mostrarCampoRequerido("El paciente es obligatorio.");
             return false;
         }
+
         if (cbMedico.getValue() == null) {
             mostrarCampoRequerido("El médico es obligatorio.");
             return false;
         }
+
         if (dpFecha.getValue() == null) {
             mostrarCampoRequerido("La fecha es obligatoria.");
             return false;
         }
+
         if (estaVacio(tfHora.getText())) {
             mostrarCampoRequerido("La hora es obligatoria.");
             return false;
         }
-        // Validar formato de hora simple (HH:mm)
+
+        if (!pacienteActivo(cbPaciente.getValue())) {
+            mostrarCampoRequerido("No se puede registrar una cita para un paciente dado de baja.");
+            return false;
+        }
+
         String hora = tfHora.getText().trim();
+
         if (!hora.matches("^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$")) {
             mostrarCampoRequerido("La hora debe tener el formato HH:mm.");
             return false;
         }
+
         return true;
     }
 
     private Cita construirObjeto() {
         Cita cita = citaEdicion != null ? citaEdicion : new Cita();
+
         Paciente paciente = cbPaciente.getValue();
         Medico medico = cbMedico.getValue();
 
         cita.setFecha(dpFecha.getValue().toString());
-        cita.setHora(tfHora.getText().trim());
+        cita.setHora(normalizarHora(tfHora.getText()));
         cita.setObservaciones(valorFormulario(tfObservaciones.getText()));
-        
-        // Estado inicial de la cita: 1 (Agendada / Pendiente) - dependerá de la DB.
+
         if (cita.getIdCita() == null) {
             cita.setIdEstadoCita(1);
         }
 
         cita.setIdPaciente(paciente.getIdPaciente());
         cita.setPaciente(paciente);
+
         cita.setIdMedico(medico.getIdMedico());
         cita.setMedico(medico);
 
         return cita;
+    }
+
+    private boolean pacienteActivo(Paciente paciente) {
+        if (paciente == null) {
+            return false;
+        }
+
+        if (paciente.getUsuario() == null || paciente.getUsuario().getEstatus() == null) {
+            return true;
+        }
+
+        String estatus = paciente.getUsuario().getEstatus().getNombre();
+
+        return estatus != null && estatus.equalsIgnoreCase("Activo");
+    }
+
+    private String normalizarHora(String hora) {
+        if (hora == null) {
+            return "";
+        }
+
+        hora = hora.trim();
+
+        if (hora.length() == 5) {
+            return hora + ":00";
+        }
+
+        return hora;
     }
 
     private void mostrarCampoRequerido(String mensaje) {
@@ -213,6 +317,10 @@ public class FXMLFormularioCitaController implements Initializable {
 
     private String valorFormulario(String valor) {
         return valor != null ? valor.trim() : "";
+    }
+
+    private String texto(String valor) {
+        return valor != null ? valor : "";
     }
 
     private void cerrar() {

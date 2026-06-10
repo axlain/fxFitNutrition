@@ -30,6 +30,7 @@
                 <rowConstraints>
                     <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
                     <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                    <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
                 </rowConstraints>
                 <children>
                     <AnchorPane prefHeight="200.0" prefWidth="200.0">
@@ -42,6 +43,12 @@
                         <children>
                             <Label styleClass="etiqueta-campo" text="Descripción" />
                             <TextField fx:id="tfDescripcion" layoutY="22.0" prefHeight="35.0" styleClass="campo-texto" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                        </children>
+                    </AnchorPane>
+                    <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
+                        <children>
+                            <Label styleClass="etiqueta-campo" text="Médico responsable (*)" />
+                            <ComboBox fx:id="cbMedico" layoutY="22.0" prefHeight="35.0" styleClass="combo-box" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                         </children>
                     </AnchorPane>
                 </children>

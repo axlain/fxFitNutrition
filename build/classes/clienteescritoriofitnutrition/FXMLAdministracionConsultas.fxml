@@ -33,7 +33,8 @@
     <center>
         <TableView fx:id="tvConsultas" styleClass="tabla-datos">
             <columns>
-                <TableColumn fx:id="tcFechaHora" prefWidth="150.0" text="Fecha y Hora" />
+                <TableColumn fx:id="tcFecha" prefWidth="120.0" text="Fecha" />
+                <TableColumn fx:id="tcHora" prefWidth="100.0" text="Hora" />
                 <TableColumn fx:id="tcPaciente" prefWidth="250.0" text="Paciente" />
                 <TableColumn fx:id="tcMedico" prefWidth="200.0" text="Médico" />
                 <TableColumn fx:id="tcPeso" prefWidth="90.0" text="Peso (kg)" />
