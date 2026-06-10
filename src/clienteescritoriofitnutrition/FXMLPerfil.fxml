@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane styleClass="modulo-root" xmlns="http://javafx.com/fxml/1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clienteescritoriofitnutrition.FXMLPerfilController">
+    <stylesheets>
+        <URL value="@/clienteescritoriofitnutrition/utilidad/estilo.css" />
+    </stylesheets>
+    <top>
+        <VBox spacing="4.0">
+            <padding>
+                <Insets bottom="14.0" left="16.0" right="16.0" top="14.0" />
+            </padding>
+            <Label styleClass="titulo-modulo" text="Perfil" />
+            <Label styleClass="texto-ayuda" text="Consulta tu información de cuenta, actualiza tu fotografía y cambia tu contraseña." />
+        </VBox>
+    </top>
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="scroll-transparente">
+            <content>
+                <VBox spacing="18.0" styleClass="panel-formulario">
+                    <padding>
+                        <Insets bottom="22.0" left="16.0" right="16.0" top="6.0" />
+                    </padding>
+
+                    <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="form-card">
+                        <VBox alignment="CENTER" spacing="10.0">
+                            <StackPane styleClass="perfil-avatar">
+                                <ImageView fx:id="ivFoto" fitHeight="96.0" fitWidth="96.0" preserveRatio="true" />
+                                <Label fx:id="lbIniciales" styleClass="perfil-avatar-text" text="" />
+                            </StackPane>
+                            <Button fx:id="btnCambiarFoto" mnemonicParsing="false" onAction="#clickCambiarFoto" styleClass="boton-secundario" text="Cambiar foto" />
+                        </VBox>
+                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                            <Label fx:id="lbNombreCompleto" styleClass="label-titulo" text="Nombre Apellido" />
+                            <Label fx:id="lbRol" styleClass="label-subtitulo" text="Rol" />
+                            <Label fx:id="lbEstatus" styleClass="pill-activo" text="Activo" />
+                        </VBox>
+                    </HBox>
+
+                    <Label styleClass="label-seccion" text="Información de la cuenta" />
+                    <GridPane hgap="14.0" styleClass="form-card" vgap="14.0">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50.0" />
+                            <ColumnConstraints percentWidth="50.0" />
+                        </columnConstraints>
+                        <VBox spacing="4.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <Label styleClass="label-campo" text="Nombre completo" />
+                            <Label fx:id="lbValorNombre" styleClass="label-valor" text="-" />
+                        </VBox>
+                        <VBox spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <Label styleClass="label-campo" text="Correo electrónico" />
+                            <Label fx:id="lbValorCorreo" styleClass="label-valor" text="-" />
+                        </VBox>
+                        <VBox spacing="4.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                            <Label styleClass="label-campo" text="Teléfono" />
+                            <Label fx:id="lbValorTelefono" styleClass="label-valor" text="-" />
+                        </VBox>
+                        <VBox spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                            <Label styleClass="label-campo" text="Fecha de nacimiento" />
+                            <Label fx:id="lbValorFechaNacimiento" styleClass="label-valor" text="-" />
+                        </VBox>
+                        <VBox spacing="4.0" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                            <Label styleClass="label-campo" text="Género" />
+                            <Label fx:id="lbValorGenero" styleClass="label-valor" text="-" />
+                        </VBox>
+                        <VBox spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                            <Label styleClass="label-campo" text="Número de personal" />
+                            <Label fx:id="lbValorNumeroPersonal" styleClass="label-valor" text="-" />
+                        </VBox>
+                        <VBox spacing="4.0" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                            <Label styleClass="label-campo" text="Cédula profesional" />
+                            <Label fx:id="lbValorCedula" styleClass="label-valor" text="-" />
+                        </VBox>
+                    </GridPane>
+
+                    <Label styleClass="label-seccion" text="Cambiar contraseña" />
+                    <GridPane hgap="14.0" styleClass="form-card" vgap="12.0">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50.0" />
+                            <ColumnConstraints percentWidth="50.0" />
+                        </columnConstraints>
+                        <Label styleClass="label-campo" text="Contraseña actual" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                        <PasswordField fx:id="pfContrasenaActual" promptText="Contraseña actual" styleClass="campo-texto" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <Label styleClass="label-campo" text="Nueva contraseña" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                        <PasswordField fx:id="pfContrasenaNueva" promptText="Nueva contraseña" styleClass="campo-texto" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label styleClass="label-campo" text="Confirmar contraseña" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <PasswordField fx:id="pfContrasenaConfirmar" promptText="Confirmar contraseña" styleClass="campo-texto" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                    </GridPane>
+
+                    <HBox alignment="CENTER_RIGHT">
+                        <Button mnemonicParsing="false" onAction="#clickCambiarContrasena" styleClass="boton-primario" text="Actualizar contraseña" />
+                    </HBox>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+</BorderPane>

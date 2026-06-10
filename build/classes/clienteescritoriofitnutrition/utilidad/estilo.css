@@ -656,6 +656,30 @@
     -fx-text-fill: #1E8A4A;
 }
 
+.label-valor {
+    -fx-font-size: 13px;
+    -fx-text-fill: #1A2E1E;
+}
+
+.perfil-avatar {
+    -fx-background-color: #1E3A28;
+    -fx-background-radius: 50%;
+    -fx-border-color: #27AE60;
+    -fx-border-radius: 50%;
+    -fx-border-width: 2;
+    -fx-min-width: 96;
+    -fx-min-height: 96;
+    -fx-max-width: 96;
+    -fx-max-height: 96;
+    -fx-alignment: center;
+}
+
+.perfil-avatar-text {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #BDE7C7;
+}
+
 .scroll-bar {
     -fx-background-color: transparent;
 }

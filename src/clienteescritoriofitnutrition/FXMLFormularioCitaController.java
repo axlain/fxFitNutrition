@@ -12,6 +12,7 @@ import clienteescritoriofitnutrition.utilidad.Utilidades;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -34,7 +35,7 @@ public class FXMLFormularioCitaController implements Initializable {
     @FXML
     private DatePicker dpFecha;
     @FXML
-    private TextField tfHora;
+    private ComboBox<String> cbHora;
     @FXML
     private TextField tfObservaciones;
 
@@ -47,6 +48,35 @@ public class FXMLFormularioCitaController implements Initializable {
         configurarCombos();
         cargarPacientes();
         cargarMedicos();
+        configurarListenersHora();
+    }
+
+    private void configurarListenersHora() {
+        dpFecha.valueProperty().addListener((obs, valorAnterior, valorNuevo) -> cargarHorasDisponibles());
+        cbMedico.valueProperty().addListener((obs, valorAnterior, valorNuevo) -> cargarHorasDisponibles());
+    }
+
+    private void cargarHorasDisponibles() {
+        LocalDate fecha = dpFecha.getValue();
+        Medico medico = cbMedico.getValue();
+        String horaActual = cbHora.getValue();
+
+        if (fecha == null || medico == null || medico.getIdMedico() == null) {
+            cbHora.setItems(FXCollections.observableArrayList());
+            cbHora.setValue(null);
+            return;
+        }
+
+        Integer idCitaExcluir = citaEdicion != null ? citaEdicion.getIdCita() : null;
+        List<String> horas = CitaImp.obtenerHorasDisponibles(medico.getIdMedico(), fecha.toString(), idCitaExcluir);
+
+        if (horaActual != null && !horas.contains(horaActual)) {
+            horas.add(horaActual);
+            Collections.sort(horas);
+        }
+
+        cbHora.setItems(FXCollections.observableArrayList(horas));
+        cbHora.setValue(horas.contains(horaActual) ? horaActual : null);
     }
 
     private void configurarCombos() {
@@ -155,11 +185,18 @@ public class FXMLFormularioCitaController implements Initializable {
             horaCita = horaCita.substring(0, 5);
         }
 
-        tfHora.setText(horaCita);
         tfObservaciones.setText(valorFormulario(citaEdicion.getObservaciones()));
 
         seleccionarPaciente(citaEdicion.getIdPaciente());
         seleccionarMedico(citaEdicion.getIdMedico());
+
+        if (!horaCita.isEmpty()) {
+            if (!cbHora.getItems().contains(horaCita)) {
+                cbHora.getItems().add(horaCita);
+                FXCollections.sort(cbHora.getItems());
+            }
+            cbHora.setValue(horaCita);
+        }
     }
 
     private void seleccionarPaciente(Integer idPaciente) {
@@ -236,20 +273,13 @@ public class FXMLFormularioCitaController implements Initializable {
             return false;
         }
 
-        if (estaVacio(tfHora.getText())) {
+        if (cbHora.getValue() == null) {
             mostrarCampoRequerido("La hora es obligatoria.");
             return false;
         }
 
         if (!pacienteActivo(cbPaciente.getValue())) {
             mostrarCampoRequerido("No se puede registrar una cita para un paciente dado de baja.");
-            return false;
-        }
-
-        String hora = tfHora.getText().trim();
-
-        if (!hora.matches("^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$")) {
-            mostrarCampoRequerido("La hora debe tener el formato HH:mm.");
             return false;
         }
 
@@ -263,7 +293,7 @@ public class FXMLFormularioCitaController implements Initializable {
         Medico medico = cbMedico.getValue();
 
         cita.setFecha(dpFecha.getValue().toString());
-        cita.setHora(normalizarHora(tfHora.getText()));
+        cita.setHora(normalizarHora(cbHora.getValue()));
         cita.setObservaciones(valorFormulario(tfObservaciones.getText()));
 
         if (cita.getIdCita() == null) {
@@ -311,10 +341,6 @@ public class FXMLFormularioCitaController implements Initializable {
         Utilidades.mostrarAlertaSimple("Campo requerido", mensaje, Alert.AlertType.WARNING);
     }
 
-    private boolean estaVacio(String valor) {
-        return valor == null || valor.trim().isEmpty();
-    }
-
     private String valorFormulario(String valor) {
         return valor != null ? valor.trim() : "";
     }
@@ -324,7 +350,7 @@ public class FXMLFormularioCitaController implements Initializable {
     }
 
     private void cerrar() {
-        Stage escenario = (Stage) tfHora.getScene().getWindow();
+        Stage escenario = (Stage) cbHora.getScene().getWindow();
         escenario.close();
     }
 }

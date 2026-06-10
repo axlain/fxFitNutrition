@@ -51,7 +51,7 @@
                 <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <children>
                         <Label styleClass="etiqueta-campo" text="Hora (HH:mm) (*)" />
-                        <TextField fx:id="tfHora" layoutY="22.0" prefHeight="35.0" prefWidth="260.0" promptText="Ej: 14:30" styleClass="campo-texto" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                        <ComboBox fx:id="cbHora" layoutY="22.0" prefHeight="35.0" prefWidth="260.0" promptText="Seleccionar hora" styleClass="combo-box" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                     </children>
                 </AnchorPane>
                 <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="2">

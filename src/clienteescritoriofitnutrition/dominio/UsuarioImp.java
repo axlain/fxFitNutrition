@@ -9,8 +9,13 @@ import clienteescritoriofitnutrition.utilidad.Constantes;
 import clienteescritoriofitnutrition.utilidad.Utilidades;
 
 import java.net.HttpURLConnection;
+import java.util.Base64;
 
 public class UsuarioImp {
+
+    private static class FotoRequest {
+        String fotoBase64;
+    }
 
     public static Respuesta subirFoto(Integer idUsuario, byte[] foto) {
         Respuesta respuesta = new Respuesta();
@@ -19,9 +24,11 @@ public class UsuarioImp {
         String url = Constantes.URL_WS + "usuario/guardar-foto/" + idUsuario;
 
         try {
+            FotoRequest datos = new FotoRequest();
+            datos.fotoBase64 = Base64.getEncoder().encodeToString(foto);
+
             Gson gson = new Gson();
-            // Convertimos el arreglo de bytes a una representación que JAX-RS pueda interpretar
-            String jsonFoto = gson.toJson(foto);
+            String jsonFoto = gson.toJson(datos);
 
             RespuestaHTTP resp = ConexionAPI.peticionBody(
                     url,

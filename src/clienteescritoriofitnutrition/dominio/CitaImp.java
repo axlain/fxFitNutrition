@@ -164,6 +164,34 @@ public class CitaImp {
         return null;
     }
 
+    public static List<String> obtenerHorasDisponibles(Integer idMedico, String fecha, Integer idCita) {
+        if (idMedico == null || idMedico <= 0 || fecha == null || fecha.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        try {
+            String fechaCodificada = URLEncoder.encode(fecha.trim(), StandardCharsets.UTF_8.name());
+            String url = Constantes.URL_WS + "cita/horas-disponibles?idMedico=" + idMedico + "&fecha=" + fechaCodificada;
+
+            if (idCita != null && idCita > 0) {
+                url += "&idCita=" + idCita;
+            }
+
+            RespuestaHTTP resp = ConexionAPI.peticionGET(url);
+
+            if (resp.getCodigo() == HttpURLConnection.HTTP_OK) {
+                Gson gson = new Gson();
+                Type listType = new TypeToken<List<String>>() {}.getType();
+                List<String> horas = gson.fromJson(resp.getContenido(), listType);
+                return horas != null ? horas : new ArrayList<>();
+            }
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
+
+        return new ArrayList<>();
+    }
+
     public static List<Cita> obtenerVigentesPaciente(Integer idPaciente) {
         String url = Constantes.URL_WS + "cita/obtener-vigentes-paciente/" + idPaciente;
         

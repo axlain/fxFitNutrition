@@ -22,9 +22,6 @@
             </padding>
             <Label styleClass="titulo-modulo" text="Pacientes" />
             <HBox alignment="CENTER_LEFT" spacing="8.0" styleClass="toolbar">
-                <Button mnemonicParsing="false" styleClass="segmented-btn-activo" text="Todos" />
-                <Button mnemonicParsing="false" styleClass="segmented-btn" text="Activos" />
-                <Button mnemonicParsing="false" styleClass="segmented-btn" text="Bajas" />
                 <TextField fx:id="tfBuscar" promptText="Buscar paciente..." styleClass="campo-busqueda" HBox.hgrow="ALWAYS" />
                 <Button fx:id="btnBuscar" mnemonicParsing="false" onAction="#clickBuscar" styleClass="boton-secundario" text="Buscar" />
                 <Button fx:id="btnLimpiar" mnemonicParsing="false" onAction="#clickLimpiar" styleClass="boton-secundario" text="Limpiar" />

@@ -117,7 +117,7 @@
                 <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="3">
                     <children>
                         <Label styleClass="etiqueta-campo" text="IMC (Calculado)" />
-                        <TextField fx:id="tfImc" editable="false" layoutY="22.0" prefHeight="35.0" prefWidth="260.0"
+                        <TextField fx:id="tfImc" disable="true" editable="false" layoutY="22.0" prefHeight="35.0" prefWidth="260.0"
                                    styleClass="campo-texto"
                                    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                     </children>

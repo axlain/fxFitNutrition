@@ -159,14 +159,13 @@ public class MedicoImp {
         try {
             
             class Cambio {
-                public Integer idAdministrador;
+                public Integer idMedico;
                 public String contrasenaActual;
                 public String nuevaContrasena;
             }
 
             Cambio cambio = new Cambio();
-            // Aquí asignamos los valores de los parámetros al objeto
-            cambio.idAdministrador = idMedico; 
+            cambio.idMedico = idMedico;
             cambio.contrasenaActual = contrasenaActual;
             cambio.nuevaContrasena = nuevaContrasena;
 

@@ -58,7 +58,7 @@
             <HBox spacing="12.0" alignment="CENTER_LEFT">
                 <VBox spacing="4.0" HBox.hgrow="ALWAYS">
                     <Label styleClass="etiqueta-campo" text="Segmento" />
-                    <ComboBox fx:id="cbSegmento" prefHeight="35.0" prefWidth="150.0" promptText="Ej: Desayuno" styleClass="combo-box" />
+                    <ComboBox fx:id="cbSegmento" prefHeight="35.0" prefWidth="150.0" promptText="Seleccionar segmento" styleClass="combo-box" />
                 </VBox>
                 <VBox spacing="4.0" HBox.hgrow="ALWAYS">
                     <Label styleClass="etiqueta-campo" text="Alimento" />

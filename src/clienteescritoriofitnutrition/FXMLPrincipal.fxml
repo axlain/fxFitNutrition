@@ -35,6 +35,8 @@
                 <Button fx:id="btnConsultas" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickConsultas" styleClass="boton-menu" text="Consultas" />
                 <Button fx:id="btnDietas" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickDietas" styleClass="boton-menu" text="Dietas" />
                 <Button fx:id="btnAlimentos" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickAlimentos" styleClass="boton-menu" text="Alimentos" />
+                <Label styleClass="label-menu" text="CUENTA" />
+                <Button fx:id="btnPerfil" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickPerfil" styleClass="boton-menu" text="Perfil" />
                 <Region VBox.vgrow="ALWAYS" />
                 <HBox alignment="CENTER_LEFT" spacing="9.0" styleClass="sidebar-footer">
                     <children>

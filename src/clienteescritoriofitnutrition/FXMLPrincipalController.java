@@ -58,6 +58,8 @@ public class FXMLPrincipalController implements Initializable, INotificador {
     @FXML
     private Button btnAlimentos;
     @FXML
+    private Button btnPerfil;
+    @FXML
     private BorderPane bpContenedor;
     @FXML
     private VBox vbDashboard;
@@ -223,6 +225,11 @@ public class FXMLPrincipalController implements Initializable, INotificador {
     @FXML
     private void clickAlimentos(ActionEvent event) {
         cargarModulo("FXMLAdministracionAlimentos.fxml", "Alimentos", "El modulo de alimentos esta pendiente de integracion.");
+    }
+
+    @FXML
+    private void clickPerfil(ActionEvent event) {
+        cargarModulo("FXMLPerfil.fxml", "Perfil", "El modulo de perfil esta pendiente de integracion.");
     }
 
     private void cargarDashboard() {
@@ -466,6 +473,8 @@ public class FXMLPrincipalController implements Initializable, INotificador {
                 ((FXMLAdministracionDietasController) controlador).inicializarSesion(sesion);
             } else if (controlador instanceof FXMLAdministracionPacientesController) {
                 ((FXMLAdministracionPacientesController) controlador).inicializarSesion(sesion);
+            } else if (controlador instanceof FXMLPerfilController) {
+                ((FXMLPerfilController) controlador).inicializarSesion(sesion);
             }
 
             bpContenedor.setCenter(vista);
