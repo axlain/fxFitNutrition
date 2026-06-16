@@ -11,6 +11,7 @@ import clienteescritoriofitnutrition.pojo.Paciente;
 import clienteescritoriofitnutrition.utilidad.Utilidades;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,6 +22,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -46,7 +48,6 @@ public class FXMLFormularioCitaController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         configurarCombos();
-        cargarPacientes();
         cargarMedicos();
         configurarListenersHora();
     }
@@ -69,6 +70,17 @@ public class FXMLFormularioCitaController implements Initializable {
 
         Integer idCitaExcluir = citaEdicion != null ? citaEdicion.getIdCita() : null;
         List<String> horas = CitaImp.obtenerHorasDisponibles(medico.getIdMedico(), fecha.toString(), idCitaExcluir);
+
+        if (fecha.isEqual(LocalDate.now())) {
+            LocalTime ahora = LocalTime.now();
+            horas.removeIf(hora -> {
+                try {
+                    return LocalTime.parse(hora.length() > 5 ? hora.substring(0, 5) : hora).isBefore(ahora);
+                } catch (Exception e) {
+                    return false;
+                }
+            });
+        }
 
         if (horaActual != null && !horas.contains(horaActual)) {
             horas.add(horaActual);
@@ -130,8 +142,21 @@ public class FXMLFormularioCitaController implements Initializable {
         this.notificador = notificador;
         this.idMedicoSesion = idMedicoSesion;
 
+        configurarFechaPicker();
+        cargarPacientes();
         cargarDatosEdicion();
         aplicarMedicoSesion();
+    }
+
+    private void configurarFechaPicker() {
+        LocalDate minima = LocalDate.now();
+        dpFecha.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate fecha, boolean vacia) {
+                super.updateItem(fecha, vacia);
+                setDisable(vacia || fecha.isBefore(minima));
+            }
+        });
     }
 
     private void aplicarMedicoSesion() {
@@ -143,17 +168,20 @@ public class FXMLFormularioCitaController implements Initializable {
 
     private void cargarPacientes() {
         List<Paciente> lista = PacienteImp.obtenerTodos();
-        List<Paciente> activos = new ArrayList<>();
+        List<Paciente> resultado = new ArrayList<>();
 
         if (lista != null) {
             for (Paciente paciente : lista) {
-                if (pacienteActivo(paciente)) {
-                    activos.add(paciente);
+                if (!pacienteActivo(paciente)) {
+                    continue;
+                }
+                if (idMedicoSesion == null || idMedicoSesion.equals(paciente.getIdMedico())) {
+                    resultado.add(paciente);
                 }
             }
         }
 
-        cbPaciente.setItems(FXCollections.observableArrayList(activos));
+        cbPaciente.setItems(FXCollections.observableArrayList(resultado));
     }
 
     private void cargarMedicos() {
@@ -270,6 +298,13 @@ public class FXMLFormularioCitaController implements Initializable {
 
         if (dpFecha.getValue() == null) {
             mostrarCampoRequerido("La fecha es obligatoria.");
+            return false;
+        }
+
+        LocalDate hoy = LocalDate.now();
+        LocalDate fechaSeleccionada = dpFecha.getValue();
+        if (fechaSeleccionada.isBefore(hoy)) {
+            mostrarCampoRequerido("No se pueden programar citas en fechas pasadas.");
             return false;
         }
 

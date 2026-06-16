@@ -23,8 +23,6 @@
             <Label styleClass="titulo-modulo" text="Agenda de Citas" />
             <HBox alignment="CENTER_LEFT" spacing="8.0" styleClass="toolbar">
                 <Button fx:id="btnFiltroTodas" mnemonicParsing="false" onAction="#clickFiltroTodas" styleClass="segmented-btn-activo" text="Todas" />
-                <Button fx:id="btnFiltroPendientes" mnemonicParsing="false" onAction="#clickFiltroPendientes" styleClass="segmented-btn" text="Pendientes" />
-                <Button fx:id="btnFiltroAtendidas" mnemonicParsing="false" onAction="#clickFiltroAtendidas" styleClass="segmented-btn" text="Atendidas" />
                 <TextField fx:id="tfBuscar" promptText="Buscar por paciente o médico..." styleClass="campo-busqueda" HBox.hgrow="ALWAYS" />
                 <Button fx:id="btnBuscar" mnemonicParsing="false" onAction="#clickBuscar" styleClass="boton-secundario" text="Buscar" />
                 <Button fx:id="btnLimpiar" mnemonicParsing="false" onAction="#clickLimpiar" styleClass="boton-secundario" text="Limpiar" />

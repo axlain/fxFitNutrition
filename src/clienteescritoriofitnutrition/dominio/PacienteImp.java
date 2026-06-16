@@ -154,14 +154,13 @@ public class PacienteImp {
         Respuesta respuesta = new Respuesta();
         respuesta.setError(true);
 
-        String url = Constantes.URL_WS + "paciente/actualizar-codigo-acceso/" + idPaciente;
+        String url = Constantes.URL_WS + "paciente/generar-codigo/" + idPaciente;
 
         try {
-            // Este endpoint es un PUT que recibe el ID por URL y no requiere cuerpo JSON.
             RespuestaHTTP resp = ConexionAPI.peticionBody(
                     url,
                     Constantes.PETICION_PUT,
-                    "", 
+                    "",
                     Constantes.APPLICATION_JSON
             );
 

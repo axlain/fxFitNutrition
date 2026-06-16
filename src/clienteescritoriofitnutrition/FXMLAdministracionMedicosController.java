@@ -119,7 +119,12 @@ public class FXMLAdministracionMedicosController implements Initializable, INoti
             Utilidades.mostrarAlertaSimple("Seleccion requerida", "Selecciona un medico para editar.", Alert.AlertType.WARNING);
             return;
         }
-        irFormulario(medico);
+        Medico medicoCompleto = MedicoImp.obtenerPorId(medico.getIdMedico());
+        if (medicoCompleto == null) {
+            Utilidades.mostrarAlertaSimple("Error", "No se pudo obtener la informacion del medico.", Alert.AlertType.ERROR);
+            return;
+        }
+        irFormulario(medicoCompleto);
     }
 
     @FXML

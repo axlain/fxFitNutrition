@@ -22,6 +22,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.stage.Stage;
 
 public class FXMLFormularioPacienteController implements Initializable {
@@ -63,6 +64,10 @@ public class FXMLFormularioPacienteController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         cbGenero.setItems(FXCollections.observableArrayList("Masculino", "Femenino", "Otro"));
         cargarMedicos();
+        tfNumeroExterior.setTextFormatter(new TextFormatter<>(change ->
+                change.getControlNewText().matches("\\d*") ? change : null));
+        tfCodigoPostal.setTextFormatter(new TextFormatter<>(change ->
+                change.getControlNewText().matches("\\d*") ? change : null));
     }
 
     public void inicializarDatos(Paciente paciente, INotificador notificador, Integer idMedicoSesion) {

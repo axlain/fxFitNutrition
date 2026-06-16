@@ -15,6 +15,7 @@ import clienteescritoriofitnutrition.pojo.Paciente;
 import clienteescritoriofitnutrition.utilidad.Utilidades;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -52,7 +53,6 @@ public class FXMLFormularioConsultaController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         configurarCombos();
         bloquearComboCitas("Selecciona primero un paciente");
-        cargarPacientes();
         cargarMedicos();
         cargarDietas();
     }
@@ -148,6 +148,7 @@ public class FXMLFormularioConsultaController implements Initializable {
         this.notificador = notificador;
         this.idMedicoSesion = idMedicoSesion;
 
+        cargarPacientes();
         aplicarMedicoSesion();
         cargarDatosEdicion();
     }
@@ -161,17 +162,20 @@ public class FXMLFormularioConsultaController implements Initializable {
 
     private void cargarPacientes() {
         List<Paciente> lista = PacienteImp.obtenerTodos();
-        List<Paciente> activos = new ArrayList<>();
+        List<Paciente> resultado = new ArrayList<>();
 
         if (lista != null) {
             for (Paciente paciente : lista) {
-                if (pacienteActivo(paciente)) {
-                    activos.add(paciente);
+                if (!pacienteActivo(paciente)) {
+                    continue;
+                }
+                if (idMedicoSesion == null || idMedicoSesion.equals(paciente.getIdMedico())) {
+                    resultado.add(paciente);
                 }
             }
         }
 
-        cbPaciente.setItems(FXCollections.observableArrayList(activos));
+        cbPaciente.setItems(FXCollections.observableArrayList(resultado));
     }
 
     private void cargarMedicos() {
@@ -196,13 +200,23 @@ public class FXMLFormularioConsultaController implements Initializable {
 
     private void cargarCitasPaciente(Integer idPaciente) {
         List<Cita> lista = CitaImp.obtenerPorIdPaciente(idPaciente);
+        List<Cita> citasHoy = new ArrayList<>();
+        String hoy = LocalDate.now().toString();
 
-        if (lista == null || lista.isEmpty()) {
-            bloquearComboCitas("Sin citas disponibles");
+        if (lista != null) {
+            for (Cita cita : lista) {
+                if (hoy.equals(cita.getFecha())) {
+                    citasHoy.add(cita);
+                }
+            }
+        }
+
+        if (citasHoy.isEmpty()) {
+            bloquearComboCitas("Sin citas para hoy");
             return;
         }
 
-        cbCita.setItems(FXCollections.observableArrayList(lista));
+        cbCita.setItems(FXCollections.observableArrayList(citasHoy));
         cbCita.setDisable(false);
         cbCita.setPromptText("Seleccionar cita");
     }

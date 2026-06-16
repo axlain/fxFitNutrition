@@ -19,6 +19,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.stage.Stage;
 
 public class FXMLFormularioMedicoController implements Initializable {
@@ -60,6 +61,8 @@ public class FXMLFormularioMedicoController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         cbGenero.setItems(FXCollections.observableArrayList("Masculino", "Femenino", "Otro"));
+        tfNumeroExterior.setTextFormatter(new TextFormatter<>(change ->
+                change.getControlNewText().matches("\\d*") ? change : null));
     }
 
     public void inicializarDatos(Medico medico, INotificador notificador) {

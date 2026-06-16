@@ -33,6 +33,20 @@ public class MedicoImp {
         return null;
     }
 
+    public static Medico obtenerPorId(Integer idMedico) {
+        String url = Constantes.URL_WS + "medico/obtener-por-id/" + idMedico;
+        RespuestaHTTP resp = ConexionAPI.peticionGET(url);
+        if (resp.getCodigo() == HttpURLConnection.HTTP_OK) {
+            try {
+                Gson gson = new Gson();
+                return gson.fromJson(resp.getContenido(), Medico.class);
+            } catch (Exception e) {
+                return null;
+            }
+        }
+        return null;
+    }
+
     public static List<Medico> buscar(String filtro) {
         if (filtro == null) filtro = "";
         

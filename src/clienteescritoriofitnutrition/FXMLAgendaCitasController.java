@@ -35,10 +35,6 @@ public class FXMLAgendaCitasController implements Initializable, INotificador {
     @FXML
     private Button btnFiltroTodas;
     @FXML
-    private Button btnFiltroPendientes;
-    @FXML
-    private Button btnFiltroAtendidas;
-    @FXML
     private TextField tfBuscar;
     @FXML
     private Button btnBuscar;
@@ -130,39 +126,7 @@ public class FXMLAgendaCitasController implements Initializable, INotificador {
 
     @FXML
     private void clickFiltroTodas(ActionEvent event) {
-        btnFiltroTodas.getStyleClass().setAll("button", "segmented-btn-activo");
-        btnFiltroPendientes.getStyleClass().setAll("button", "segmented-btn");
-        btnFiltroAtendidas.getStyleClass().setAll("button", "segmented-btn");
         cargarInformacionCitas();
-    }
-
-    @FXML
-    private void clickFiltroPendientes(ActionEvent event) {
-        btnFiltroTodas.getStyleClass().setAll("button", "segmented-btn");
-        btnFiltroPendientes.getStyleClass().setAll("button", "segmented-btn-activo");
-        btnFiltroAtendidas.getStyleClass().setAll("button", "segmented-btn");
-        filtrarPorEstado("Pendiente");
-    }
-
-    @FXML
-    private void clickFiltroAtendidas(ActionEvent event) {
-        btnFiltroTodas.getStyleClass().setAll("button", "segmented-btn");
-        btnFiltroPendientes.getStyleClass().setAll("button", "segmented-btn");
-        btnFiltroAtendidas.getStyleClass().setAll("button", "segmented-btn-activo");
-        filtrarPorEstado("Asistida");
-    }
-
-    private void filtrarPorEstado(String estado) {
-        if (citas == null) {
-            return;
-        }
-        ObservableList<Cita> filtradas = FXCollections.observableArrayList();
-        for (Cita cita : citas) {
-            if (cita.getNombreEstado().equalsIgnoreCase(estado)) {
-                filtradas.add(cita);
-            }
-        }
-        tvCitas.setItems(filtradas);
     }
 
     @FXML
