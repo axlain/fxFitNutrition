@@ -44,6 +44,28 @@ public class CitaImp {
         return new ArrayList<>();
     }
 
+    public static List<Cita> obtenerTodosPorPaciente(Integer idPaciente) {
+        if (idPaciente == null || idPaciente <= 0) {
+            return new ArrayList<>();
+        }
+
+        String url = Constantes.URL_WS + "cita/obtener-por-paciente/" + idPaciente;
+
+        RespuestaHTTP resp = ConexionAPI.peticionGET(url);
+
+        if (resp.getCodigo() == HttpURLConnection.HTTP_OK) {
+            try {
+                Gson gson = new Gson();
+                Type listType = new TypeToken<List<Cita>>() {}.getType();
+                return gson.fromJson(resp.getContenido(), listType);
+            } catch (Exception e) {
+                return new ArrayList<>();
+            }
+        }
+
+        return new ArrayList<>();
+    }
+
     public static Respuesta registrar(Cita cita) {
         Respuesta respuesta = new Respuesta();
         respuesta.setError(true);
