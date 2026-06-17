@@ -145,6 +145,25 @@ public class ConsultaImp {
         return null;
     }
     
+    public static List<Consulta> obtenerTodas() {
+        String url = Constantes.URL_WS + "consulta/obtener-todas";
+
+        RespuestaHTTP resp = ConexionAPI.peticionGET(url);
+
+        if (resp.getCodigo() == HttpURLConnection.HTTP_OK) {
+            try {
+                Gson gson = new Gson();
+                Type listType = new TypeToken<List<Consulta>>() {
+                }.getType();
+                return gson.fromJson(resp.getContenido(), listType);
+            } catch (Exception e) {
+                return null;
+            }
+        }
+
+        return null;
+    }
+
     public static List<Consulta> obtenerHistorialMedico(Integer idMedico) {
         String url = Constantes.URL_WS + "consulta/historial-medico/" + idMedico;
 
@@ -179,13 +198,6 @@ public class ConsultaImp {
         }
 
         return null;
-    }
-
-    public static HashMap<String, Object> obtenerTodas() {
-        HashMap<String, Object> respuesta = new LinkedHashMap<>();
-        respuesta.put(Constantes.KEY_ERROR, true);
-        respuesta.put(Constantes.KEY_MENSAJE, "La búsqueda de todas las consultas ya no está disponible. Usa historial por paciente.");
-        return respuesta;
     }
 
     public static List<Consulta> obtenerPorIdPaciente(Integer idPaciente) {

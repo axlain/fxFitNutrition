@@ -118,7 +118,7 @@ public class FXMLDetalleDietaController implements Initializable {
             return "0";
         }
 
-        return valorDouble(dietaAlimento.getAlimento().getCaloriasPorPorcion());
+        return valorDouble(dietaAlimento.getCaloriasCalculadas());
     }
 
     private String valorSeguro(String valor) {

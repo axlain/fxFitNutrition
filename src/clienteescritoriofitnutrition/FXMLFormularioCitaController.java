@@ -72,10 +72,10 @@ public class FXMLFormularioCitaController implements Initializable {
         List<String> horas = CitaImp.obtenerHorasDisponibles(medico.getIdMedico(), fecha.toString(), idCitaExcluir);
 
         if (fecha.isEqual(LocalDate.now())) {
-            LocalTime ahora = LocalTime.now();
+            LocalTime limite = LocalTime.now().plusHours(1);
             horas.removeIf(hora -> {
                 try {
-                    return LocalTime.parse(hora.length() > 5 ? hora.substring(0, 5) : hora).isBefore(ahora);
+                    return LocalTime.parse(hora.length() > 5 ? hora.substring(0, 5) : hora).isBefore(limite);
                 } catch (Exception e) {
                     return false;
                 }

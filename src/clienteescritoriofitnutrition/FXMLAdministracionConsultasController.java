@@ -80,12 +80,14 @@ public class FXMLAdministracionConsultasController implements Initializable, INo
     }
 
     private void cargarInformacionConsultas() {
-        List<Consulta> lista = new ArrayList<>();
+        List<Consulta> lista;
 
         Integer idMedicoSesion = obtenerIdMedicoSesion();
 
         if (idMedicoSesion != null && idMedicoSesion > 0) {
             lista = ConsultaImp.obtenerHistorialMedico(idMedicoSesion);
+        } else {
+            lista = ConsultaImp.obtenerTodas();
         }
 
         if (lista == null) {
