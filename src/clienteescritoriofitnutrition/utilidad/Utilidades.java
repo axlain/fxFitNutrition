@@ -6,9 +6,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Control;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
 
 public class Utilidades {
@@ -68,5 +73,56 @@ public class Utilidades {
                 return mensajeDefault;
         }
     }
-    
+
+    private static final Pattern PATRON_CORREO =
+            Pattern.compile("^[\\w.+-]+@[\\w-]+\\.[\\w.-]+$");
+    private static final Pattern PATRON_TELEFONO = Pattern.compile("\\d{10}");
+
+    public static boolean esCorreoValido(String correo) {
+        return correo != null && PATRON_CORREO.matcher(correo.trim()).matches();
+    }
+
+    public static boolean esTelefonoValido(String telefono) {
+        return telefono != null && PATRON_TELEFONO.matcher(telefono.trim()).matches();
+    }
+
+    public static boolean esFechaNacimientoValida(LocalDate fechaNacimiento) {
+        if (fechaNacimiento == null) {
+            return false;
+        }
+        LocalDate hoy = LocalDate.now();
+        if (fechaNacimiento.isAfter(hoy)) {
+            return false;
+        }
+        int edad = Period.between(fechaNacimiento, hoy).getYears();
+        return edad >= 1 && edad <= 120;
+    }
+
+    // Marca un campo como invalido (borde rojo), escribe el mensaje al lado y le da foco.
+    public static void marcarError(Control campo, Label destino, String mensaje) {
+        if (campo != null && !campo.getStyleClass().contains("campo-error")) {
+            campo.getStyleClass().add("campo-error");
+        }
+        if (destino != null) {
+            destino.setText(mensaje);
+        }
+        if (campo != null) {
+            campo.requestFocus();
+        }
+    }
+
+    // Limpia el mensaje y quita el estado de error de los campos indicados.
+    public static void limpiarErrores(Label destino, Control... campos) {
+        if (destino != null) {
+            destino.setText("");
+        }
+        if (campos != null) {
+            for (Control campo : campos) {
+                if (campo != null) {
+                    campo.getStyleClass().remove("campo-error");
+                }
+            }
+        }
+    }
+
 }

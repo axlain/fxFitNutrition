@@ -71,58 +71,58 @@
             <center>
                 <BorderPane fx:id="bpContenedor" styleClass="contenedor-modulo">
                     <center>
-                        <VBox fx:id="vbDashboard" spacing="16.0">
+                        <VBox fx:id="vbDashboard" spacing="16.0" styleClass="dashboard">
                             <padding>
                                 <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
                             </padding>
                             <HBox spacing="12.0">
                                 <children>
-                                    <VBox spacing="3.0" styleClass="stat-card" HBox.hgrow="ALWAYS">
+                                    <VBox spacing="4.0" styleClass="stat-card" HBox.hgrow="ALWAYS">
                                         <children>
-                                            <StackPane styleClass="stat-icon">
+                                            <HBox alignment="CENTER_LEFT" spacing="8.0">
                                                 <children>
-                                                    <Label styleClass="stat-icon-text" text="P" />
+                                                    <Region styleClass="stat-dot-pacientes" />
+                                                    <Label fx:id="lbNombrePacientes" styleClass="label-stat-nombre" text="Pacientes activos" />
                                                 </children>
-                                            </StackPane>
+                                            </HBox>
                                             <Label fx:id="lbTotalPacientes" styleClass="label-stat-valor" text="0" />
-                                            <Label styleClass="label-stat-nombre" text="Pacientes activos" />
-                                            <Label fx:id="lbActivosPacientes" styleClass="label-stat-delta" text="0 activos" />
+                                            <Label fx:id="lbActivosPacientes" styleClass="label-stat-delta" text="de 0 registrados" />
                                         </children>
                                     </VBox>
-                                    <VBox spacing="3.0" styleClass="stat-card" HBox.hgrow="ALWAYS">
+                                    <VBox fx:id="cardMedicos" spacing="4.0" styleClass="stat-card" HBox.hgrow="ALWAYS">
                                         <children>
-                                            <StackPane styleClass="stat-icon">
+                                            <HBox alignment="CENTER_LEFT" spacing="8.0">
                                                 <children>
-                                                    <Label styleClass="stat-icon-text" text="M" />
+                                                    <Region styleClass="stat-dot-medicos" />
+                                                    <Label styleClass="label-stat-nombre" text="Médicos" />
                                                 </children>
-                                            </StackPane>
+                                            </HBox>
                                             <Label fx:id="lbTotalMedicos" styleClass="label-stat-valor" text="0" />
-                                            <Label styleClass="label-stat-nombre" text="Medicos" />
-                                            <Label fx:id="lbMedicosActivos" styleClass="label-stat-delta" text="0 activos" />
+                                            <Label fx:id="lbMedicosActivos" styleClass="label-stat-delta" text="de 0 en total" />
                                         </children>
                                     </VBox>
-                                    <VBox spacing="3.0" styleClass="stat-card" HBox.hgrow="ALWAYS">
+                                    <VBox spacing="4.0" styleClass="stat-card" HBox.hgrow="ALWAYS">
                                         <children>
-                                            <StackPane styleClass="stat-icon">
+                                            <HBox alignment="CENTER_LEFT" spacing="8.0">
                                                 <children>
-                                                    <Label styleClass="stat-icon-text" text="C" />
+                                                    <Region styleClass="stat-dot-citas" />
+                                                    <Label styleClass="label-stat-nombre" text="Citas de hoy" />
                                                 </children>
-                                            </StackPane>
+                                            </HBox>
                                             <Label fx:id="lbCitasHoy" styleClass="label-stat-valor" text="0" />
-                                            <Label styleClass="label-stat-nombre" text="Citas hoy" />
-                                            <Label fx:id="lbCitasPendientes" styleClass="label-stat-delta" text="0 pendientes" />
+                                            <Label fx:id="lbCitasPendientes" styleClass="label-stat-delta" text="0 por atender" />
                                         </children>
                                     </VBox>
-                                    <VBox spacing="3.0" styleClass="stat-card" HBox.hgrow="ALWAYS">
+                                    <VBox spacing="4.0" styleClass="stat-card" HBox.hgrow="ALWAYS">
                                         <children>
-                                            <StackPane styleClass="stat-icon">
+                                            <HBox alignment="CENTER_LEFT" spacing="8.0">
                                                 <children>
-                                                    <Label styleClass="stat-icon-text" text="N" />
+                                                    <Region styleClass="stat-dot-consultas" />
+                                                    <Label fx:id="lbNombreConsultas" styleClass="label-stat-nombre" text="Consultas" />
                                                 </children>
-                                            </StackPane>
+                                            </HBox>
                                             <Label fx:id="lbConsultasTotal" styleClass="label-stat-valor" text="0" />
-                                            <Label styleClass="label-stat-nombre" text="Consultas totales" />
-                                            <Label fx:id="lbConsultasHoy" styleClass="label-stat-delta" text="0 hoy" />
+                                            <Label fx:id="lbConsultasHoy" styleClass="label-stat-delta" text="0 en total" />
                                         </children>
                                     </VBox>
                                 </children>
@@ -135,7 +135,7 @@
                                                 <children>
                                                     <Label styleClass="label-panel" text="Pacientes recientes" />
                                                     <Region HBox.hgrow="ALWAYS" />
-                                                    <Label styleClass="label-stat-delta" text="Ver todos" />
+                                                    <Label onMouseClicked="#clickVerPacientes" styleClass="link-ver" text="Ver todos" />
                                                 </children>
                                             </HBox>
                                             <VBox fx:id="vbPacientesRecientes" spacing="12.0" styleClass="panel-body" />
@@ -143,10 +143,11 @@
                                     </VBox>
                                     <VBox styleClass="panel" HBox.hgrow="ALWAYS">
                                         <children>
-                                            <HBox alignment="CENTER_LEFT" styleClass="panel-header">
+                                            <HBox alignment="CENTER_LEFT" spacing="8.0" styleClass="panel-header">
                                                 <children>
-                                                    <Label styleClass="label-panel" text="Citas del dia" />
+                                                    <Label styleClass="label-panel" text="Citas del día" />
                                                     <Region HBox.hgrow="ALWAYS" />
+                                                    <Label onMouseClicked="#clickVerCitas" styleClass="link-ver" text="Ver agenda" />
                                                     <Label fx:id="lbFechaCitas" styleClass="label-subtitulo" text="" />
                                                 </children>
                                             </HBox>

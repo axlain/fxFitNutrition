@@ -6,6 +6,7 @@ import clienteescritoriofitnutrition.interfaz.INotificador;
 import clienteescritoriofitnutrition.pojo.Domicilio;
 import clienteescritoriofitnutrition.pojo.Medico;
 import clienteescritoriofitnutrition.pojo.Usuario;
+import clienteescritoriofitnutrition.utilidad.Responsividad;
 import clienteescritoriofitnutrition.utilidad.Utilidades;
 import java.net.URL;
 import java.time.LocalDate;
@@ -17,9 +18,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class FXMLFormularioMedicoController implements Initializable {
@@ -54,6 +57,10 @@ public class FXMLFormularioMedicoController implements Initializable {
     private TextField tfEstado;
     @FXML
     private TextField tfCodigoPostal;
+    @FXML
+    private Label lbError;
+    @FXML
+    private BorderPane rootForm;
 
     private Medico medicoEdicion;
     private INotificador notificador;
@@ -63,6 +70,11 @@ public class FXMLFormularioMedicoController implements Initializable {
         cbGenero.setItems(FXCollections.observableArrayList("Masculino", "Femenino", "Otro"));
         tfNumeroExterior.setTextFormatter(new TextFormatter<>(change ->
                 change.getControlNewText().matches("\\d*") ? change : null));
+        tfTelefono.setTextFormatter(new TextFormatter<>(change ->
+                change.getControlNewText().matches("\\d{0,10}") ? change : null));
+        tfCodigoPostal.setTextFormatter(new TextFormatter<>(change ->
+                change.getControlNewText().matches("\\d{0,5}") ? change : null));
+        Responsividad.aplicar(rootForm, 15.0, 780.0, 13.0, 20.0);
     }
 
     public void inicializarDatos(Medico medico, INotificador notificador) {
@@ -139,24 +151,51 @@ public class FXMLFormularioMedicoController implements Initializable {
     }
 
     private boolean validarCampos() {
+        Utilidades.limpiarErrores(lbError, tfNombre, tfApellidoPaterno, dpFechaNacimiento,
+                cbGenero, tfCorreo, tfTelefono, tfCedulaProfesional, pfContrasena);
+
         if (estaVacio(tfNombre.getText())) {
-            mostrarCampoRequerido("El nombre es obligatorio.");
+            Utilidades.marcarError(tfNombre, lbError, "El nombre es obligatorio.");
             return false;
         }
         if (estaVacio(tfApellidoPaterno.getText())) {
-            mostrarCampoRequerido("El apellido paterno es obligatorio.");
+            Utilidades.marcarError(tfApellidoPaterno, lbError, "El apellido paterno es obligatorio.");
+            return false;
+        }
+        if (dpFechaNacimiento.getValue() == null) {
+            Utilidades.marcarError(dpFechaNacimiento, lbError, "La fecha de nacimiento es obligatoria.");
+            return false;
+        }
+        if (!Utilidades.esFechaNacimientoValida(dpFechaNacimiento.getValue())) {
+            Utilidades.marcarError(dpFechaNacimiento, lbError, "La fecha de nacimiento no es valida (no debe ser una fecha futura).");
+            return false;
+        }
+        if (estaVacio(cbGenero.getValue())) {
+            Utilidades.marcarError(cbGenero, lbError, "El genero es obligatorio.");
             return false;
         }
         if (estaVacio(tfCorreo.getText())) {
-            mostrarCampoRequerido("El correo es obligatorio.");
+            Utilidades.marcarError(tfCorreo, lbError, "El correo es obligatorio.");
+            return false;
+        }
+        if (!Utilidades.esCorreoValido(tfCorreo.getText())) {
+            Utilidades.marcarError(tfCorreo, lbError, "El correo no tiene un formato valido.");
+            return false;
+        }
+        if (estaVacio(tfTelefono.getText())) {
+            Utilidades.marcarError(tfTelefono, lbError, "El telefono es obligatorio.");
+            return false;
+        }
+        if (!Utilidades.esTelefonoValido(tfTelefono.getText())) {
+            Utilidades.marcarError(tfTelefono, lbError, "El telefono debe tener 10 digitos numericos.");
             return false;
         }
         if (estaVacio(tfCedulaProfesional.getText())) {
-            mostrarCampoRequerido("La cedula profesional es obligatoria.");
+            Utilidades.marcarError(tfCedulaProfesional, lbError, "La cedula profesional es obligatoria.");
             return false;
         }
         if (medicoEdicion == null && estaVacio(pfContrasena.getText())) {
-            mostrarCampoRequerido("La contrasena es obligatoria.");
+            Utilidades.marcarError(pfContrasena, lbError, "La contrasena es obligatoria.");
             return false;
         }
         return true;
@@ -192,10 +231,6 @@ public class FXMLFormularioMedicoController implements Initializable {
         }
 
         return medico;
-    }
-
-    private void mostrarCampoRequerido(String mensaje) {
-        Utilidades.mostrarAlertaSimple("Campo requerido", mensaje, Alert.AlertType.WARNING);
     }
 
     private boolean estaVacio(String valor) {
