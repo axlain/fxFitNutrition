@@ -22,7 +22,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.BorderPane;
@@ -58,8 +57,6 @@ public class FXMLFormularioPacienteController implements Initializable {
     private TextField tfEstado;
     @FXML
     private TextField tfCodigoPostal;
-    @FXML
-    private Label lbError;
     @FXML
     private BorderPane rootForm;
 
@@ -181,50 +178,55 @@ public class FXMLFormularioPacienteController implements Initializable {
     }
 
     private boolean validarCampos() {
-        Utilidades.limpiarErrores(lbError, tfNombre, tfApellidoPaterno, dpFechaNacimiento,
-                cbGenero, tfCorreo, tfTelefono, cbMedico);
-
         if (estaVacio(tfNombre.getText())) {
-            Utilidades.marcarError(tfNombre, lbError, "El nombre es obligatorio.");
+            mostrarCampoRequerido("El nombre es obligatorio.");
             return false;
         }
         if (estaVacio(tfApellidoPaterno.getText())) {
-            Utilidades.marcarError(tfApellidoPaterno, lbError, "El apellido paterno es obligatorio.");
+            mostrarCampoRequerido("El apellido paterno es obligatorio.");
             return false;
         }
         if (dpFechaNacimiento.getValue() == null) {
-            Utilidades.marcarError(dpFechaNacimiento, lbError, "La fecha de nacimiento es obligatoria.");
+            mostrarCampoRequerido("La fecha de nacimiento es obligatoria.");
             return false;
         }
-        if (!Utilidades.esFechaNacimientoValida(dpFechaNacimiento.getValue())) {
-            Utilidades.marcarError(dpFechaNacimiento, lbError, "La fecha de nacimiento no es valida (no debe ser una fecha futura).");
+        if (!Utilidades.esFechaNacimientoValida(dpFechaNacimiento.getValue(), 0)) {
+            mostrarCampoRequerido("La fecha de nacimiento no es valida (no debe ser una fecha futura).");
             return false;
         }
         if (estaVacio(cbGenero.getValue())) {
-            Utilidades.marcarError(cbGenero, lbError, "El genero es obligatorio.");
+            mostrarCampoRequerido("El genero es obligatorio.");
             return false;
         }
         if (estaVacio(tfCorreo.getText())) {
-            Utilidades.marcarError(tfCorreo, lbError, "El correo es obligatorio.");
+            mostrarCampoRequerido("El correo es obligatorio.");
             return false;
         }
         if (!Utilidades.esCorreoValido(tfCorreo.getText())) {
-            Utilidades.marcarError(tfCorreo, lbError, "El correo no tiene un formato valido.");
+            mostrarCampoRequerido("El correo no tiene un formato valido.");
             return false;
         }
         if (estaVacio(tfTelefono.getText())) {
-            Utilidades.marcarError(tfTelefono, lbError, "El telefono es obligatorio.");
+            mostrarCampoRequerido("El telefono es obligatorio.");
             return false;
         }
         if (!Utilidades.esTelefonoValido(tfTelefono.getText())) {
-            Utilidades.marcarError(tfTelefono, lbError, "El telefono debe tener 10 digitos numericos.");
+            mostrarCampoRequerido("El telefono debe tener 10 digitos numericos.");
             return false;
         }
         if (cbMedico.getValue() == null) {
-            Utilidades.marcarError(cbMedico, lbError, "El medico asignado es obligatorio.");
+            mostrarCampoRequerido("El medico asignado es obligatorio.");
+            return false;
+        }
+        if (!estaVacio(tfCodigoPostal.getText()) && tfCodigoPostal.getText().trim().length() != 5) {
+            mostrarCampoRequerido("El codigo postal debe tener 5 digitos.");
             return false;
         }
         return true;
+    }
+
+    private void mostrarCampoRequerido(String mensaje) {
+        Utilidades.mostrarAlertaSimple("Campo requerido", mensaje, Alert.AlertType.WARNING);
     }
 
     private Paciente construirObjeto() {

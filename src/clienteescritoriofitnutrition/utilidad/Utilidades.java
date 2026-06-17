@@ -12,8 +12,6 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Control;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
 
 public class Utilidades {
@@ -86,7 +84,8 @@ public class Utilidades {
         return telefono != null && PATRON_TELEFONO.matcher(telefono.trim()).matches();
     }
 
-    public static boolean esFechaNacimientoValida(LocalDate fechaNacimiento) {
+    // Valida la fecha de nacimiento: no nula, no futura y edad entre edadMinima y 120 anios.
+    public static boolean esFechaNacimientoValida(LocalDate fechaNacimiento, int edadMinima) {
         if (fechaNacimiento == null) {
             return false;
         }
@@ -95,34 +94,7 @@ public class Utilidades {
             return false;
         }
         int edad = Period.between(fechaNacimiento, hoy).getYears();
-        return edad >= 1 && edad <= 120;
-    }
-
-    // Marca un campo como invalido (borde rojo), escribe el mensaje al lado y le da foco.
-    public static void marcarError(Control campo, Label destino, String mensaje) {
-        if (campo != null && !campo.getStyleClass().contains("campo-error")) {
-            campo.getStyleClass().add("campo-error");
-        }
-        if (destino != null) {
-            destino.setText(mensaje);
-        }
-        if (campo != null) {
-            campo.requestFocus();
-        }
-    }
-
-    // Limpia el mensaje y quita el estado de error de los campos indicados.
-    public static void limpiarErrores(Label destino, Control... campos) {
-        if (destino != null) {
-            destino.setText("");
-        }
-        if (campos != null) {
-            for (Control campo : campos) {
-                if (campo != null) {
-                    campo.getStyleClass().remove("campo-error");
-                }
-            }
-        }
+        return edad >= edadMinima && edad <= 120;
     }
 
 }

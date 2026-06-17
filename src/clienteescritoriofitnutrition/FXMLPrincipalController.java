@@ -502,6 +502,7 @@ public class FXMLPrincipalController implements Initializable, INotificador {
             escenario.setScene(escena);
             escenario.setTitle("Detalle de la cita");
             escenario.initModality(Modality.APPLICATION_MODAL);
+            escenario.setResizable(false);
             escenario.showAndWait();
         } catch (IOException ex) {
             ex.printStackTrace();

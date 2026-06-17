@@ -93,11 +93,10 @@
         </ScrollPane>
     </center>
     <bottom>
-        <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="barra-modal">
+        <HBox alignment="CENTER_RIGHT" spacing="10.0" styleClass="barra-modal">
             <padding>
                 <Insets bottom="18.0" left="22.0" right="22.0" top="14.0" />
             </padding>
-            <Label fx:id="lbError" maxWidth="1.7976931348623157E308" styleClass="label-error" text="" wrapText="true" HBox.hgrow="ALWAYS" />
             <Button mnemonicParsing="false" onAction="#clickCancelar" styleClass="boton-secundario" text="Cancelar" />
             <Button mnemonicParsing="false" onAction="#clickGuardar" styleClass="boton-primario" text="Guardar" />
         </HBox>
