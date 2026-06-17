@@ -33,6 +33,38 @@ public class PacienteImp {
         return null;
     }
 
+    public static List<Paciente> obtenerRecientes(int limite) {
+        String url = Constantes.URL_WS + "paciente/obtener-recientes/" + limite;
+        RespuestaHTTP resp = ConexionAPI.peticionGET(url);
+
+        if (resp.getCodigo() == HttpURLConnection.HTTP_OK) {
+            try {
+                Gson gson = new Gson();
+                Type listType = new TypeToken<List<Paciente>>() {}.getType();
+                return gson.fromJson(resp.getContenido(), listType);
+            } catch (Exception e) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    public static List<Paciente> obtenerRecientesMedico(int idMedico, int limite) {
+        String url = Constantes.URL_WS + "paciente/obtener-recientes-medico/" + idMedico + "/" + limite;
+        RespuestaHTTP resp = ConexionAPI.peticionGET(url);
+
+        if (resp.getCodigo() == HttpURLConnection.HTTP_OK) {
+            try {
+                Gson gson = new Gson();
+                Type listType = new TypeToken<List<Paciente>>() {}.getType();
+                return gson.fromJson(resp.getContenido(), listType);
+            } catch (Exception e) {
+                return null;
+            }
+        }
+        return null;
+    }
+
     public static List<Paciente> buscar(String filtro) {
         if (filtro == null) filtro = "";
         

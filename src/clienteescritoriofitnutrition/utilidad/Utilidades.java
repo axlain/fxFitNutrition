@@ -6,7 +6,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
@@ -68,5 +71,30 @@ public class Utilidades {
                 return mensajeDefault;
         }
     }
-    
+
+    private static final Pattern PATRON_CORREO =
+            Pattern.compile("^[\\w.+-]+@[\\w-]+\\.[\\w.-]+$");
+    private static final Pattern PATRON_TELEFONO = Pattern.compile("\\d{10}");
+
+    public static boolean esCorreoValido(String correo) {
+        return correo != null && PATRON_CORREO.matcher(correo.trim()).matches();
+    }
+
+    public static boolean esTelefonoValido(String telefono) {
+        return telefono != null && PATRON_TELEFONO.matcher(telefono.trim()).matches();
+    }
+
+    // Valida la fecha de nacimiento: no nula, no futura y edad entre edadMinima y 120 anios.
+    public static boolean esFechaNacimientoValida(LocalDate fechaNacimiento, int edadMinima) {
+        if (fechaNacimiento == null) {
+            return false;
+        }
+        LocalDate hoy = LocalDate.now();
+        if (fechaNacimiento.isAfter(hoy)) {
+            return false;
+        }
+        int edad = Period.between(fechaNacimiento, hoy).getYears();
+        return edad >= edadMinima && edad <= 120;
+    }
+
 }

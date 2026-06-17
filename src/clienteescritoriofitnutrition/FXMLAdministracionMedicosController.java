@@ -20,6 +20,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -73,6 +74,7 @@ public class FXMLAdministracionMedicosController implements Initializable, INoti
         tcCorreo.setCellValueFactory(new PropertyValueFactory("correoUsuario"));
         tcTelefono.setCellValueFactory(new PropertyValueFactory("telefonoUsuario"));
         tcEstatus.setCellValueFactory(new PropertyValueFactory("estatusUsuario"));
+        tvMedicos.setPlaceholder(new Label("Sin resultados"));
     }
 
     private void cargarInformacionMedicos() {

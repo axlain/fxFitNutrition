@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="650.0" prefWidth="780.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/fxml/1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clienteescritoriofitnutrition.FXMLFormularioPacienteController">
+<BorderPane fx:id="rootForm" prefHeight="650.0" prefWidth="780.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/fxml/1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clienteescritoriofitnutrition.FXMLFormularioPacienteController">
     <stylesheets>
         <URL value="@/clienteescritoriofitnutrition/utilidad/estilo.css" />
     </stylesheets>
@@ -64,8 +64,10 @@
                         <Label styleClass="label-campo" text="Correo" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                         <TextField fx:id="tfCorreo" promptText="correo@dominio.com" styleClass="campo-texto" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                         <Label styleClass="label-campo" text="Telefono" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                        <TextField fx:id="tfTelefono" promptText="Telefono" styleClass="campo-texto" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField fx:id="tfTelefono" promptText="10 digitos" styleClass="campo-texto" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                     </GridPane>
+
+                    <Label styleClass="texto-ayuda" text="Telefono: 10 digitos numericos. Correo: ejemplo@dominio.com" />
 
                     <Label styleClass="label-seccion" text="Domicilio" />
                     <GridPane hgap="14.0" styleClass="form-card" vgap="12.0">

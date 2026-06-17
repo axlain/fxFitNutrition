@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefWidth="430.0" spacing="16.0" styleClass="dashboard" xmlns="http://javafx.com/fxml/1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clienteescritoriofitnutrition.FXMLDetalleCitaController">
+    <stylesheets>
+        <URL value="@/clienteescritoriofitnutrition/utilidad/estilo.css" />
+    </stylesheets>
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+    <children>
+        <Label styleClass="label-panel" text="Detalle de la cita" />
+        <HBox alignment="CENTER_LEFT" spacing="12.0">
+            <children>
+                <Label fx:id="lbHora" styleClass="cita-hora" text="00:00" />
+                <VBox spacing="2.0" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label fx:id="lbPaciente" styleClass="fila-titulo" text="Paciente" />
+                        <Label fx:id="lbFecha" styleClass="label-subtitulo" text="Fecha" />
+                    </children>
+                </VBox>
+                <Label fx:id="lbEstado" styleClass="pill-confirmada" text="Estado" />
+            </children>
+        </HBox>
+        <VBox spacing="3.0">
+            <children>
+                <Label styleClass="label-stat-nombre" text="Medico asignado" />
+                <Label fx:id="lbMedico" styleClass="fila-titulo" text="Medico" />
+            </children>
+        </VBox>
+        <VBox spacing="3.0">
+            <children>
+                <Label styleClass="label-stat-nombre" text="Observaciones" />
+                <Label fx:id="lbObservaciones" maxWidth="1.7976931348623157E308" styleClass="detalle-observaciones" text="Sin observaciones" wrapText="true" />
+            </children>
+        </VBox>
+        <HBox alignment="CENTER_RIGHT">
+            <children>
+                <Button mnemonicParsing="false" onAction="#clickCerrar" styleClass="boton-menu" text="Cerrar" />
+            </children>
+        </HBox>
+    </children>
+</VBox>

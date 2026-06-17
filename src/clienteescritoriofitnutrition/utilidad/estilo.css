@@ -456,8 +456,7 @@
 
 .label-stat-delta {
     -fx-font-size: 10px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #1E8A4A;
+    -fx-text-fill: #5C6B61;
 }
 
 .stat-icon {
@@ -475,6 +474,79 @@
     -fx-font-size: 13px;
     -fx-font-weight: bold;
 }
+
+/* ===== RESPONSIVO (escalado proporcional con em) ===== */
+/* Responsividad.aplicar() fija -fx-font-size en el contenedor central (y en cada
+   formulario modal) segun el ancho de ventana; los hijos usan em para escalar. */
+.dashboard .label-panel {
+    -fx-font-size: 1.0em;
+}
+.dashboard .label-stat-nombre {
+    -fx-font-size: 0.82em;
+}
+.dashboard .label-stat-valor {
+    -fx-font-size: 1.7em;
+}
+.dashboard .label-stat-delta {
+    -fx-font-size: 0.72em;
+}
+.dashboard .label-subtitulo {
+    -fx-font-size: 0.8em;
+}
+.dashboard .fila-titulo {
+    -fx-font-size: 0.95em;
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-font-weight: bold;
+    -fx-text-fill: #1A2E1E;
+}
+.dashboard .cita-hora {
+    -fx-font-size: 1.5em;
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-font-weight: bold;
+    -fx-text-fill: #15241A;
+    -fx-min-width: 62;
+}
+.dashboard .detalle-observaciones {
+    -fx-font-size: 0.92em;
+    -fx-text-fill: #2A3A2E;
+    -fx-background-color: #F4F8F5;
+    -fx-background-radius: 6;
+    -fx-border-color: #DCE6DE;
+    -fx-border-radius: 6;
+    -fx-padding: 10 12 10 12;
+    -fx-min-height: 70;
+}
+.dashboard .link-ver {
+    -fx-font-size: 0.78em;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1E8A4A;
+    -fx-cursor: hand;
+}
+.dashboard .link-ver:hover {
+    -fx-underline: true;
+}
+.dashboard .fila-clic {
+    -fx-padding: 6 8 6 8;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+}
+.dashboard .fila-clic:hover {
+    -fx-background-color: #F1F7F3;
+}
+.dashboard .stat-dot-pacientes,
+.dashboard .stat-dot-medicos,
+.dashboard .stat-dot-citas,
+.dashboard .stat-dot-consultas {
+    -fx-min-width: 12;
+    -fx-min-height: 12;
+    -fx-max-width: 12;
+    -fx-max-height: 12;
+    -fx-background-radius: 4;
+}
+.dashboard .stat-dot-pacientes { -fx-background-color: #2E9E6B; }
+.dashboard .stat-dot-medicos   { -fx-background-color: #3B82C4; }
+.dashboard .stat-dot-citas     { -fx-background-color: #E0A93B; }
+.dashboard .stat-dot-consultas { -fx-background-color: #7C5CD6; }
 
 .status-pill,
 .pill-activo,
@@ -635,6 +707,48 @@
 .encabezado-modal .label-pagina {
     -fx-font-size: 14px;
 }
+
+/* ===== Tipografia responsiva (em) en modulos de lista y formularios ===== */
+/* Escalan con el -fx-font-size que Responsividad fija en el contenedor/raiz.
+   El login y otras escenas no escaladas conservan sus tamanos en px. */
+.modulo-root .titulo-modulo,
+.mainFxmlClass .titulo-modulo { -fx-font-size: 0.93em; }
+
+.modulo-root .label-seccion,
+.mainFxmlClass .label-seccion,
+.modulo-root .label-panel,
+.mainFxmlClass .label-panel { -fx-font-size: 0.8em; }
+
+.modulo-root .label-campo,
+.mainFxmlClass .label-campo { -fx-font-size: 0.74em; }
+
+.modulo-root .texto-ayuda,
+.mainFxmlClass .texto-ayuda,
+.modulo-root .label-subtitulo,
+.mainFxmlClass .label-subtitulo,
+.modulo-root .label-error,
+.mainFxmlClass .label-error { -fx-font-size: 0.8em; }
+
+.modulo-root .campo-texto,
+.mainFxmlClass .campo-texto,
+.modulo-root .campo-fecha,
+.mainFxmlClass .campo-fecha,
+.modulo-root .combo-box-estilo,
+.mainFxmlClass .combo-box-estilo { -fx-font-size: 0.8em; }
+
+.modulo-root .campo-busqueda,
+.mainFxmlClass .campo-busqueda { -fx-font-size: 0.74em; }
+
+.modulo-root .boton-primario,
+.mainFxmlClass .boton-primario { -fx-font-size: 0.87em; }
+
+.modulo-root .boton-secundario,
+.mainFxmlClass .boton-secundario,
+.modulo-root .boton-peligro,
+.mainFxmlClass .boton-peligro { -fx-font-size: 0.8em; }
+
+.modulo-root .tabla-datos .column-header .label { -fx-font-size: 0.67em; }
+.modulo-root .tabla-datos .table-cell { -fx-font-size: 0.8em; }
 
 .form-titlebar {
     -fx-background-color: linear-gradient(to bottom, #F8FCF9, #F0F5F2);

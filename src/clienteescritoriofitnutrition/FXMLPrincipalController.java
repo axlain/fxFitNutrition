@@ -11,17 +11,21 @@ import clienteescritoriofitnutrition.pojo.Consulta;
 import clienteescritoriofitnutrition.pojo.Medico;
 import clienteescritoriofitnutrition.pojo.Paciente;
 import clienteescritoriofitnutrition.pojo.Usuario;
+import clienteescritoriofitnutrition.utilidad.Responsividad;
 import clienteescritoriofitnutrition.utilidad.Utilidades;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Set;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -35,6 +39,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class FXMLPrincipalController implements Initializable, INotificador {
@@ -64,6 +69,8 @@ public class FXMLPrincipalController implements Initializable, INotificador {
     @FXML
     private VBox vbDashboard;
     @FXML
+    private Label lbNombrePacientes;
+    @FXML
     private Label lbTotalPacientes;
     @FXML
     private Label lbActivosPacientes;
@@ -72,9 +79,13 @@ public class FXMLPrincipalController implements Initializable, INotificador {
     @FXML
     private Label lbMedicosActivos;
     @FXML
+    private VBox cardMedicos;
+    @FXML
     private Label lbCitasHoy;
     @FXML
     private Label lbCitasPendientes;
+    @FXML
+    private Label lbNombreConsultas;
     @FXML
     private Label lbConsultasTotal;
     @FXML
@@ -97,6 +108,8 @@ public class FXMLPrincipalController implements Initializable, INotificador {
     public void initialize(URL url, ResourceBundle rb) {
         dashboard = vbDashboard;
         cargarFechaFooter();
+        // Escalado proporcional para el dashboard y los modulos cargados en el contenedor central.
+        Responsividad.aplicar(bpContenedor, 15.0, 1240.0, 13.0, 20.0);
     }
 
     private void cargarFechaFooter() {
@@ -175,6 +188,9 @@ public class FXMLPrincipalController implements Initializable, INotificador {
     private void aplicarPermisos() {
         boolean esAdministrador = esAdministrador();
         btnMedicos.setDisable(!esAdministrador);
+        // En sesion de medico la tarjeta "Medicos" mostraria solo a el mismo: no aporta, se oculta.
+        cardMedicos.setVisible(esAdministrador);
+        cardMedicos.setManaged(esAdministrador);
         btnPacientes.setDisable(false);
         btnCitas.setDisable(false);
         btnConsultas.setDisable(false);
@@ -232,29 +248,71 @@ public class FXMLPrincipalController implements Initializable, INotificador {
         cargarModulo("FXMLPerfil.fxml", "Perfil", "El modulo de perfil esta pendiente de integracion.");
     }
 
-    private void cargarDashboard() {
-        List<Paciente> pacientes = PacienteImp.obtenerTodos();
-        if (pacientes == null) {
-            pacientes = new ArrayList<Paciente>();
-        }
+    // Accesos directos desde el dashboard (heuristica: flexibilidad y eficiencia).
+    @FXML
+    private void clickVerPacientes(MouseEvent event) {
+        cargarModulo("FXMLAdministracionPacientes.fxml", "Pacientes", "No se pudo cargar el modulo de pacientes.");
+    }
 
+    @FXML
+    private void clickVerCitas(MouseEvent event) {
+        cargarModulo("FXMLAgendaCitas.fxml", "Citas", "No se pudo cargar el modulo de citas.");
+    }
+
+    private void cargarDashboard() {
+        boolean esAdmin = esAdministrador();
+        Integer idMedico = obtenerIdMedicoSesion();
+
+        List<Paciente> pacientes = obtenerPacientesDashboard(idMedico, esAdmin);
         List<Medico> medicos = obtenerMedicosDashboard();
         List<Cita> citasHoy = obtenerCitasHoy(medicos);
-        List<Consulta> consultas = obtenerConsultasDashboard(pacientes);
+        List<Consulta> consultas = obtenerConsultasDashboard(pacientes, idMedico, esAdmin);
 
-        lbTotalPacientes.setText(String.valueOf(contarActivosPacientes(pacientes)));
-        lbActivosPacientes.setText(pacientes.size() + " registrados");
+        int pacientesActivos = contarActivosPacientes(pacientes);
+
+        // Las metricas cambian segun el rol: el admin ve la clinica completa; el medico ve solo lo suyo.
+        lbNombrePacientes.setText(esAdmin ? "Pacientes activos" : "Mis pacientes");
+        lbTotalPacientes.setText(String.valueOf(pacientesActivos));
+        lbActivosPacientes.setText("de " + pacientes.size() + (esAdmin ? " registrados" : " asignados"));
+        // Un medico dado de baja desaparece (no queda inactivo): activos == total. El dato util del dia
+        // es cuantos tienen agenda hoy (esta tarjeta solo se muestra al admin).
         lbTotalMedicos.setText(String.valueOf(medicos.size()));
-        lbMedicosActivos.setText(contarActivosMedicos(medicos) + " activos");
+        lbMedicosActivos.setText(contarMedicosConCitaHoy(citasHoy) + " con cita hoy");
         lbCitasHoy.setText(String.valueOf(citasHoy.size()));
-        lbCitasPendientes.setText(contarCitasPorEstado(citasHoy, "Pendiente") + " pendientes");
+        lbCitasPendientes.setText(contarCitasPorAtender(citasHoy) + " por atender");
+        lbNombreConsultas.setText(esAdmin ? "Consultas" : "Mis consultas");
         lbConsultasTotal.setText(String.valueOf(consultas.size()));
-        lbConsultasHoy.setText(contarConsultasHoy(consultas) + " hoy");
+        lbConsultasHoy.setText(contarConsultasEsteMes(consultas) + " este mes");
 
         LocalDate hoy = LocalDate.now();
         lbFechaCitas.setText(hoy.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        cargarPacientesRecientes(pacientes);
+        cargarPacientesRecientes(idMedico, esAdmin);
         cargarCitasDelDia(citasHoy);
+    }
+
+    private Integer obtenerIdMedicoSesion() {
+        if (sesion != null && sesion.getMedico() != null) {
+            return sesion.getMedico().getIdMedico();
+        }
+        return null;
+    }
+
+    // Admin: toda la clinica. Medico: solo sus pacientes asignados.
+    private List<Paciente> obtenerPacientesDashboard(Integer idMedico, boolean esAdmin) {
+        List<Paciente> todos = PacienteImp.obtenerTodos();
+        if (todos == null) {
+            todos = new ArrayList<Paciente>();
+        }
+        if (esAdmin || idMedico == null) {
+            return todos;
+        }
+        List<Paciente> mios = new ArrayList<Paciente>();
+        for (Paciente paciente : todos) {
+            if (paciente != null && idMedico.equals(paciente.getIdMedico())) {
+                mios.add(paciente);
+            }
+        }
+        return mios;
     }
 
     private List<Medico> obtenerMedicosDashboard() {
@@ -285,7 +343,12 @@ public class FXMLPrincipalController implements Initializable, INotificador {
         return citas;
     }
 
-    private List<Consulta> obtenerConsultasDashboard(List<Paciente> pacientes) {
+    // Medico: sus consultas directo por id (1 llamada). Admin: agrega el historial de todos los pacientes.
+    private List<Consulta> obtenerConsultasDashboard(List<Paciente> pacientes, Integer idMedico, boolean esAdmin) {
+        if (!esAdmin && idMedico != null) {
+            List<Consulta> mias = ConsultaImp.obtenerHistorialMedico(idMedico);
+            return mias != null ? mias : new ArrayList<Consulta>();
+        }
         List<Consulta> consultas = new ArrayList<Consulta>();
         for (Paciente paciente : pacientes) {
             if (paciente != null && paciente.getIdPaciente() != null) {
@@ -308,56 +371,73 @@ public class FXMLPrincipalController implements Initializable, INotificador {
         return total;
     }
 
-    private int contarActivosMedicos(List<Medico> medicos) {
-        int total = 0;
-        for (Medico medico : medicos) {
-            if ("Activo".equalsIgnoreCase(medico.getEstatusUsuario())) {
-                total++;
-            }
-        }
-        return total;
-    }
-
-    private int contarCitasPorEstado(List<Cita> citas, String estado) {
+    private int contarCitasPorAtender(List<Cita> citas) {
         int total = 0;
         for (Cita cita : citas) {
-            if (estado.equalsIgnoreCase(obtenerEstadoCita(cita))) {
+            String estado = obtenerEstadoCita(cita);
+            if ("Confirmada".equalsIgnoreCase(estado)
+                    || "Pendiente".equalsIgnoreCase(estado)
+                    || "Reagendada".equalsIgnoreCase(estado)) {
                 total++;
             }
         }
         return total;
     }
 
-    private int contarConsultasHoy(List<Consulta> consultas) {
+    private int contarMedicosConCitaHoy(List<Cita> citas) {
+        Set<Integer> ids = new HashSet<Integer>();
+        for (Cita cita : citas) {
+            if (cita.getIdMedico() != null) {
+                ids.add(cita.getIdMedico());
+            }
+        }
+        return ids.size();
+    }
+
+    private int contarConsultasEsteMes(List<Consulta> consultas) {
+        String mes = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
         int total = 0;
-        String hoy = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
         for (Consulta consulta : consultas) {
-            if (consulta.getFechaHora() != null && consulta.getFechaHora().startsWith(hoy)) {
+            if (consulta.getFecha() != null && consulta.getFecha().startsWith(mes)) {
                 total++;
             }
         }
         return total;
     }
 
-    private void cargarPacientesRecientes(List<Paciente> pacientes) {
+    // "Pacientes recientes" reales (ordenados por fecha_registro en el API). Admin: global; medico: solo los suyos.
+    private void cargarPacientesRecientes(Integer idMedico, boolean esAdmin) {
         vbPacientesRecientes.getChildren().clear();
-        if (pacientes.isEmpty()) {
+        List<Paciente> recientes = (esAdmin || idMedico == null)
+                ? PacienteImp.obtenerRecientes(3)
+                : PacienteImp.obtenerRecientesMedico(idMedico, 3);
+        if (recientes == null || recientes.isEmpty()) {
             vbPacientesRecientes.getChildren().add(crearTextoVacio("Sin pacientes registrados."));
             return;
         }
 
-        int limite = Math.min(3, pacientes.size());
-        for (int i = 0; i < limite; i++) {
-            Paciente paciente = pacientes.get(i);
+        EventHandler<MouseEvent> irPacientes = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                cargarModulo("FXMLAdministracionPacientes.fxml", "Pacientes", "No se pudo cargar el modulo de pacientes.");
+            }
+        };
+
+        for (Paciente paciente : recientes) {
             HBox fila = new HBox();
             fila.setSpacing(12);
             fila.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+            fila.getStyleClass().add("fila-clic");
+            fila.setOnMouseClicked(irPacientes);
 
             Label nombre = new Label(paciente.getNombreCompleto());
-            nombre.setPrefWidth(190);
+            nombre.getStyleClass().add("fila-titulo");
+            nombre.setMaxWidth(Double.MAX_VALUE);
+            HBox.setHgrow(nombre, Priority.ALWAYS);
+
             Label medico = new Label(paciente.getMedicoAsignado());
-            medico.setPrefWidth(140);
             medico.getStyleClass().add("label-subtitulo");
+
             Label estatus = new Label(paciente.getEstatusUsuario());
             estatus.getStyleClass().add(obtenerClaseEstatusUsuario(paciente.getEstatusUsuario()));
 
@@ -374,18 +454,29 @@ public class FXMLPrincipalController implements Initializable, INotificador {
         }
 
         for (Cita cita : citas) {
+            final Cita citaFila = cita;
+
             HBox fila = new HBox();
-            fila.setSpacing(12);
+            fila.setSpacing(14);
             fila.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+            fila.getStyleClass().add("fila-clic");
+            fila.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    mostrarDetalleCita(citaFila);
+                }
+            });
 
             Label hora = new Label(formatearHora(cita.getHora()));
-            hora.setPrefWidth(52);
-            hora.getStyleClass().add("label-stat-valor");
+            hora.getStyleClass().add("cita-hora");
 
             VBox datos = new VBox();
+            datos.setSpacing(1);
+            datos.setMaxWidth(Double.MAX_VALUE);
             HBox.setHgrow(datos, Priority.ALWAYS);
             Label paciente = new Label(obtenerNombrePaciente(cita));
-            Label detalle = new Label(obtenerNombreMedico(cita) + " - " + obtenerTexto(cita.getObservaciones()));
+            paciente.getStyleClass().add("fila-titulo");
+            Label detalle = new Label(obtenerNombreMedico(cita));
             detalle.getStyleClass().add("label-subtitulo");
             datos.getChildren().addAll(paciente, detalle);
 
@@ -394,6 +485,28 @@ public class FXMLPrincipalController implements Initializable, INotificador {
 
             fila.getChildren().addAll(hora, datos, estado);
             vbCitasHoy.getChildren().add(fila);
+        }
+    }
+
+    // Abre el detalle de la cita en una ventana emergente (observacion bien distribuida)
+    // en vez de saltar al modulo completo de Citas.
+    private void mostrarDetalleCita(Cita cita) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLDetalleCita.fxml"));
+            Parent vista = loader.load();
+            FXMLDetalleCitaController controlador = loader.getController();
+            controlador.inicializarDatos(cita);
+
+            Scene escena = new Scene(vista);
+            Stage escenario = new Stage();
+            escenario.setScene(escena);
+            escenario.setTitle("Detalle de la cita");
+            escenario.initModality(Modality.APPLICATION_MODAL);
+            escenario.setResizable(false);
+            escenario.showAndWait();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            Utilidades.mostrarAlertaSimple("Error", "No se pudo abrir el detalle de la cita.", Alert.AlertType.ERROR);
         }
     }
 
@@ -439,10 +552,6 @@ public class FXMLPrincipalController implements Initializable, INotificador {
             return cita.getMedico().getNombreCompleto();
         }
         return "Medico";
-    }
-
-    private String obtenerTexto(String texto) {
-        return texto != null && !texto.trim().isEmpty() ? texto : "Sin observaciones";
     }
 
     private String formatearHora(String hora) {

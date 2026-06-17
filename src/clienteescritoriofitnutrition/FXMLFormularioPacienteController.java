@@ -8,6 +8,7 @@ import clienteescritoriofitnutrition.pojo.Domicilio;
 import clienteescritoriofitnutrition.pojo.Medico;
 import clienteescritoriofitnutrition.pojo.Paciente;
 import clienteescritoriofitnutrition.pojo.Usuario;
+import clienteescritoriofitnutrition.utilidad.Responsividad;
 import clienteescritoriofitnutrition.utilidad.Utilidades;
 import java.net.URL;
 import java.time.LocalDate;
@@ -23,6 +24,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class FXMLFormularioPacienteController implements Initializable {
@@ -55,6 +57,8 @@ public class FXMLFormularioPacienteController implements Initializable {
     private TextField tfEstado;
     @FXML
     private TextField tfCodigoPostal;
+    @FXML
+    private BorderPane rootForm;
 
     private Paciente pacienteEdicion;
     private INotificador notificador;
@@ -66,8 +70,11 @@ public class FXMLFormularioPacienteController implements Initializable {
         cargarMedicos();
         tfNumeroExterior.setTextFormatter(new TextFormatter<>(change ->
                 change.getControlNewText().matches("\\d*") ? change : null));
+        tfTelefono.setTextFormatter(new TextFormatter<>(change ->
+                change.getControlNewText().matches("\\d{0,10}") ? change : null));
         tfCodigoPostal.setTextFormatter(new TextFormatter<>(change ->
-                change.getControlNewText().matches("\\d*") ? change : null));
+                change.getControlNewText().matches("\\d{0,5}") ? change : null));
+        Responsividad.aplicar(rootForm, 15.0, 780.0, 13.0, 20.0);
     }
 
     public void inicializarDatos(Paciente paciente, INotificador notificador, Integer idMedicoSesion) {
@@ -179,15 +186,47 @@ public class FXMLFormularioPacienteController implements Initializable {
             mostrarCampoRequerido("El apellido paterno es obligatorio.");
             return false;
         }
+        if (dpFechaNacimiento.getValue() == null) {
+            mostrarCampoRequerido("La fecha de nacimiento es obligatoria.");
+            return false;
+        }
+        if (!Utilidades.esFechaNacimientoValida(dpFechaNacimiento.getValue(), 0)) {
+            mostrarCampoRequerido("La fecha de nacimiento no es valida (no debe ser una fecha futura).");
+            return false;
+        }
+        if (estaVacio(cbGenero.getValue())) {
+            mostrarCampoRequerido("El genero es obligatorio.");
+            return false;
+        }
         if (estaVacio(tfCorreo.getText())) {
             mostrarCampoRequerido("El correo es obligatorio.");
+            return false;
+        }
+        if (!Utilidades.esCorreoValido(tfCorreo.getText())) {
+            mostrarCampoRequerido("El correo no tiene un formato valido.");
+            return false;
+        }
+        if (estaVacio(tfTelefono.getText())) {
+            mostrarCampoRequerido("El telefono es obligatorio.");
+            return false;
+        }
+        if (!Utilidades.esTelefonoValido(tfTelefono.getText())) {
+            mostrarCampoRequerido("El telefono debe tener 10 digitos numericos.");
             return false;
         }
         if (cbMedico.getValue() == null) {
             mostrarCampoRequerido("El medico asignado es obligatorio.");
             return false;
         }
+        if (!estaVacio(tfCodigoPostal.getText()) && tfCodigoPostal.getText().trim().length() != 5) {
+            mostrarCampoRequerido("El codigo postal debe tener 5 digitos.");
+            return false;
+        }
         return true;
+    }
+
+    private void mostrarCampoRequerido(String mensaje) {
+        Utilidades.mostrarAlertaSimple("Campo requerido", mensaje, Alert.AlertType.WARNING);
     }
 
     private Paciente construirObjeto() {
@@ -219,10 +258,6 @@ public class FXMLFormularioPacienteController implements Initializable {
         paciente.setMedico(medico);
 
         return paciente;
-    }
-
-    private void mostrarCampoRequerido(String mensaje) {
-        Utilidades.mostrarAlertaSimple("Campo requerido", mensaje, Alert.AlertType.WARNING);
     }
 
     private boolean estaVacio(String valor) {
