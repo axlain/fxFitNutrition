@@ -30,8 +30,8 @@
         </HBox>
         <VBox spacing="3.0">
             <children>
-                <Label styleClass="label-stat-nombre" text="Medico asignado" />
-                <Label fx:id="lbMedico" styleClass="fila-titulo" text="Medico" />
+                <Label styleClass="label-stat-nombre" text="M?dico de la cita" />
+                <Label fx:id="lbMedico" styleClass="fila-titulo" text="M?dico" />
             </children>
         </VBox>
         <VBox spacing="3.0">

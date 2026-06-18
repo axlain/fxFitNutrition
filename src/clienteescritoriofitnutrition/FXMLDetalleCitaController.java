@@ -1,6 +1,8 @@
 package clienteescritoriofitnutrition;
 
 import clienteescritoriofitnutrition.pojo.Cita;
+import clienteescritoriofitnutrition.pojo.Medico;
+import clienteescritoriofitnutrition.pojo.Paciente;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -27,9 +29,9 @@ public class FXMLDetalleCitaController {
         }
 
         lbHora.setText(formatearHora(cita.getHora()));
-        lbPaciente.setText(textoODefault(cita.getNombrePaciente(), "Paciente"));
+        lbPaciente.setText(textoODefault(obtenerNombrePacienteDetalle(cita), "Paciente"));
         lbFecha.setText(textoODefault(cita.getFecha(), ""));
-        lbMedico.setText(textoODefault(cita.getNombreMedico(), "Medico"));
+        lbMedico.setText(textoODefault(obtenerNombreMedicoDetalle(cita), "M?dico"));
 
         String estado = cita.getNombreEstado();
         lbEstado.setText(textoODefault(estado, "Sin estado"));
@@ -63,6 +65,28 @@ public class FXMLDetalleCitaController {
             return "";
         }
         return hora.length() >= 5 ? hora.substring(0, 5) : hora;
+    }
+
+    private String obtenerNombrePacienteDetalle(Cita cita) {
+        Paciente paciente = cita.getPaciente();
+        if (paciente != null) {
+            String nombreCompleto = paciente.getNombreCompleto();
+            if (nombreCompleto != null && !nombreCompleto.trim().isEmpty()) {
+                return nombreCompleto;
+            }
+        }
+        return cita.getNombrePaciente();
+    }
+
+    private String obtenerNombreMedicoDetalle(Cita cita) {
+        Medico medico = cita.getMedico();
+        if (medico != null) {
+            String nombreCompleto = medico.getNombreCompleto();
+            if (nombreCompleto != null && !nombreCompleto.trim().isEmpty()) {
+                return nombreCompleto;
+            }
+        }
+        return cita.getNombreMedico();
     }
 
     private String textoODefault(String valor, String porDefecto) {
