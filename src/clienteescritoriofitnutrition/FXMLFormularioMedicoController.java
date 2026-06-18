@@ -66,7 +66,7 @@ public class FXMLFormularioMedicoController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         cbGenero.setItems(FXCollections.observableArrayList("Masculino", "Femenino", "Otro"));
         tfNumeroExterior.setTextFormatter(new TextFormatter<>(change ->
-                change.getControlNewText().matches("\\d*") ? change : null));
+                change.getControlNewText().matches("\\d{0,4}") ? change : null));
         tfTelefono.setTextFormatter(new TextFormatter<>(change ->
                 change.getControlNewText().matches("\\d{0,10}") ? change : null));
         tfCodigoPostal.setTextFormatter(new TextFormatter<>(change ->

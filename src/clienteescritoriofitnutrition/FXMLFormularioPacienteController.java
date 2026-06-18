@@ -69,7 +69,7 @@ public class FXMLFormularioPacienteController implements Initializable {
         cbGenero.setItems(FXCollections.observableArrayList("Masculino", "Femenino", "Otro"));
         cargarMedicos();
         tfNumeroExterior.setTextFormatter(new TextFormatter<>(change ->
-                change.getControlNewText().matches("\\d*") ? change : null));
+                change.getControlNewText().matches("\\d{0,4}") ? change : null));
         tfTelefono.setTextFormatter(new TextFormatter<>(change ->
                 change.getControlNewText().matches("\\d{0,10}") ? change : null));
         tfCodigoPostal.setTextFormatter(new TextFormatter<>(change ->

@@ -73,6 +73,7 @@ public class FXMLAdministracionPacientesController implements Initializable, INo
 
     public void inicializarSesion(RSAutenticar sesion) {
         this.sesion = sesion;
+        cargarInformacionPacientes();
     }
 
     private Integer obtenerIdMedicoSesion() {
@@ -98,7 +99,7 @@ public class FXMLAdministracionPacientesController implements Initializable, INo
             lista = new ArrayList<>();
             Utilidades.mostrarAlertaSimple("Sin conexion", "No fue posible cargar los pacientes.", Alert.AlertType.WARNING);
         }
-        pacientes = FXCollections.observableArrayList(lista);
+        pacientes = FXCollections.observableArrayList(filtrarPorMedicoSesion(lista));
         tvPacientes.setItems(pacientes);
     }
 
@@ -115,7 +116,22 @@ public class FXMLAdministracionPacientesController implements Initializable, INo
             lista = new ArrayList<>();
             Utilidades.mostrarAlertaSimple("Busqueda", "No fue posible realizar la busqueda.", Alert.AlertType.WARNING);
         }
-        tvPacientes.setItems(FXCollections.observableArrayList(lista));
+        tvPacientes.setItems(FXCollections.observableArrayList(filtrarPorMedicoSesion(lista)));
+    }
+
+    // Admin: toda la clinica. Medico: solo sus pacientes asignados (mismo criterio que el dashboard).
+    private List<Paciente> filtrarPorMedicoSesion(List<Paciente> lista) {
+        Integer idMedico = obtenerIdMedicoSesion();
+        if (idMedico == null) {
+            return lista;
+        }
+        List<Paciente> mios = new ArrayList<>();
+        for (Paciente paciente : lista) {
+            if (paciente != null && idMedico.equals(paciente.getIdMedico())) {
+                mios.add(paciente);
+            }
+        }
+        return mios;
     }
 
     @FXML
