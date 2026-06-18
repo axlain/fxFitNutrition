@@ -548,6 +548,7 @@ public class FXMLFormularioConsultaController implements Initializable {
         Cita cita = cbCita.getValue();
         Dieta dieta = cbDieta.getValue();
 
+        consulta.setIdCita(cita.getIdCita());
         consulta.setFecha(cita.getFecha());
         consulta.setHora(normalizarHora(cita.getHora()));
 
