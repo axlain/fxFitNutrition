@@ -231,11 +231,15 @@ public class FXMLFormularioCitaController implements Initializable {
         seleccionarMedico(citaEdicion.getIdMedico());
 
         if (!horaCita.isEmpty()) {
-            if (!cbHora.getItems().contains(horaCita)) {
+            boolean esCancelada = citaEdicion.getIdEstadoCita() != null
+                    && citaEdicion.getIdEstadoCita() == 3;
+            if (!cbHora.getItems().contains(horaCita) && !esCancelada) {
+                // Cita activa: re-agregar su hora original (el API la excluye del check).
+                // Cita cancelada: no forzar la hora si ya está ocupada por otra cita.
                 cbHora.getItems().add(horaCita);
                 FXCollections.sort(cbHora.getItems());
             }
-            cbHora.setValue(horaCita);
+            cbHora.setValue(cbHora.getItems().contains(horaCita) ? horaCita : null);
         }
     }
 
