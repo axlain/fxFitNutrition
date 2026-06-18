@@ -94,7 +94,7 @@
                                             <HBox alignment="CENTER_LEFT" spacing="8.0">
                                                 <children>
                                                     <Region styleClass="stat-dot-medicos" />
-                                                    <Label styleClass="label-stat-nombre" text="Médicos" />
+                                                    <Label styleClass="label-stat-nombre" text="Médicos activos" />
                                                 </children>
                                             </HBox>
                                             <Label fx:id="lbTotalMedicos" styleClass="label-stat-valor" text="0" />
