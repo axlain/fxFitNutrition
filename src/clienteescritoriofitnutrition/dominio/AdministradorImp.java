@@ -104,18 +104,10 @@ public class AdministradorImp {
         String url = Constantes.URL_WS + "administrador/cambiar-contrasena";
 
         try {
-            // Se declara la clase interna y se asignan los valores posteriormente
-            // para evitar el error "self-reference in initializer"
-            class Cambio {
-                public Integer idAdministrador;
-                public String contrasenaActual;
-                public String nuevaContrasena;
-            }
-
-            Cambio cambio = new Cambio();
-            cambio.idAdministrador = idAdministrador;
-            cambio.contrasenaActual = contrasenaActual;
-            cambio.nuevaContrasena = nuevaContrasena;
+            java.util.HashMap<String, Object> cambio = new java.util.HashMap<>();
+            cambio.put("idAdministrador", idAdministrador);
+            cambio.put("contrasenaActual", contrasenaActual);
+            cambio.put("nuevaContrasena", nuevaContrasena);
 
             Gson gson = new Gson();
             String json = gson.toJson(cambio);

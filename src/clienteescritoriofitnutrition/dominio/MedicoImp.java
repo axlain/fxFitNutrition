@@ -171,17 +171,10 @@ public class MedicoImp {
         String url = Constantes.URL_WS + "medico/cambiar-contrasena";
 
         try {
-            
-            class Cambio {
-                public Integer idMedico;
-                public String contrasenaActual;
-                public String nuevaContrasena;
-            }
-
-            Cambio cambio = new Cambio();
-            cambio.idMedico = idMedico;
-            cambio.contrasenaActual = contrasenaActual;
-            cambio.nuevaContrasena = nuevaContrasena;
+            java.util.HashMap<String, Object> cambio = new java.util.HashMap<>();
+            cambio.put("idMedico", idMedico);
+            cambio.put("contrasenaActual", contrasenaActual);
+            cambio.put("nuevaContrasena", nuevaContrasena);
 
             Gson gson = new Gson();
             String json = gson.toJson(cambio);
