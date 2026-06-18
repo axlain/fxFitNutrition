@@ -135,6 +135,18 @@ public class FXMLFormularioCitaController implements Initializable {
                 return null;
             }
         });
+
+        cbPaciente.valueProperty().addListener((obs, anterior, paciente) -> {
+            if (idMedicoSesion == null) {
+                if (paciente != null) {
+                    seleccionarMedico(paciente.getIdMedico());
+                    cbMedico.setDisable(true);
+                } else {
+                    cbMedico.setValue(null);
+                    cbMedico.setDisable(false);
+                }
+            }
+        });
     }
 
     public void inicializarDatos(Cita cita, INotificador notificador, Integer idMedicoSesion) {

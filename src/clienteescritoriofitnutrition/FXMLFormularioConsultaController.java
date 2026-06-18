@@ -28,6 +28,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -56,6 +57,20 @@ public class FXMLFormularioConsultaController implements Initializable {
         bloquearComboCitas("Selecciona primero un paciente");
         cargarMedicos();
         cargarDietas();
+        configurarCamposNumericos();
+    }
+
+    private void configurarCamposNumericos() {
+        TextFormatter<String> formatterPeso = new TextFormatter<>(change -> {
+            String nuevoTexto = change.getControlNewText();
+            return nuevoTexto.matches("\\d*\\.?\\d*") ? change : null;
+        });
+        TextFormatter<String> formatterEstatura = new TextFormatter<>(change -> {
+            String nuevoTexto = change.getControlNewText();
+            return nuevoTexto.matches("\\d*\\.?\\d*") ? change : null;
+        });
+        tfPeso.setTextFormatter(formatterPeso);
+        tfEstatura.setTextFormatter(formatterEstatura);
     }
 
     private void configurarCombos() {
@@ -139,7 +154,16 @@ public class FXMLFormularioConsultaController implements Initializable {
 
             if (paciente == null || paciente.getIdPaciente() == null) {
                 bloquearComboCitas("Selecciona primero un paciente");
+                if (idMedicoSesion == null) {
+                    cbMedico.setValue(null);
+                    cbMedico.setDisable(false);
+                }
                 return;
+            }
+
+            if (idMedicoSesion == null) {
+                seleccionarMedico(paciente.getIdMedico());
+                cbMedico.setDisable(true);
             }
 
             boolean modoEdicion = consultaEdicion != null

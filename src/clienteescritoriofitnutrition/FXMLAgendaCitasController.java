@@ -101,12 +101,17 @@ public class FXMLAgendaCitasController implements Initializable, INotificador {
             lista = new ArrayList<>();
         }
 
-        // Si el usuario en sesión es médico, solo se muestran sus citas.
+        // Si el usuario en sesión es médico, solo se muestran sus citas,
+        // más las canceladas de pacientes que le fueron reasignados.
         Integer idMedicoSesion = obtenerIdMedicoSesion();
         if (idMedicoSesion != null) {
             List<Cita> propias = new ArrayList<>();
             for (Cita cita : lista) {
                 if (idMedicoSesion.equals(cita.getIdMedico())) {
+                    propias.add(cita);
+                } else if (cita.getPaciente() != null
+                        && idMedicoSesion.equals(cita.getPaciente().getIdMedico())
+                        && "Cancelada".equalsIgnoreCase(cita.getNombreEstado())) {
                     propias.add(cita);
                 }
             }
